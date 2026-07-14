@@ -1,16 +1,16 @@
-<a href="https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship"><img src="assets/maven-logo.png" alt="Maven" width="150" align="left" hspace="18"></a>
+<p align="center">
+  <a href="https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship"><img src="assets/maven-logo.png" alt="Maven" width="150"></a>
+</p>
 
-# Hardcore Agentic Engineering
+<h1 align="center">Hardcore Agentic Engineering: <em>for builders who ship</em></h1>
 
-#### For builders who ship.
-
-<br clear="left">
-
-Free lightning lessons from [Hardcore Agentic Engineering](https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship), a three-week Maven course on getting real work out of coding agents and proving that work is correct. The course runs **August 3&ndash;21, 2026**. **[Register here](https://get.specstory.com/agentic-engineering)**: the link applies promo code `HARDCORE` for you.
+<p align="center">
+Free lightning lessons from <a href="https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship">Hardcore Agentic Engineering</a>, a three-week Maven course on getting real work out of coding agents and proving that work is correct. The course runs <strong>August 3&ndash;21, 2026</strong>. <a href="https://get.specstory.com/agentic-engineering"><strong>Register here</strong></a>: the link applies promo code <code>HARDCORE</code> for you.
+</p>
 
 ---
 
-## The course, from ten thousand feet
+## The course
 
 Most AI courses teach you to prompt. This one assumes you already prompt an agent, read the diff, and accept the result. It teaches the discipline that comes next. The spine of the whole course is one sentence:
 

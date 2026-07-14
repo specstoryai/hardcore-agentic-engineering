@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Build a Definition of Done for Claude Code &amp; Codex — Lightning Lesson</title>
+<title>Build a Definition of Done for Claude Code &amp; Codex · Lightning Lesson</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='%23ECF3EF' stroke='%2314263B' stroke-width='7'/%3E%3Ccircle cx='50' cy='50' r='13' fill='%23C41E6A'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,500;0,700;0,800;1,500;1,700;1,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,7 +15,7 @@
   --graticule:rgba(20,38,59,.075);
   --ink:#14263B;
   --ink-soft:#46607C;
-  --ink-faint:#7E93A8;
+  --ink-faint:#597086;
   --magenta:#C41E6A;
   --magenta-soft:#F3D9E6;
   --buff:#F1E5C6;
@@ -114,12 +115,14 @@ h1{
   font-size:clamp(2.6rem,6.4vw,5.4rem);
   line-height:1.02;letter-spacing:-.015em;
   margin-bottom:clamp(14px,2.5vh,26px);
+  text-wrap:balance;
 }
 h2{
   font-family:var(--serif);font-weight:800;
   font-size:clamp(1.9rem,4.4vw,3.5rem);
   line-height:1.06;letter-spacing:-.012em;
   margin-bottom:clamp(14px,2.6vh,28px);
+  text-wrap:balance;
 }
 h1 .tilt, h2 .tilt{font-style:italic;font-weight:700;color:var(--magenta)}
 .lede{font-size:clamp(1.1rem,1.9vw,1.5rem);line-height:1.5;color:var(--ink-soft);max-width:56ch}
@@ -310,7 +313,7 @@ code{font-family:var(--mono);font-size:.95em}
   <div class="inner">
     <div class="kicker"><b>Lightning Lesson</b> · 30 min + Q&amp;A · dead reckoning for coding agents</div>
     <h1>Build a <span class="tilt">Definition&nbsp;of&nbsp;Done</span> for Claude&nbsp;Code &amp;&nbsp;Codex</h1>
-    <p class="lede">Stop letting the agent grade its own homework. Drive it non-interactively with a loop that <strong>proves</strong> it finished — with an exit code, not a feeling.</p>
+    <p class="lede">Stop letting the agent grade its own homework. Drive it non-interactively with a loop that <strong>proves</strong> it finished with an exit code, not a feeling.</p>
     <p class="footline">Greg Ceccarelli · Co-founder, SpecStory · July 14, 2026</p>
   </div>
 </section>
@@ -322,14 +325,14 @@ code{font-family:var(--mono);font-size:.95em}
     <h2>I'm Greg. I ship with agents <span class="tilt">daily.</span></h2>
     <div class="cols">
       <div>
-        <p class="lede"><strong>Co-founder of SpecStory</strong> — we capture every AI coding session so you can search, share, and learn from them. Before that: CPO at Pluralsight, data at GitHub, Dropbox, and Google.</p>
-        <p class="lede" data-step style="margin-top:14px">This lesson comes out of <strong>Hardcore Agentic Engineering</strong>, a course I teach with my co-founders. One conviction drives it: the hard part isn't getting agents to <em>produce</em> work — it's <strong>engineering the proof it's correct.</strong></p>
+        <p class="lede"><strong>Co-founder of SpecStory</strong>, where we capture every AI coding session so you can search, share, and learn from them. Before that: CPO at Pluralsight, data at GitHub, Dropbox, and Google.</p>
+        <p class="lede" data-step style="margin-top:14px">This lesson comes out of <strong>Hardcore Agentic Engineering</strong>, a course I teach with my co-founders. One conviction drives it: the hard part isn't getting agents to <em>produce</em> work. It's <strong>engineering the proof it's correct.</strong></p>
       </div>
       <div class="panel">
         <span class="panel-label">Tonight is one piece of that proof</span>
         <ul>
-          <li data-step>Thousands of agent sessions captured — the same failure everywhere: <b>"done" that isn't</b></li>
-          <li data-step>The fix is old, boring, and it works — <b>we'll build it in ten lines</b></li>
+          <li data-step>Thousands of agent sessions captured, the same failure everywhere: <b>"done" that isn't</b></li>
+          <li data-step>The fix is old, boring, and it works. <b>We'll build it in ten lines</b></li>
         </ul>
       </div>
     </div>
@@ -354,11 +357,11 @@ code{font-family:var(--mono);font-size:.95em}
     <div class="kicker">Fix 04 · course plotted</div>
     <h2>Five stops. One promise.</h2>
     <div class="stops">
-      <div class="stop" data-step><span><b>How harnesses actually decide to stop</b> — the while-loop you're already running</span></div>
-      <div class="stop" data-step><span><b>What agile teams figured out 20 years ago</b> — the Definition of Done, and why it worked</span></div>
-      <div class="stop" data-step><span><b>Goals arrive in the harness</b> — and an LLM plays judge</span></div>
+      <div class="stop" data-step><span><b>How harnesses actually decide to stop</b>: the while-loop you're already running</span></div>
+      <div class="stop" data-step><span><b>What agile teams figured out 20 years ago</b>: the Definition of Done, and why it worked</span></div>
+      <div class="stop" data-step><span><b>Goals arrive in the harness</b>, and an LLM plays judge</span></div>
       <div class="stop" data-step><span><b>The ten-line loop</b> where a shell script is the judge<span class="live">live demo</span></span></div>
-      <div class="stop" data-step><span><b>When to skip all of this</b> — not every task needs a gate</span></div>
+      <div class="stop" data-step><span><b>When to skip all of this</b>: not every task needs a gate</span></div>
     </div>
     <p class="footline" data-step>Promise: by stop 04 you have something you can run tonight.</p>
   </div>
@@ -367,12 +370,12 @@ code{font-family:var(--mono);font-size:.95em}
 <!-- ============ 4 · WHAT'S AN AGENT ============ -->
 <section class="slide" data-title="New here? Agent 101">
   <div class="inner">
-    <div class="kicker">Fix 05 · <b>Part 1</b> · agent 101 — never run one? sixty seconds and you're caught up</div>
+    <div class="kicker">Fix 05 · <b>Part 1</b> · agent 101 · never run one? sixty seconds and you're caught up</div>
     <h2>A coding agent is a <span class="tilt">conversation with hands</span></h2>
     <div class="cols">
       <div>
         <p class="lede">Claude Code and Codex are terminal programs. You type a request in plain English; an AI <strong>edits your files and runs your commands</strong> to fulfill it.</p>
-        <p class="lede" data-step style="margin-top:14px">Each turn, the model answers with one of two things: <strong>words</strong>, or a <strong>tool call</strong> — "run this command," "edit this file." The program executes the call and hands back the result.</p>
+        <p class="lede" data-step style="margin-top:14px">Each turn, the model answers with one of two things: <strong>words</strong>, or a <strong>tool call</strong>: "run this command," "edit this file." The program executes the call and hands back the result.</p>
       </div>
       <div class="term" data-step>
         <div class="bar">~/project · claude</div>
@@ -387,14 +390,14 @@ code{font-family:var(--mono);font-size:.95em}
 tests pass. <span class="c">← just words. no tool call.</span></pre>
       </div>
     </div>
-    <p class="footline" data-step>Hold on to that last line — words, no tool call. It's about to matter a lot.</p>
+    <p class="footline" data-step>Hold on to that last line: words, no tool call. It's about to matter a lot.</p>
   </div>
 </section>
 
 <!-- ============ 5 · HARNESS 101 ============ -->
 <section class="slide" data-title="Harness 101">
   <div class="inner">
-    <div class="kicker">Fix 06 · <b>Part 1</b> · harness 101 — sixty seconds of vocabulary</div>
+    <div class="kicker">Fix 06 · <b>Part 1</b> · harness 101 · sixty seconds of vocabulary</div>
     <h2>The model can't touch your computer. The <span class="tilt">harness</span> can.</h2>
     <div class="flow">
       <div class="node"><small>brain · text in, text out</small>MODEL</div>
@@ -403,8 +406,8 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
       <div class="arrow">⇄</div>
       <div class="node"><small>files · shell · git</small>YOUR MACHINE</div>
     </div>
-    <p class="lede" data-step>The model is a text function — it can <em>ask</em> to run a test; it can't run one. The <strong>harness</strong> is the program wrapped around it: it executes the tool calls, feeds results back… <strong>and decides when to loop and when to stop.</strong></p>
-    <p class="footline" data-step>Claude Code · Codex CLI · Gemini CLI · Copilot CLI — different badges, same job. "Agent" = model + harness.</p>
+    <p class="lede" data-step>The model is a text function: it can <em>ask</em> to run a test; it can't run one. The <strong>harness</strong> is the program wrapped around it: it executes the tool calls, feeds results back… <strong>and decides when to loop and when to stop.</strong></p>
+    <p class="footline" data-step>Claude Code · Codex CLI · Gemini CLI · Copilot CLI: different badges, same job. "Agent" = model + harness.</p>
   </div>
 </section>
 
@@ -424,7 +427,7 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
       <div class="arrow" data-step>→</div>
       <div class="node stop" data-step><small>run ends</small>STOP</div>
     </div>
-    <p class="lede" data-step>Claude Code, Codex, Gemini CLI, Copilot — different products, <strong>same while-loop</strong>. Reason, act, observe, repeat…</p>
+    <p class="lede" data-step>Claude Code, Codex, Gemini CLI, Copilot: different products, <strong>same while-loop</strong>. Reason, act, observe, repeat…</p>
     <p class="lede" data-step style="margin-top:12px">…and the run ends <strong>the moment the model replies without calling a tool.</strong> Nothing checks anything at that boundary by default.</p>
   </div>
 </section>
@@ -436,8 +439,8 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
     <h2>"Done" is a <span class="tilt">feeling</span></h2>
     <div class="cols">
       <div>
-        <p class="lede">The green checkmark is a <strong>string the model produced</strong> — not an event in the world.</p>
-        <p class="lede" style="margin-top:14px" data-step>The agent isn't lying. It's predicting the most plausible next sentence — and after a run that <em>looked</em> fine, <strong>"Done!" is extremely plausible.</strong></p>
+        <p class="lede">The green checkmark is a <strong>string the model produced</strong>, not an event in the world.</p>
+        <p class="lede" style="margin-top:14px" data-step>The agent isn't lying. It's predicting the most plausible next sentence, and after a run that <em>looked</em> fine, <strong>"Done!" is extremely plausible.</strong></p>
         <div class="chips" data-step>
           <span class="chip shot"><span class="tag">📸 screenshot</span> The agent doesn't stop when it's done. It's "done" when it stops.</span>
         </div>
@@ -445,9 +448,9 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
       <div class="panel">
         <span class="panel-label">Three smells you already know</span>
         <ul>
-          <li data-step><b>The victory lap</b> — "All tests passing! ✅" (it never ran them)</li>
-          <li data-step><b>The quiet shrink</b> — scope trimmed mid-run so "done" arrives sooner</li>
-          <li data-step><b>The plausible summary</b> — a beautiful description of a state the repo is not in</li>
+          <li data-step><b>The victory lap</b>: "All tests passing! ✅" (it never ran them)</li>
+          <li data-step><b>The quiet shrink</b>: scope trimmed mid-run so "done" arrives sooner</li>
+          <li data-step><b>The plausible summary</b>: a beautiful description of a state the repo is not in</li>
         </ul>
       </div>
     </div>
@@ -458,12 +461,12 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
 <section class="slide" data-title="P2 · DoD origin">
   <div class="inner">
     <div class="kicker">Fix 09 · <b>Part 2</b> · humans hit this first</div>
-    <h2>Definition of Done — the origin</h2>
+    <h2>Definition of Done: the origin</h2>
     <div class="cols">
       <div>
-        <p class="lede" data-step>Mid-2000s agile teams kept demoing work that was <strong>"90% done"</strong> — coded but untested, unreviewed, undeployable. <em>"Done-done"</em> entered the vocabulary as a joke…</p>
+        <p class="lede" data-step>Mid-2000s agile teams kept demoing work that was <strong>"90% done"</strong>: coded but untested, unreviewed, undeployable. <em>"Done-done"</em> entered the vocabulary as a joke…</p>
         <p class="lede" style="margin-top:14px" data-step>…and Scrum made it a discipline. The <strong>2020 Scrum Guide</strong> elevates the Definition of Done to the formal <strong>commitment</strong> attached to every Increment.</p>
-        <p class="lede" style="margin-top:14px" data-step>Work that doesn't meet it isn't part of the Increment at all — it can't even be <em>shown</em> at Sprint Review. Meet it, and — their phrase — <strong>"an Increment is born."</strong></p>
+        <p class="lede" style="margin-top:14px" data-step>Work that doesn't meet it isn't part of the Increment at all; it can't even be <em>shown</em> at Sprint Review. Meet it and, in their phrase, <strong>"an Increment is born."</strong></p>
       </div>
       <div class="panel plain" data-step>
         <span class="panel-label">A team's Definition of Done (typical)</span>
@@ -483,20 +486,20 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
 <section class="slide" data-title="Why DoD worked">
   <div class="inner">
     <div class="kicker">Fix 10 · Part 2 · the transferable insight</div>
-    <h2>Why it worked — and why it transfers</h2>
+    <h2>Why it worked, and why it transfers</h2>
     <div class="cols">
       <div class="panel">
         <span class="panel-label">Four properties</span>
         <ul>
-          <li data-step><b>Written before the work</b> — goalposts committed in advance</li>
-          <li data-step><b>A checklist, not a vibe</b> — each item checkable by anyone</li>
-          <li data-step><b>Binary</b> — there is no 90% done</li>
-          <li data-step><b>Shared</b> — the worker doesn't privately define done</li>
+          <li data-step><b>Written before the work</b>: goalposts committed in advance</li>
+          <li data-step><b>A checklist, not a vibe</b>: each item checkable by anyone</li>
+          <li data-step><b>Binary</b>: there is no 90% done</li>
+          <li data-step><b>Shared</b>: the worker doesn't privately define done</li>
         </ul>
       </div>
       <div>
         <p class="big" data-step>Scrum wrote the DoD for humans who fool themselves.</p>
-        <p class="big" data-step style="margin-top:16px">Agents fool themselves <em>faster</em> — at 3&nbsp;a.m., unattended.</p>
+        <p class="big" data-step style="margin-top:16px">Agents fool themselves <em>faster</em>: at 3&nbsp;a.m., unattended.</p>
       </div>
     </div>
     <p class="footline" data-step>Increment ↔ the diff &nbsp;·&nbsp; developer says "done" ↔ model says "done" &nbsp;·&nbsp; DoD ↔ executable checks &nbsp;·&nbsp; Sprint Review gate ↔ the loop's exit condition</p>
@@ -512,7 +515,7 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
       <div class="tl" data-step>
         <span class="when">Apr 30, 2026</span>
         <h3>Codex CLI ships <code>/goal</code></h3>
-        <p>A session-scoped completion condition, re-injected every turn with a built-in completion audit — "treat uncertainty as not achieved."</p>
+        <p>A session-scoped completion condition, re-injected every turn with a built-in completion audit: "treat uncertainty as not achieved."</p>
       </div>
       <div class="tl" data-step>
         <span class="when">May 12, 2026</span>
@@ -522,7 +525,7 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
       <div class="tl mg" data-step>
         <span class="when">May 2026</span>
         <h3>Goal engineering <span style="font-weight:500;font-style:italic">(Ceccarelli)</span></h3>
-        <p>The practice around it: a checked-in <b>goal</b> (≤4,000 chars — the cap Codex enforces) + a <b>rider</b> with phases and named tests. The brief becomes an artifact with a SHA.</p>
+        <p>The practice around it: a checked-in <b>goal</b> (≤4,000 chars, the cap Codex enforces) + a <b>rider</b> with phases and named tests. The brief becomes an artifact with a SHA.</p>
       </div>
     </div>
     <p class="lede" data-step style="margin-top:18px">Real progress: the loop finally has a <strong>destination</strong>, and the harness won't let the model wander off. But look who decides you've arrived…</p>
@@ -540,10 +543,10 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
       </thead>
       <tbody>
         <tr data-step><td><b>Who decides</b></td><td>A model reads the transcript, answers "done?"</td><td>A script exits 0 or non-zero</td></tr>
-        <tr data-step><td><b>The verdict is</b></td><td class="verdict op">Opinion — probabilistic, persuadable</td><td class="verdict ev">Evidence — binary, reproducible</td></tr>
+        <tr data-step><td><b>The verdict is</b></td><td class="verdict op">Opinion: probabilistic, persuadable</td><td class="verdict ev">Evidence: binary, reproducible</td></tr>
         <tr data-step><td><b>Cost per turn</b></td><td>One more model call</td><td>Milliseconds</td></tr>
-        <tr data-step><td><b>Fuzzy criteria</b> ("prose is friendly")</td><td>Yes — its superpower</td><td>No — only what you encoded</td></tr>
-        <tr data-step><td><b>Swayed by a confident summary?</b></td><td>Yes — it judges the same conversation</td><td>Never reads the transcript</td></tr>
+        <tr data-step><td><b>Fuzzy criteria</b> ("prose is friendly")</td><td>Yes, its superpower</td><td>No, only what you encoded</td></tr>
+        <tr data-step><td><b>Swayed by a confident summary?</b></td><td>Yes, it judges the same conversation</td><td>Never reads the transcript</td></tr>
         <tr data-step><td><b>Setup cost</b></td><td>Zero</td><td>You write the checks</td></tr>
       </tbody>
     </table>
@@ -561,7 +564,7 @@ tests pass. <span class="c">← just words. no tool call.</span></pre>
     <h2>Two files. That's the lesson.</h2>
     <div class="files">
       <div class="term" data-step>
-        <div class="bar">check.sh — the definition of done</div>
+        <div class="bar">check.sh · the definition of done</div>
 <pre><span class="c">#!/usr/bin/env bash</span>
 <span class="k">set</span> -e
 npm test                <span class="c"># tests pass</span>
@@ -570,7 +573,7 @@ grep -q '"/healthz"' \
   src/app.ts            <span class="c"># it's really there</span></pre>
       </div>
       <div class="term" data-step>
-        <div class="bar">loop.sh — the harness</div>
+        <div class="bar">loop.sh · the harness</div>
 <pre><span class="c">#!/usr/bin/env bash</span>
 <span class="k">until</span> ./check.sh; <span class="k">do</span>
   claude -p <span class="p">"Goal in TODO.md. Run ./check.sh,
@@ -578,7 +581,7 @@ grep -q '"/healthz"' \
     --allowedTools <span class="p">"Bash,Read,Edit"</span> \
     --permission-mode acceptEdits
 <span class="k">done</span>
-<span class="k">echo</span> <span class="ok">"DONE — check.sh exited 0"</span></pre>
+<span class="k">echo</span> <span class="ok">"DONE: check.sh exited 0"</span></pre>
       </div>
     </div>
     <p class="lede" data-step style="margin-top:16px"><strong><code style="font-family:var(--mono)">until</code> is the whole orchestration layer.</strong> The exit code is the Definition of Done. The model's opinion never touches the exit condition. <em>Exit 0 = an Increment is born.</em></p>
@@ -589,7 +592,7 @@ grep -q '"/healthz"' \
 <!-- ============ 11 · DEMO ============ -->
 <section class="slide" data-title="Live demo / simulator">
   <div class="inner">
-    <div class="kicker">Fix 14 · Part 4 · <b>watch it run</b> — live demo (this simulator is your backup)</div>
+    <div class="kicker">Fix 14 · Part 4 · <b>watch it run</b> · live demo (this simulator is your backup)</div>
     <div class="term" style="max-width:900px">
       <div class="bar">~/demo · ./loop.sh</div>
 <pre><span class="p">$</span> ./loop.sh
@@ -619,19 +622,19 @@ grep -q '"/healthz"' \
 <!-- ============ 13 · ONE STEP FURTHER ============ -->
 <section class="slide" data-title="One step further">
   <div class="inner">
-    <div class="kicker">Fix 15 · Part 4 · one step further — three patches, five lines</div>
+    <div class="kicker">Fix 15 · Part 4 · one step further · three patches, five lines</div>
     <h2>The loop, one step <span class="tilt">further</span></h2>
     <div class="cols">
       <div class="panel">
         <span class="panel-label">Your ten-liner's three blind spots</span>
         <ul>
-          <li data-step><b>① It retries blind</b> — the agent never hears <em>why</em> the gate said no. Pipe check.sh's output into the next prompt.</li>
-          <li data-step><b>② It retries forever</b> — no budget. Cap the attempts; <b>NOT&nbsp;DONE is an honest result too.</b></li>
-          <li data-step><b>③ It trusts the agent near the gate</b> — <code style="font-family:var(--mono)">chmod 444 check.sh</code>: fix the code, never the check.</li>
+          <li data-step><b>① It retries blind</b>: the agent never hears <em>why</em> the gate said no. Pipe check.sh's output into the next prompt.</li>
+          <li data-step><b>② It retries forever</b>: no budget. Cap the attempts; <b>NOT&nbsp;DONE is an honest result too.</b></li>
+          <li data-step><b>③ It trusts the agent near the gate</b>: <code style="font-family:var(--mono)">chmod 444 check.sh</code>: fix the code, never the check.</li>
         </ul>
       </div>
       <div class="term" data-step>
-        <div class="bar">loop.sh — v2 · feedback + budget + lock</div>
+        <div class="bar">loop.sh · v2 · feedback + budget + lock</div>
 <pre><span class="c">#!/usr/bin/env bash</span>
 chmod 444 check.sh          <span class="c"># ③ lock the gate</span>
 <span class="k">for</span> attempt <span class="k">in</span> 1 2 3 4 5; <span class="k">do</span>  <span class="c"># ② budget</span>
@@ -640,7 +643,7 @@ chmod 444 check.sh          <span class="c"># ③ lock the gate</span>
   <span class="c"># ① feed the failure back in:</span>
   claude -p <span class="p">"Goal in TODO.md. check.sh failed:
 $out
-Fix the code — never the check. Commit."</span> \
+Fix the code, never the check. Commit."</span> \
     --allowedTools <span class="p">"Bash,Read,Edit"</span> \
     --permission-mode acceptEdits
 <span class="k">done</span>
@@ -659,8 +662,8 @@ Fix the code — never the check. Commit."</span> \
     <table class="compare">
       <thead><tr><th style="width:44%">Your ten-liner</th><th>deadreckon.sh</th></tr></thead>
       <tbody>
-        <tr data-step><td>Agent <i>could</i> just edit <code style="font-family:var(--mono)">check.sh</code></td><td><b>dr-gate</b>: a watchdog <b>outside the sandbox</b> holds a per-run secret and re-runs the checks itself — the agent can't stamp its own pass</td></tr>
-        <tr data-step><td>Runs loose in your repo</td><td>Isolated git worktree — your branch untouched until promotion</td></tr>
+        <tr data-step><td>Agent <i>could</i> just edit <code style="font-family:var(--mono)">check.sh</code></td><td><b>dr-gate</b>: a watchdog <b>outside the sandbox</b> holds a per-run secret and re-runs the checks itself; the agent can't stamp its own pass</td></tr>
+        <tr data-step><td>Runs loose in your repo</td><td>Isolated git worktree: your branch untouched until promotion</td></tr>
         <tr data-step><td>Dies with your laptop</td><td>Every turn snapshotted to disk; resume from the last completed turn</td></tr>
         <tr data-step><td>Leaves a transcript to take on faith</td><td>Evidence artifacts: run narrative, decisions, per-file provenance</td></tr>
         <tr data-step><td>You write checks by hand</td><td><span style="font-family:var(--mono);font-size:.92em">deadreckon def-done "sign up, log in, save a drawing"</span> → compiled to executable checks</td></tr>
@@ -679,39 +682,39 @@ Fix the code — never the check. Commit."</span> \
       <div class="panel">
         <span class="panel-label">Skip the definition of done when…</span>
         <ul>
-          <li data-step>You're sitting there watching — <b>you</b> are the gate</li>
-          <li data-step>The output is learning, not an artifact — spikes, exploration</li>
-          <li data-step>"Done" is taste-shaped — naming, tone, design (a judge is right here)</li>
-          <li data-step>The change is smaller than the ceremony — a five-line tweak</li>
+          <li data-step>You're sitting there watching: <b>you</b> are the gate</li>
+          <li data-step>The output is learning, not an artifact: spikes, exploration</li>
+          <li data-step>"Done" is taste-shaped: naming, tone, design (a judge is right here)</li>
+          <li data-step>The change is smaller than the ceremony: a five-line tweak</li>
         </ul>
       </div>
       <div class="panel" style="background:var(--magenta-soft);border-color:var(--magenta)">
         <span class="panel-label" style="color:#8E1450">Write one when…</span>
         <ul>
-          <li data-step>You're walking away — overnight, lunch, the weekend</li>
-          <li data-step>The task repeats — batch migrations, fleets of repos</li>
-          <li data-step>"Done" is fact-shaped — tests green, build passes, endpoint responds</li>
+          <li data-step>You're walking away: overnight, lunch, the weekend</li>
+          <li data-step>The task repeats: batch migrations, fleets of repos</li>
+          <li data-step>"Done" is fact-shaped: tests green, build passes, endpoint responds</li>
           <li data-step>You intend to trust the result <b>without reading the transcript</b></li>
         </ul>
       </div>
     </div>
     <div class="chips">
       <span class="chip shot" data-step><span class="tag">📸 screenshot</span> If you're watching, <b>you</b> are the definition of done. If you're walking away, write one a machine can check.</span>
-      <span class="chip chat" data-step><span class="tag">Chat</span> One task you'd hand to this loop tonight — put it in the chat.</span>
+      <span class="chip chat" data-step><span class="tag">Chat</span> One task you'd hand to this loop tonight: put it in the chat.</span>
     </div>
   </div>
 </section>
 
 <!-- ============ 14 · RECAP ============ -->
-<section class="slide" data-title="Recap — screenshot">
+<section class="slide" data-title="Recap · screenshot">
   <div class="inner">
     <div class="kicker">Fix 18 · recap · <b>📸 screenshot this one</b></div>
     <h2>Five things to keep</h2>
     <div class="takes">
-      <div class="take" data-step>Harnesses stop when the model stops calling tools — <b>a feeling, not a fact</b></div>
-      <div class="take" data-step>Scrum's Definition of Done: written first, checklist, binary, shared — <b>no Done, no Increment</b></div>
-      <div class="take" data-step><code style="font-family:var(--mono)">/goal</code> gives the loop a target, but an LLM judges arrival — <b>opinion</b></div>
-      <div class="take" data-step><code style="font-family:var(--mono)">until ./check.sh</code> makes done an exit code — <b>evidence</b></div>
+      <div class="take" data-step>Harnesses stop when the model stops calling tools: <b>a feeling, not a fact</b></div>
+      <div class="take" data-step>Scrum's Definition of Done: written first, checklist, binary, shared. <b>No Done, no Increment</b></div>
+      <div class="take" data-step><code style="font-family:var(--mono)">/goal</code> gives the loop a target, but an LLM judges arrival: <b>opinion</b></div>
+      <div class="take" data-step><code style="font-family:var(--mono)">until ./check.sh</code> makes done an exit code: <b>evidence</b></div>
       <div class="take" data-step>Match the gate to the stakes: <b>watching vs. walking away</b></div>
     </div>
   </div>
@@ -724,15 +727,15 @@ Fix the code — never the check. Commit."</span> \
     <h2>Tonight, in three steps</h2>
     <div class="stops" style="margin-bottom:22px">
       <div class="stop" data-step><span>Pick one <b>fact-shaped</b> task. Write <b>check.sh before you prompt.</b></span></div>
-      <div class="stop" data-step><span>Run the <b>until-loop</b> with <b>claude -p</b> or <b>codex exec</b> — in a throwaway worktree. When it sticks, graduate to the <b>v2 loop</b>.</span></div>
+      <div class="stop" data-step><span>Run the <b>until-loop</b> with <b>claude -p</b> or <b>codex exec</b>, in a throwaway worktree. When it sticks, graduate to the <b>v2 loop</b>.</span></div>
       <div class="stop" data-step><span>Want the gate outside the agent's reach? <b>deadreckon.sh</b></span></div>
     </div>
     <div class="panel" data-step style="max-width:840px;background:var(--magenta-soft);border-color:var(--magenta)">
       <span class="panel-label" style="color:#8E1450">Tonight was one loop. Shipping is a system.</span>
       <ul>
-        <li><b>Hardcore Agentic Engineering</b> — <i>for builders who ship</i> · Aug 3–21 on Maven · ten live sessions</li>
-        <li>The full discipline: <b>Brief → Steer → Verify</b> — you build <b>prove-it</b>, a harness that survives <code style="font-family:var(--mono)">kill -9</code> and gates "done" behind checks the agent can't reach</li>
-        <li>Enroll at <b style="font-family:var(--mono)">get.specstory.com/agentic-engineering</b> — applies promo code <b style="font-family:var(--mono)">HARDCORE</b> for you</li>
+        <li><b>Hardcore Agentic Engineering</b> · <i>for builders who ship</i> · Aug 3–21 on Maven · ten live sessions</li>
+        <li>The full discipline: <b>Brief → Steer → Verify</b>. You build <b>prove-it</b>, a harness that survives <code style="font-family:var(--mono)">kill -9</code> and gates "done" behind checks the agent can't reach</li>
+        <li>Enroll at <b style="font-family:var(--mono)">get.specstory.com/agentic-engineering</b>. It applies promo code <b style="font-family:var(--mono)">HARDCORE</b> for you</li>
       </ul>
     </div>
   </div>
@@ -748,25 +751,25 @@ Fix the code — never the check. Commit."</span> \
         <div class="tl" data-step>
           <span class="when">Mon · Jul 20</span>
           <h3>Build an environment-aware AI Agent from Scratch</h3>
-          <p>An agent harness isn't a black box — it's a loop you can build yourself in an afternoon. With <b>John Berryman</b> (GitHub Copilot; author, <i>Prompt Engineering for LLMs</i>).</p>
+          <p>An agent harness isn't a black box. It's a loop you can build yourself in an afternoon. With <b>John Berryman</b> (GitHub Copilot; author, <i>Prompt Engineering for LLMs</i>).</p>
         </div>
         <div class="tl" data-step>
           <span class="when">Mon · Jul 27</span>
           <h3>Make Your Repo Agent-Ready: Rules, Docs, Reviews</h3>
-          <p>Most agent failures aren't the model's fault — they're the repo's. With <b>Dan Gerlanc</b> (co-founder, .txt / Outlines).</p>
+          <p>Most agent failures aren't the model's fault. They're the repo's. With <b>Dan Gerlanc</b> (co-founder, .txt / Outlines).</p>
         </div>
       </div>
       <div class="panel" data-step>
-        <span class="panel-label">And for your chart table — the field guide</span>
+        <span class="panel-label">And for your chart table · the field guide</span>
         <ul>
-          <li><b>25 Patterns in Agentic Engineering</b> — free PDF</li>
+          <li><b>25 Patterns in Agentic Engineering</b> · free PDF</li>
           <li>The moves that ship software when the agent writes the code and the human owns the proof</li>
           <li>Drawn from 1,310 captured agent sessions &amp; 4,670 commits</li>
           <li style="font-family:var(--mono);font-size:.78em">specstory.com/books/25-patterns-in-agentic-engineering-book-2026.pdf</li>
         </ul>
       </div>
     </div>
-    <p class="footline" data-step>Watching the recording? Everything lives at <b>maven.com/specstory</b> — lessons, recordings, and the course.</p>
+    <p class="footline" data-step>Watching the recording? Everything lives at <b>maven.com/specstory</b>: lessons, recordings, and the course.</p>
   </div>
 </section>
 
@@ -774,11 +777,11 @@ Fix the code — never the check. Commit."</span> \
 <section class="slide" data-title="Q&A">
   <div class="inner">
     <div class="kicker">Fix 21 · Q&amp;A · next 10 minutes</div>
-    <h2>Questions — <span class="tilt">put them in the chat</span></h2>
-    <p class="lede">👍 the ones you want answered. Specific beats general — bring your actual task.</p>
+    <h2>Questions: <span class="tilt">put them in the chat</span></h2>
+    <p class="lede">👍 the ones you want answered. Specific beats general. Bring your actual task.</p>
     <div class="chips" style="margin-top:26px">
       <span class="chip shot">deadreckon.sh</span>
-      <span class="chip shot">github.com/specstoryai/hardcore-agentic-engineering — this deck + the demo</span>
+      <span class="chip shot">github.com/specstoryai/hardcore-agentic-engineering · this deck + the demo</span>
       <span class="chip shot">greg@specstory.com · @gregce10</span>
     </div>
     <p class="footline">Sources: deadreckon.sh · Ceccarelli, "Goal Engineering" &amp; "The Green Checkmark is Not a Fact" · Scrum Guide 2020 · Claude Code &amp; Codex CLI docs</p>
@@ -791,7 +794,7 @@ Fix the code — never the check. Commit."</span> \
 
 <footer class="chrome-bottom">
   <svg class="plot" id="plot" preserveAspectRatio="none" aria-hidden="true"></svg>
-  <div class="legendline"><span>Dead reckoning: position by known course + checks passed — not by the pilot's word</span><span id="plotLabel">FIX 01 · TITLE</span></div>
+  <div class="legendline"><span>Dead reckoning: position by known course + checks passed, not by the pilot's word</span><span id="plotLabel">FIX 01 · TITLE</span></div>
 </footer>
 
 <script>

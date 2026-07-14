@@ -29,7 +29,7 @@ It's the same idea as [deadreckon](https://deadreckon.sh), stripped to something
 
 | File | What it is |
 |---|---|
-| [`definition-of-done-lightning-lesson.html`](definition-of-done-lightning-lesson.html) | The full deck, [published here](https://specstoryai.github.io/hardcore-agentic-engineering/). A single self-contained HTML file. Open it in a browser and present: `←`/`→` navigate, `G` shows the slide grid, `T` runs the 30-minute timer, `F` goes fullscreen. |
+| [`definition-of-done-lightning-lesson.html`](definition-of-done-lightning-lesson.html) | The full deck, [published here](https://specstoryai.github.io/hardcore-agentic-engineering/definition-of-done/). A single self-contained HTML file. Open it in a browser and present: `←`/`→` navigate, `G` shows the slide grid, `T` runs the 30-minute timer, `F` goes fullscreen. |
 | [`dod-demo/`](https://github.com/specstoryai/dod-demo) | The live demo, as a git submodule. Two Claudes run the same prompt side by side: one alone (ships a bug and calls it done), one inside the gated loop (gets pushed back until the check passes). |
 
 The demo repo has its own README with single-run and side-by-side instructions, including a deterministic `--mock` mode for rehearsal. If you cloned this repo without `--recurse-submodules`, run `git submodule update --init` to pull it in.

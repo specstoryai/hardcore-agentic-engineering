@@ -36,7 +36,7 @@ Three free one-hour sessions in July 2026. Each stands alone and teaches one pie
 
 | Date | Lesson | Materials |
 |---|---|---|
-| Tue, Jul 14 | [Build a Definition of Done for Claude Code and Codex](https://maven.com/p/e72330/build-a-definition-of-done-for-claude-code-and-codex): why agents say "done" when they aren't, and the ten-line loop that makes done an exit code | [slides](https://specstoryai.github.io/hardcore-agentic-engineering/) · [`lightning-lessons/definition-of-done/`](lightning-lessons/definition-of-done/) |
+| Tue, Jul 14 | [Build a Definition of Done for Claude Code and Codex](https://maven.com/p/e72330/build-a-definition-of-done-for-claude-code-and-codex): why agents say "done" when they aren't, and the ten-line loop that makes done an exit code | [slides](https://specstoryai.github.io/hardcore-agentic-engineering/definition-of-done/) · [`lightning-lessons/definition-of-done/`](lightning-lessons/definition-of-done/) |
 | Mon, Jul 20 | [Build an environment-aware AI Agent from Scratch](https://maven.com/p/2ffede/build-an-environment-aware-ai-agent-from-scratch): an agent harness is a loop you can build yourself in an afternoon. With John Berryman (GitHub Copilot; author, *Prompt Engineering for LLMs*) | coming soon |
 | Mon, Jul 27 | [Make Your Repo Agent-Ready: Rules, Docs, Reviews](https://maven.com/p/d68fd1/make-your-repo-agent-ready-rules-docs-reviews): most agent failures aren't the model's fault, they're the repo's. With Dan Gerlanc (co-founder, .txt/Outlines) | coming soon |
 

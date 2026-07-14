@@ -356,9 +356,25 @@ code{font-family:var(--mono);font-size:.95em}
 <!-- ============ 3 · HOOK ============ -->
 <section class="slide" data-title="Hook">
   <div class="inner">
-    <div class="kicker">Fix 03 · the hook</div>
-    <p class="big">Everyone assumes the agent stops <em>because the work is done.</em></p>
-    <p class="big" data-step style="margin-top:20px">It stops because it <em>stopped calling tools.</em></p>
+    <div class="kicker">Fix 03 · the hook · don't take my word for it</div>
+    <div class="cols">
+      <div>
+        <p class="big">Everyone assumes the agent stops <em>because the work is done.</em></p>
+        <p class="big" data-step style="margin-top:20px">It stops because it <em>stopped calling tools.</em></p>
+      </div>
+      <div class="term" data-step style="font-size:clamp(.72rem,1.15vw,.98rem)">
+        <div class="bar">openai/codex · codex-rs/core/src/session/turn.rs · run_turn()</div>
+<pre><span class="c">// every item the model streams either</span>
+<span class="c">// schedules a tool call, or doesn't:</span>
+needs_follow_up |= output_result.needs_follow_up; <span class="c">// :2134</span>
+
+<span class="k">if</span> !needs_follow_up {
+    <span class="k">break</span>;  <span class="mg">// ← no tool call. the run ends. :373</span>
+}
+
+<span class="k">Ok</span>(last_agent_message)  <span class="c">// "done" is this string :460</span></pre>
+      </div>
+    </div>
     <div class="chips" data-step>
       <span class="chip chat"><span class="tag">Chat</span> What's the last thing your agent claimed was "done"… that wasn't? Put it in the chat.</span>
     </div>

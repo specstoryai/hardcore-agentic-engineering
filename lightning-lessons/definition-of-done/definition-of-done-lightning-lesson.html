@@ -701,10 +701,31 @@ Fix the code, never the check. Commit."</span> \
   </div>
 </section>
 
+<!-- ============ 13b · DEADRECKON DEF-DONE DEMO ============ -->
+<section class="slide" data-title="deadreckon def-done · demo">
+  <div class="inner">
+    <div class="kicker">Fix 17 · <b>watch it run</b> · deadreckon writes the checks for you</div>
+    <h2>Say "done" in English. Get a gate.</h2>
+    <div class="term" style="max-width:940px">
+      <div class="bar">~/app · deadreckon def-done</div>
+<pre><span class="p">$</span> deadreckon def-done <span class="p">"tests pass, dist/app.js exists, /healthz is served"</span>
+<span data-step><span class="c">compiling plain English → .deadreckon/acceptance.yaml</span>
+</span><span data-step>checks:
+  - kind: <span class="k">build_success</span>     <span class="c"># npm test, green</span>
+  - kind: <span class="k">file_exists</span>       <span class="c"># {working_dir}/dist/app.js</span>
+  - kind: <span class="k">content_match</span>     <span class="c"># "/healthz" in src/app.ts</span>
+</span><span data-step><span class="p">$</span> deadreckon start <span class="p">"Goal in TODO.md"</span>
+<span class="c">dr-gate re-runs these checks itself and signs the pass. the agent can't reach either.</span>
+</span><span data-step><span class="ok">✓ gate passed · run promoted</span></span></pre>
+    </div>
+    <p class="lede" data-step style="margin-top:16px">The same three check species you just wrote by hand in check.sh. <strong>Here the English is the source, and the gate lives outside the agent's reach.</strong></p>
+  </div>
+</section>
+
 <!-- ============ 13 · WHEN NOT TO ============ -->
 <section class="slide" data-title="P5 · When to skip it">
   <div class="inner">
-    <div class="kicker">Fix 17 · <b>Part 5</b> · you don't always need one</div>
+    <div class="kicker">Fix 18 · <b>Part 5</b> · you don't always need one</div>
     <h2>When to skip the ceremony</h2>
     <div class="cols">
       <div class="panel">
@@ -736,7 +757,7 @@ Fix the code, never the check. Commit."</span> \
 <!-- ============ 14 · RECAP ============ -->
 <section class="slide" data-title="Recap · screenshot">
   <div class="inner">
-    <div class="kicker">Fix 18 · recap</div>
+    <div class="kicker">Fix 19 · recap</div>
     <h2>Five things to keep</h2>
     <div class="takes">
       <div class="take" data-step>Harnesses stop when the model stops calling tools: <b>a feeling, not a fact</b></div>
@@ -751,7 +772,7 @@ Fix the code, never the check. Commit."</span> \
 <!-- ============ 15 · TONIGHT + PITCH ============ -->
 <section class="slide" data-title="Tonight + the course">
   <div class="inner">
-    <div class="kicker">Fix 19 · try it tonight → go deeper</div>
+    <div class="kicker">Fix 20 · try it tonight → go deeper</div>
     <h2>Tonight, in three steps</h2>
     <div class="stops" style="margin-bottom:22px">
       <div class="stop" data-step><span>Pick one <b>fact-shaped</b> task. Write <b>check.sh before you prompt.</b></span></div>
@@ -772,7 +793,7 @@ Fix the code, never the check. Commit."</span> \
 <!-- ============ 17 · REST OF THE SERIES + BOOK ============ -->
 <section class="slide" data-title="Next fixes + the book">
   <div class="inner">
-    <div class="kicker">Fix 20 · the next two fixes are already plotted · <b>all free</b></div>
+    <div class="kicker">Fix 21 · the next two fixes are already plotted · <b>all free</b></div>
     <h2>Two more lessons this month</h2>
     <div class="cols">
       <div class="timeline">
@@ -807,7 +828,7 @@ Fix the code, never the check. Commit."</span> \
 <!-- ============ 16 · Q&A ============ -->
 <section class="slide" data-title="Q&A">
   <div class="inner">
-    <div class="kicker">Fix 21 · Q&amp;A · next 10 minutes</div>
+    <div class="kicker">Fix 22 · Q&amp;A · next 10 minutes</div>
     <h2>Questions: <span class="tilt">put them in the chat</span></h2>
     <p class="lede">👍 the ones you want answered. Specific beats general. Bring your actual task.</p>
     <div class="chips" style="margin-top:26px">

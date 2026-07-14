@@ -272,21 +272,6 @@ table.compare .verdict.ev{color:var(--magenta)}
 .term pre [data-step]{display:inline;transform:none}
 code{font-family:var(--mono);font-size:.95em}
 
-/* notes drawer */
-#notesDrawer{
-  position:fixed;left:0;right:0;bottom:64px;z-index:45;
-  background:var(--ink);color:#E9EFF2;
-  max-height:34vh;overflow-y:auto;
-  padding:16px 30px 18px;
-  font-size:14.5px;line-height:1.6;
-  transform:translateY(110%);transition:transform .25s ease;
-  border-top:3px solid var(--magenta);
-}
-#notesDrawer.open{transform:none}
-#notesDrawer .nlabel{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9DB3C6;display:block;margin-bottom:8px}
-#notesDrawer b{color:#F3D9E6}
-.slide .notes{display:none}
-
 /* overview */
 #overview{
   position:fixed;inset:0;z-index:60;background:rgba(20,38,59,.94);
@@ -313,7 +298,7 @@ code{font-family:var(--mono);font-size:.95em}
 <header class="chrome-top">
   <span class="brand">DEF-DONE <em>/</em> MAVEN LIGHTNING LESSON</span>
   <span class="spacer"></span>
-  <span class="keyhint">← → navigate · N notes · G grid · T timer · F fullscreen</span>
+  <span class="keyhint">← → navigate · G grid · T timer · F fullscreen</span>
   <span class="fixcount" id="fixCount">FIX 01 / 16</span>
   <button class="clock" id="clock" title="T start/pause · R reset">30:00</button>
 </header>
@@ -328,7 +313,6 @@ code{font-family:var(--mono);font-size:.95em}
     <p class="lede">Stop letting the agent grade its own homework. Drive it non-interactively with a loop that <strong>proves</strong> it finished — with an exit code, not a feeling.</p>
     <p class="footline">[YOUR NAME] · [ONE-LINE CREDENTIAL] · [DATE]</p>
   </div>
-  <aside class="notes"><b>0:00.</b> Twenty seconds only. Name, one credential, go. Maven data: intros past 1 min lose people. Greet by name in chat while people join, start on time.</aside>
 </section>
 
 <!-- ============ 2 · HOOK ============ -->
@@ -341,7 +325,6 @@ code{font-family:var(--mono);font-size:.95em}
       <span class="chip chat"><span class="tag">Chat</span> What's the last thing your agent claimed was "done"… that wasn't? Put it in the chat.</span>
     </div>
   </div>
-  <aside class="notes"><b>0:20–2:00.</b> Tell YOUR story here, STAR shape, 45–60s: the run that announced success — green checkmark, confident summary — and the thing didn't work. Then reveal line two. Then the no-fail chat question; read 2–3 answers aloud. This doubles as your audience read.</aside>
 </section>
 
 <!-- ============ 3 · COURSE ============ -->
@@ -358,7 +341,6 @@ code{font-family:var(--mono);font-size:.95em}
     </div>
     <p class="footline" data-step>Promise: by stop 04 you have something you can run tonight.</p>
   </div>
-  <aside class="notes"><b>2:00–3:00.</b> One breath per stop. Land the promise line and move — the map earns you permission to go fast later.</aside>
 </section>
 
 <!-- ============ 4 · HARNESS 101 ============ -->
@@ -376,7 +358,6 @@ code{font-family:var(--mono);font-size:.95em}
     <p class="lede" data-step>The model is a text function — it can <em>ask</em> to run a test; it can't run one. The <strong>harness</strong> is the program wrapped around it: it executes the tool calls, feeds results back… <strong>and decides when to loop and when to stop.</strong></p>
     <p class="footline" data-step>Claude Code · Codex CLI · Gemini CLI · Copilot CLI — different badges, same job. "Agent" = model + harness.</p>
   </div>
-  <aside class="notes"><b>3:00–4:00.</b> Hard cap: one minute. Pure vocabulary so nobody gets lost: model = brain, harness = hands + the loop. Optional pulse-check: "🖐 in chat if you've run Claude Code or Codex." The last phrase — <i>decides when to stop</i> — is the door into the next slide.</aside>
 </section>
 
 <!-- ============ 5 · HOW HARNESSES STOP ============ -->
@@ -398,7 +379,6 @@ code{font-family:var(--mono);font-size:.95em}
     <p class="lede" data-step>Claude Code, Codex, Gemini CLI, Copilot — different products, <strong>same while-loop</strong>. Reason, act, observe, repeat…</p>
     <p class="lede" data-step style="margin-top:12px">…and the run ends <strong>the moment the model replies without calling a tool.</strong> Nothing checks anything at that boundary by default.</p>
   </div>
-  <aside class="notes"><b>3:00–5:00.</b> Build the diagram left to right. Punch the exit condition: the stop is a property of the model's OUTPUT, not of the WORK. This is the setup for everything else.</aside>
 </section>
 
 <!-- ============ 5 · DONE IS A FEELING ============ -->
@@ -424,7 +404,6 @@ code{font-family:var(--mono);font-size:.95em}
       </div>
     </div>
   </div>
-  <aside class="notes"><b>5:00–7:00.</b> Credit Greg Ceccarelli's essay "The Green Checkmark is Not a Fact" for the framing. Ask for nods in chat on each smell. Cue the screenshot chip out loud.</aside>
 </section>
 
 <!-- ============ 6 · DOD ORIGIN ============ -->
@@ -450,7 +429,6 @@ code{font-family:var(--mono);font-size:.95em}
       </div>
     </div>
   </div>
-  <aside class="notes"><b>7:00–9:00.</b> Keep the history to 60s. The checklist panel is the visual anchor — point at it: every line is checkable by ANYONE, before the work started.</aside>
 </section>
 
 <!-- ============ 7 · WHY IT WORKED ============ -->
@@ -475,7 +453,6 @@ code{font-family:var(--mono);font-size:.95em}
     </div>
     <p class="footline" data-step>Increment ↔ the diff &nbsp;·&nbsp; developer says "done" ↔ model says "done" &nbsp;·&nbsp; DoD ↔ executable checks &nbsp;·&nbsp; Sprint Review gate ↔ the loop's exit condition</p>
   </div>
-  <aside class="notes"><b>9:00–11:00.</b> The bridge line is the emotional midpoint of the talk — slow down for it. The mapping footline sets up Part 4 word-for-word.</aside>
 </section>
 
 <!-- ============ 8 · GOALS ARRIVE ============ -->
@@ -502,7 +479,6 @@ code{font-family:var(--mono);font-size:.95em}
     </div>
     <p class="lede" data-step style="margin-top:18px">Real progress: the loop finally has a <strong>destination</strong>, and the harness won't let the model wander off. But look who decides you've arrived…</p>
   </div>
-  <aside class="notes"><b>11:00–13:30.</b> This is the "first introduction" beat: goal engineering framed the practice; the CLIs shipped the mechanism. End on the cliffhanger question — it's the pivot to the centerpiece slide.</aside>
 </section>
 
 <!-- ============ 9 · WHO GRADES ============ -->
@@ -528,7 +504,6 @@ code{font-family:var(--mono);font-size:.95em}
       <span class="chip chat" data-step><span class="tag">Chat</span> Which of your recurring agent tasks has a fact-shaped "done"? Drop one in.</span>
     </div>
   </div>
-  <aside class="notes"><b>13:30–16:00.</b> SPEND TIME HERE. Be fair: judges are the right tool for taste-shaped criteria — the failure mode is using an opinion where a fact was available. The chat prompt seeds the demo: pick one answer and reference it on the next slide.</aside>
 </section>
 
 <!-- ============ 10 · THE LOOP ============ -->
@@ -561,7 +536,6 @@ grep -q '"/healthz"' \
     <p class="lede" data-step style="margin-top:16px"><strong><code style="font-family:var(--mono)">until</code> is the whole orchestration layer.</strong> The exit code is the Definition of Done. The model's opinion never touches the exit condition. <em>Exit 0 = an Increment is born.</em></p>
     <p class="footline" data-step>Codex flavor: swap the middle line for&nbsp; <b>codex exec --full-auto "Goal in TODO.md. Run ./check.sh, fix the first failure, commit."</b></p>
   </div>
-  <aside class="notes"><b>16:00–19:00.</b> Read check.sh aloud — note it's the same three check species deadreckon compiles from plain English: run the tests, file exists, content matches. Be honest: checks run BETWEEN turns; inside a turn the agent works however it likes. Mention caps (max loop count / spend) belong in production.</aside>
 </section>
 
 <!-- ============ 11 · DEMO ============ -->
@@ -592,7 +566,6 @@ grep -q '"/healthz"' \
     <p data-step style="margin-top:18px"><span class="stamp inkpad">Done · exit 0 · stamped by the check, not the model</span></p>
     <p class="lede" data-step style="margin-top:16px">I didn't decide it was done. The model didn't decide. <strong>The exit code decided.</strong></p>
   </div>
-  <aside class="notes"><b>19:00–23:00.</b> Alt-tab to the REAL terminal if it's working: small repo, check.sh failing two ways, loop pre-warmed, font ≥20pt, throwaway dir (you're auto-approving edits). Narrate turns exactly like the simulator lines. Show git log --oneline at the end. If the demo gods are angry, step this simulator with → instead.</aside>
 </section>
 
 <!-- ============ 13 · ONE STEP FURTHER ============ -->
@@ -628,7 +601,6 @@ Fix the code — never the check. Commit."</span> \
     </div>
     <p class="footline" data-step>Feedback → deadreckon's per-turn gate report · the budget → its spend caps &amp; resumable turns · the lock → dr-gate. <b>You just reinvented the next slide.</b></p>
   </div>
-  <aside class="notes"><b>20:30–22:00.</b> Answer the "okay, what's next" itch before deadreckon: feedback, budget, tamper-proofing — still one file. ① is the big practical win: agents converge in fewer turns when the failure text is in the prompt. Be honest that ③ is theater against a determined agent (it can chmod +w) — which IS the segue: "to really lock the gate, it has to live where the agent can't reach. Next slide."</aside>
 </section>
 
 <!-- ============ 14 · DEADRECKON ============ -->
@@ -648,7 +620,6 @@ Fix the code — never the check. Commit."</span> \
     </table>
     <p class="footline" data-step>curl -fsSL https://deadreckon.sh/install.sh | sh &nbsp;·&nbsp; open source · MIT · supervises the CLI you already use (Claude Code, Codex, Gemini, Copilot…)</p>
   </div>
-  <aside class="notes"><b>23:00–25:00.</b> Frame as graduation, not a pitch: "everything on the right is the answer to a way your ten-liner can be fooled." The dr-gate row is the headline — the agent literally cannot reach the thing that says done.</aside>
 </section>
 
 <!-- ============ 13 · WHEN NOT TO ============ -->
@@ -681,7 +652,6 @@ Fix the code — never the check. Commit."</span> \
       <span class="chip chat" data-step><span class="tag">Chat</span> One task you'd hand to this loop tonight — put it in the chat.</span>
     </div>
   </div>
-  <aside class="notes"><b>25:00–27:00.</b> This slide buys credibility — you're teaching judgment, not selling a hammer. The heuristic chip is the most-quoted line of the talk; say it twice.</aside>
 </section>
 
 <!-- ============ 14 · RECAP ============ -->
@@ -697,7 +667,6 @@ Fix the code — never the check. Commit."</span> \
       <div class="take" data-step>Match the gate to the stakes: <b>watching vs. walking away</b></div>
     </div>
   </div>
-  <aside class="notes"><b>27:00–28:00.</b> Announce the screenshot moment before you start reading. One breath per line.</aside>
 </section>
 
 <!-- ============ 15 · TONIGHT + PITCH ============ -->
@@ -719,7 +688,6 @@ Fix the code — never the check. Commit."</span> \
       </ul>
     </div>
   </div>
-  <aside class="notes"><b>26:30–28:30.</b> The segue, verbatim: "Everything tonight fits in ten lines. Shipping with agents doesn't — that's the course." Maven's data: a promo code lifts conversion ~20%, and the pitch belongs HERE, before Q&A, while energy is highest. Say the code out loud, leave the QR up 15 seconds, then open the floor. Swap the bracketed module list for your real syllabus.</aside>
 </section>
 
 <!-- ============ 16 · Q&A ============ -->
@@ -735,12 +703,9 @@ Fix the code — never the check. Commit."</span> \
     </div>
     <p class="footline">Sources: deadreckon.sh · Ceccarelli, "Goal Engineering" &amp; "The Green Checkmark is Not a Fact" · Scrum Guide 2020 · Claude Code &amp; Codex CLI docs</p>
   </div>
-  <aside class="notes"><b>30:00+.</b> Q&A is Maven's most-valued segment — answer with nuance and specifics. Prepped answers: gaming check.sh (chmod 444 / checks outside workdir → exactly why dr-gate exists) · flaky tests = flaky gate · run auto-approve modes in a container · LLM judge as a SECOND gate after checks pass · add loop/spend caps in production · "isn't this just TDD?" — largely, but the checked-in check survives an unattended overnight run.</aside>
 </section>
 
 </main>
-
-<div id="notesDrawer" aria-live="polite"><span class="nlabel">Speaker notes — N to hide</span><div id="notesBody"></div></div>
 
 <div id="overview" role="dialog" aria-label="Slide overview"><div class="grid" id="ovGrid"></div></div>
 
@@ -803,7 +768,6 @@ Fix the code — never the check. Commit."</span> \
     fixCount.textContent = "FIX " + String(cur+1).padStart(2,"0") + " / " + N;
     location.hash = "/" + (cur+1);
     drawPlot();
-    syncNotes();
     markOverview();
   }
   function next(){
@@ -816,15 +780,6 @@ Fix the code — never the check. Commit."</span> \
     if (on.length){ on[on.length-1].classList.remove("on"); return; }
     if (cur > 0) go(cur-1, true);
   }
-
-  /* ---------- notes ---------- */
-  var drawer = document.getElementById("notesDrawer");
-  var notesBody = document.getElementById("notesBody");
-  function syncNotes(){
-    var n = slides[cur].querySelector(".notes");
-    notesBody.innerHTML = n ? n.innerHTML : "<i>No notes for this slide.</i>";
-  }
-  function toggleNotes(){ drawer.classList.toggle("open"); }
 
   /* ---------- overview ---------- */
   var overview = document.getElementById("overview");
@@ -869,7 +824,6 @@ Fix the code — never the check. Commit."</span> \
       case "ArrowLeft": case "PageUp": e.preventDefault(); prev(); break;
       case "Home": go(0); break;
       case "End": go(N-1); break;
-      case "n": case "N": toggleNotes(); break;
       case "g": case "G": toggleOverview(); break;
       case "t": case "T": toggleTimer(); break;
       case "r": case "R": resetTimer(); break;
@@ -877,7 +831,6 @@ Fix the code — never the check. Commit."</span> \
         if (document.fullscreenElement) document.exitFullscreen();
         else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
         break;
-      case "Escape": drawer.classList.remove("open"); break;
     }
   });
   document.getElementById("deck").addEventListener("click", function(e){
@@ -897,7 +850,6 @@ Fix the code — never the check. Commit."</span> \
   fixCount.textContent = "FIX " + String(cur+1).padStart(2,"0") + " / " + N;
   location.hash = "/" + (cur+1);
   drawPlot();
-  syncNotes();
   markOverview();
 })();
 </script>

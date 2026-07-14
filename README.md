@@ -1,16 +1,13 @@
 # Hardcore Agentic Engineering
 
+<p align="center">
+  <a href="https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship"><img src="assets/maven-logo.png" alt="Maven" width="180"></a>
+</p>
+
 <p align="center"><strong>For builders who ship.</strong></p>
 
 <p align="center">
-Free lightning lessons from<br>
-<a href="https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship">Hardcore Agentic Engineering</a>, a three-week Maven course on getting real work<br>
-out of coding agents and proving that work is correct.
-</p>
-
-<p align="center">
-<strong>The course runs August 3&ndash;21, 2026.</strong><br>
-<a href="https://get.specstory.com/agentic-engineering"><strong>Register here</strong></a> (the link applies promo code <code>HARDCORE</code> for you).
+Free lightning lessons from <a href="https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship">Hardcore Agentic Engineering</a>, a three-week Maven course on getting real work out of coding agents and proving that work is correct. The course runs <strong>August 3&ndash;21, 2026</strong>. <a href="https://get.specstory.com/agentic-engineering"><strong>Register here</strong></a>: the link applies promo code <code>HARDCORE</code> for you.
 </p>
 
 ---

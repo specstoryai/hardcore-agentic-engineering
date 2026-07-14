@@ -1,0 +1,16 @@
+{
+  "name": "dod-demo",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "A tiny harness of harnesses: drive a coding agent until a real check (the definition of done) passes. The agent works in an isolated workspace and cannot see the gate. Mirrors deadreckon.",
+  "scripts": {
+    "harness": "node harness.mjs",
+    "harness:mock": "node harness.mjs --mock",
+    "vanilla": "node vanilla.mjs",
+    "vanilla:mock": "node vanilla.mjs --mock",
+    "compare": "./demo-compare.sh",
+    "compare:mock": "./demo-compare.sh --mock",
+    "ship": "./ship.sh"
+  }
+}

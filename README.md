@@ -1,14 +1,12 @@
+<a href="https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship"><img src="assets/maven-logo.png" alt="Maven" width="150" align="left" hspace="18"></a>
+
 # Hardcore Agentic Engineering
 
-<p align="center">
-  <a href="https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship"><img src="assets/maven-logo.png" alt="Maven" width="180"></a>
-</p>
+#### For builders who ship.
 
-<p align="center"><strong>For builders who ship.</strong></p>
+<br clear="left">
 
-<p align="center">
-Free lightning lessons from <a href="https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship">Hardcore Agentic Engineering</a>, a three-week Maven course on getting real work out of coding agents and proving that work is correct. The course runs <strong>August 3&ndash;21, 2026</strong>. <a href="https://get.specstory.com/agentic-engineering"><strong>Register here</strong></a>: the link applies promo code <code>HARDCORE</code> for you.
-</p>
+Free lightning lessons from [Hardcore Agentic Engineering](https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship), a three-week Maven course on getting real work out of coding agents and proving that work is correct. The course runs **August 3&ndash;21, 2026**. **[Register here](https://get.specstory.com/agentic-engineering)**: the link applies promo code `HARDCORE` for you.
 
 ---
 
@@ -44,13 +42,11 @@ Three free one-hour sessions in July 2026. Each stands alone and teaches one pie
 
 ## Using this repo
 
-The demos live in git submodules, so clone with:
-
 ```bash
-git clone --recurse-submodules https://github.com/specstoryai/hardcore-agentic-engineering.git
+git clone https://github.com/specstoryai/hardcore-agentic-engineering.git
 ```
 
-Each lesson folder has its own README explaining the deck and how to run the demo. The decks are single self-contained HTML files. Open one in a browser and present.
+Everything is in the clone, demos included. Each lesson folder has its own README explaining the deck and how to run the demo. The decks are single self-contained HTML files. Open one in a browser and present.
 
 ## Further reading
 

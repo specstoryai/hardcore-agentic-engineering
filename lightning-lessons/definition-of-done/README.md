@@ -3,7 +3,7 @@
 <p align="center"><strong>Stop letting the agent grade its own homework.</strong></p>
 
 <p align="center">
-A 30-minute Maven lightning lesson on why coding agents say "done" when they aren't,<br>
+A one-hour Maven lightning lesson on why coding agents say "done" when they aren't,<br>
 and the smallest possible loop that makes "done" an exit code instead of a feeling.
 </p>
 
@@ -29,7 +29,7 @@ It's the same idea as [deadreckon](https://deadreckon.sh), stripped to something
 
 | File | What it is |
 |---|---|
-| [`definition-of-done-lightning-lesson.html`](definition-of-done-lightning-lesson.html) | The full deck, [published here](https://specstoryai.github.io/hardcore-agentic-engineering/definition-of-done/). A single self-contained HTML file. Open it in a browser and present: `←`/`→` navigate, `G` shows the slide grid, `T` runs the 30-minute timer, `F` goes fullscreen. |
+| [`definition-of-done-lightning-lesson.html`](definition-of-done-lightning-lesson.html) | The full deck, [published here](https://specstoryai.github.io/hardcore-agentic-engineering/definition-of-done/). A single self-contained HTML file. Open it in a browser and present: `←`/`→` navigate, `G` shows the slide grid, `T` runs the 40-minute timer, `F` goes fullscreen. |
 | [`dod-demo/`](dod-demo/) | The live demo. Two Claudes run the same prompt side by side: one alone (ships a bug and calls it done), one inside the gated loop (gets pushed back until the check passes). |
 
 The demo folder has its own README with single-run and side-by-side instructions, including a deterministic `--mock` mode for rehearsal. Zero dependencies, plain Node.

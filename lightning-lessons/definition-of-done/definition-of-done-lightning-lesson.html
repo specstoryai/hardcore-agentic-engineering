@@ -343,7 +343,34 @@ code{font-family:var(--mono);font-size:.95em}
   </div>
 </section>
 
-<!-- ============ 4 · HARNESS 101 ============ -->
+<!-- ============ 4 · WHAT'S AN AGENT ============ -->
+<section class="slide" data-title="New here? Agent 101">
+  <div class="inner">
+    <div class="kicker">Fix 00 · <b>Part 1</b> · agent 101 — never run one? sixty seconds and you're caught up</div>
+    <h2>A coding agent is a <span class="tilt">conversation with hands</span></h2>
+    <div class="cols">
+      <div>
+        <p class="lede">Claude Code and Codex are terminal programs. You type a request in plain English; an AI <strong>edits your files and runs your commands</strong> to fulfill it.</p>
+        <p class="lede" data-step style="margin-top:14px">Each turn, the model answers with one of two things: <strong>words</strong>, or a <strong>tool call</strong> — "run this command," "edit this file." The program executes the call and hands back the result.</p>
+      </div>
+      <div class="term" data-step>
+        <div class="bar">~/project · claude</div>
+<pre><span class="p">&gt;</span> add a /healthz endpoint
+
+<span class="c">⚙ tool call:</span> <span class="k">Read</span> src/app.ts
+<span class="c">⚙ tool call:</span> <span class="k">Edit</span> src/app.ts
+<span class="c">⚙ tool call:</span> <span class="k">Bash</span> npm test
+<span class="c">   → 14 passing</span>
+
+<span class="ok">Done!</span> Added /healthz and the
+tests pass. <span class="c">← just words. no tool call.</span></pre>
+      </div>
+    </div>
+    <p class="footline" data-step>Hold on to that last line — words, no tool call. It's about to matter a lot.</p>
+  </div>
+</section>
+
+<!-- ============ 5 · HARNESS 101 ============ -->
 <section class="slide" data-title="Harness 101">
   <div class="inner">
     <div class="kicker">Fix 00 · <b>Part 1</b> · harness 101 — sixty seconds of vocabulary</div>

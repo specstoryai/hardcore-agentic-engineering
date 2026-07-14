@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build a Definition of Done for Claude Code &amp; Codex — Lightning Lesson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,500;0,700;0,800;1,500;1,700;1,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --water:#ECF3EF;
+  --water-deep:#E2ECE6;
+  --graticule:rgba(20,38,59,.075);
+  --ink:#14263B;
+  --ink-soft:#46607C;
+  --ink-faint:#7E93A8;
+  --magenta:#C41E6A;
+  --magenta-soft:#F3D9E6;
+  --buff:#F1E5C6;
+  --buff-line:#D9C48F;
+  --screen:#0F1D30;
+  --screen-line:#24384F;
+  --phosphor:#CFE7DA;
+  --phosphor-dim:#7E99A8;
+  --ok:#2E9E6B;
+  --bad:#D6484A;
+  --serif:"Besley", Georgia, "Times New Roman", serif;
+  --sans:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:
+    linear-gradient(rgba(236,243,239,0) 0 0),
+    repeating-linear-gradient(0deg, var(--graticule) 0 1px, transparent 1px 110px),
+    repeating-linear-gradient(90deg, var(--graticule) 0 1px, transparent 1px 110px),
+    radial-gradient(120% 90% at 50% 0%, var(--water) 55%, var(--water-deep) 100%);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--magenta);text-decoration-thickness:1px;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--magenta);outline-offset:3px;border-radius:2px}
+
+/* ---------- chrome ---------- */
+.chrome-top{
+  position:fixed;inset:0 0 auto 0;height:52px;z-index:40;
+  display:flex;align-items:center;gap:18px;
+  padding:0 26px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);
+  border-bottom:1px solid rgba(20,38,59,.16);
+  background:rgba(236,243,239,.82);backdrop-filter:blur(3px);
+}
+.chrome-top .brand{font-weight:600;color:var(--ink)}
+.chrome-top .brand em{font-style:normal;color:var(--magenta)}
+.chrome-top .spacer{flex:1}
+.fixcount{font-weight:600;color:var(--ink)}
+.clock{
+  font-weight:600;min-width:74px;text-align:right;color:var(--ink);
+  border:1px solid rgba(20,38,59,.25);border-radius:3px;padding:4px 10px;letter-spacing:.1em;
+}
+.clock.running{border-color:var(--ink)}
+.clock.low{color:var(--magenta);border-color:var(--magenta)}
+.keyhint{color:var(--ink-faint);letter-spacing:.08em;text-transform:none}
+
+.chrome-bottom{
+  position:fixed;inset:auto 0 0 0;height:64px;z-index:40;
+  padding:8px 26px 10px;
+  background:rgba(236,243,239,.82);backdrop-filter:blur(3px);
+  border-top:1px solid rgba(20,38,59,.16);
+}
+.plot{width:100%;height:30px;display:block}
+.plot .course-done{stroke:var(--ink);stroke-width:2;fill:none}
+.plot .course-ahead{stroke:var(--ink-faint);stroke-width:1.5;stroke-dasharray:2 7;fill:none}
+.plot .fixpt{fill:var(--water);stroke:var(--ink-soft);stroke-width:1.4}
+.plot .fixpt.done{fill:var(--ink);stroke:var(--ink)}
+.plot .fixpt.here{fill:var(--magenta);stroke:var(--magenta)}
+.plot .ring{fill:none;stroke:var(--magenta);stroke-width:1.4;opacity:.55}
+.plot text{font-family:var(--mono);font-size:9px;fill:var(--ink-faint);letter-spacing:.1em}
+.legendline{
+  display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
+  margin-top:2px;
+}
+
+/* ---------- deck & slides ---------- */
+#deck{position:fixed;inset:52px 0 64px 0;overflow:hidden}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:34px clamp(30px,6vw,92px) 30px;
+  opacity:0;visibility:hidden;transform:translateY(14px);
+  transition:opacity .32s ease, transform .32s ease, visibility 0s linear .32s;
+  overflow-y:auto;
+}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .32s ease, transform .32s ease}
+.inner{width:min(1180px,100%);margin:0 auto}
+
+.kicker{
+  font-family:var(--mono);font-size:clamp(11px,1.1vw,13px);
+  letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);
+  display:flex;align-items:center;gap:14px;margin-bottom:clamp(12px,2vh,24px);
+}
+.kicker::before{content:"";width:34px;height:1px;background:var(--magenta)}
+.kicker b{color:var(--magenta);font-weight:600}
+
+h1{
+  font-family:var(--serif);font-weight:800;
+  font-size:clamp(2.6rem,6.4vw,5.4rem);
+  line-height:1.02;letter-spacing:-.015em;
+  margin-bottom:clamp(14px,2.5vh,26px);
+}
+h2{
+  font-family:var(--serif);font-weight:800;
+  font-size:clamp(1.9rem,4.4vw,3.5rem);
+  line-height:1.06;letter-spacing:-.012em;
+  margin-bottom:clamp(14px,2.6vh,28px);
+}
+h1 .tilt, h2 .tilt{font-style:italic;font-weight:700;color:var(--magenta)}
+.lede{font-size:clamp(1.1rem,1.9vw,1.5rem);line-height:1.5;color:var(--ink-soft);max-width:56ch}
+.lede strong{color:var(--ink)}
+p{line-height:1.55}
+
+.big{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(1.7rem,3.6vw,2.9rem);line-height:1.18;
+  max-width:24ch;
+}
+.big em{font-style:italic;color:var(--magenta)}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,42px);align-items:start}
+@media (max-width:880px){.cols{grid-template-columns:1fr}}
+
+.panel{
+  background:var(--buff);
+  border:1px solid var(--buff-line);
+  border-radius:6px;
+  padding:clamp(14px,2vw,24px) clamp(16px,2.2vw,26px);
+  box-shadow:3px 4px 0 rgba(20,38,59,.10);
+}
+.panel .panel-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:10px;display:block;
+}
+.panel ul{list-style:none}
+.panel li{padding:7px 0;font-size:clamp(1rem,1.6vw,1.25rem);line-height:1.4;border-bottom:1px dashed rgba(20,38,59,.18)}
+.panel li:last-child{border-bottom:0}
+.panel li::before{content:"—";color:var(--magenta);margin-right:10px;font-family:var(--mono)}
+.panel.plain li::before{content:"☐";color:var(--ink-soft)}
+
+.term{
+  background:var(--screen);
+  color:var(--phosphor);
+  border-radius:8px;
+  border:1px solid var(--screen-line);
+  box-shadow:0 10px 26px rgba(15,29,48,.28), inset 0 0 0 1px rgba(207,231,218,.05);
+  font-family:var(--mono);
+  font-size:clamp(.92rem,1.55vw,1.24rem);
+  line-height:1.62;
+  padding:clamp(14px,2vw,22px) clamp(16px,2.2vw,26px);
+  overflow-x:auto;
+}
+.term .bar{
+  display:flex;gap:8px;align-items:center;
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--phosphor-dim);
+  border-bottom:1px solid var(--screen-line);
+  margin:-4px 0 12px;padding-bottom:10px;
+}
+.term .bar::before{content:"● ● ●";letter-spacing:.28em;color:#31465F;font-size:9px}
+.term pre{font-family:inherit;white-space:pre;margin:0}
+.term .c{color:var(--phosphor-dim)}      /* comment */
+.term .p{color:#8FB7D9}                  /* prompt/path */
+.term .k{color:#EAC98B}                  /* keyword */
+.term .ok{color:#6FD3A3;font-weight:600}
+.term .bad{color:#F08A8C;font-weight:600}
+.term .mg{color:#EF7FB4;font-weight:600}
+
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:clamp(16px,2.6vh,26px)}
+.chip{
+  font-family:var(--mono);font-size:clamp(.8rem,1.2vw,.95rem);letter-spacing:.05em;
+  border-radius:4px;padding:9px 14px;display:inline-flex;gap:9px;align-items:center;line-height:1.35;
+}
+.chip.chat{background:var(--magenta-soft);border:1px solid var(--magenta);color:#8E1450}
+.chip.shot{background:rgba(20,38,59,.06);border:1px dashed var(--ink-soft);color:var(--ink-soft)}
+.chip .tag{font-weight:600;text-transform:uppercase;letter-spacing:.16em;font-size:.72em}
+
+/* flow diagram (slide 4) */
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:clamp(10px,2vh,20px) 0}
+.node{
+  border:2px solid var(--ink);border-radius:6px;background:rgba(255,255,255,.55);
+  font-family:var(--mono);font-size:clamp(.85rem,1.5vw,1.15rem);letter-spacing:.06em;
+  padding:14px 18px;display:flex;flex-direction:column;justify-content:center;min-width:120px;
+}
+.node small{font-size:.68em;color:var(--ink-soft);letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.node.loop{border-style:dashed;position:relative}
+.node.stop{border-color:var(--magenta);color:var(--magenta);background:var(--magenta-soft)}
+.arrow{display:flex;align-items:center;padding:0 12px;font-family:var(--mono);color:var(--ink-soft);font-size:1.3rem}
+.loopnote{
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;color:var(--magenta);
+  position:absolute;top:-24px;left:50%;transform:translateX(-50%);white-space:nowrap;
+}
+
+/* compare table (slide 9) */
+table.compare{width:100%;border-collapse:collapse;font-size:clamp(.92rem,1.5vw,1.2rem)}
+table.compare th,table.compare td{padding:11px 14px;text-align:left;border-bottom:1px solid rgba(20,38,59,.18);vertical-align:top;line-height:1.4}
+table.compare thead th{
+  font-family:var(--mono);font-size:.78em;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);
+  border-bottom:2px solid var(--ink);
+}
+table.compare td:nth-child(2){background:rgba(20,38,59,.045)}
+table.compare td:nth-child(3){background:rgba(196,30,106,.06)}
+table.compare .verdict{font-family:var(--serif);font-weight:700;font-size:1.06em}
+table.compare .verdict.op{color:var(--ink-soft)}
+table.compare .verdict.ev{color:var(--magenta)}
+
+/* two-file layout (slide 10) */
+.files{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(14px,2.4vw,30px)}
+@media (max-width:960px){.files{grid-template-columns:1fr}}
+
+/* stamp */
+.stamp{
+  display:inline-block;font-family:var(--mono);font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ok);border:3px double var(--ok);border-radius:6px;
+  padding:8px 16px;transform:rotate(-4deg);
+  font-size:clamp(.85rem,1.5vw,1.15rem);
+}
+.stamp.inkpad{box-shadow:0 0 0 3px rgba(46,158,107,.12)}
+
+/* timeline (slide 8) */
+.timeline{border-left:2px solid var(--ink);padding-left:26px;display:flex;flex-direction:column;gap:clamp(12px,2vh,22px);margin-top:6px}
+.tl{position:relative}
+.tl::before{content:"";position:absolute;left:-33px;top:8px;width:12px;height:12px;background:var(--water);border:2px solid var(--ink);border-radius:50%}
+.tl.mg::before{background:var(--magenta);border-color:var(--magenta)}
+.tl .when{font-family:var(--mono);font-size:.82em;letter-spacing:.14em;text-transform:uppercase;color:var(--magenta);font-weight:600}
+.tl h3{font-family:var(--serif);font-size:clamp(1.15rem,2.2vw,1.7rem);margin:3px 0 4px}
+.tl p{color:var(--ink-soft);font-size:clamp(.95rem,1.5vw,1.2rem);max-width:62ch}
+.tl code{font-family:var(--mono);background:rgba(20,38,59,.07);padding:1px 6px;border-radius:3px;font-size:.92em}
+
+/* map list (slide 3) */
+.stops{counter-reset:stop;display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px);max-width:820px}
+.stop{
+  display:flex;gap:18px;align-items:baseline;
+  font-size:clamp(1.1rem,2vw,1.55rem);line-height:1.35;
+}
+.stop::before{
+  counter-increment:stop;content:counter(stop,decimal-leading-zero);
+  font-family:var(--mono);font-size:.72em;letter-spacing:.1em;color:var(--magenta);font-weight:600;
+  border:1px solid var(--magenta);border-radius:3px;padding:3px 7px;flex:none;
+}
+.stop b{font-weight:600}
+.stop .live{font-family:var(--mono);font-size:.62em;letter-spacing:.18em;text-transform:uppercase;color:var(--ok);border:1px solid var(--ok);border-radius:3px;padding:2px 7px;margin-left:8px;vertical-align:middle}
+
+/* takeaways (slide 14) */
+.takes{counter-reset:take;display:flex;flex-direction:column;gap:clamp(9px,1.7vh,16px)}
+.take{display:flex;gap:16px;align-items:baseline;font-size:clamp(1.02rem,1.9vw,1.45rem);line-height:1.4}
+.take::before{
+  counter-increment:take;content:counter(take);
+  font-family:var(--serif);font-weight:800;font-style:italic;color:var(--magenta);
+  font-size:1.25em;min-width:1.2em;
+}
+
+.footline{margin-top:clamp(18px,3vh,30px);font-family:var(--mono);font-size:clamp(.78rem,1.2vw,.95rem);letter-spacing:.1em;color:var(--ink-faint)}
+
+/* builds */
+[data-step]{opacity:0;transform:translateY(8px);transition:opacity .3s ease,transform .3s ease}
+[data-step].on{opacity:1;transform:none}
+.term pre [data-step]{display:inline;transform:none}
+code{font-family:var(--mono);font-size:.95em}
+
+/* overview */
+#overview{
+  position:fixed;inset:0;z-index:60;background:rgba(20,38,59,.94);
+  display:none;align-items:center;justify-content:center;padding:60px 40px;
+}
+#overview.open{display:flex}
+#overview .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;width:min(1100px,100%)}
+#overview button{
+  background:var(--water);border:1px solid rgba(20,38,59,.3);border-radius:5px;
+  padding:14px 12px;text-align:left;font-family:var(--mono);font-size:12.5px;line-height:1.4;color:var(--ink);
+}
+#overview button .n{color:var(--magenta);font-weight:600;display:block;margin-bottom:4px;letter-spacing:.12em}
+#overview button:hover{background:#fff}
+#overview button.here{outline:3px solid var(--magenta)}
+@media (max-width:900px){#overview .grid{grid-template-columns:repeat(2,1fr)}}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+
+<header class="chrome-top">
+  <span class="brand">DEF-DONE <em>/</em> MAVEN LIGHTNING LESSON</span>
+  <span class="spacer"></span>
+  <span class="keyhint">← → navigate · G grid · T timer · F fullscreen</span>
+  <span class="fixcount" id="fixCount">FIX 01 / 16</span>
+  <button class="clock" id="clock" title="T start/pause · R reset">30:00</button>
+</header>
+
+<main id="deck">
+
+<!-- ============ 1 · TITLE ============ -->
+<section class="slide" data-title="Title">
+  <div class="inner">
+    <div class="kicker"><b>Lightning Lesson</b> · 30 min + Q&amp;A · dead reckoning for coding agents</div>
+    <h1>Build a <span class="tilt">Definition&nbsp;of&nbsp;Done</span> for Claude&nbsp;Code &amp;&nbsp;Codex</h1>
+    <p class="lede">Stop letting the agent grade its own homework. Drive it non-interactively with a loop that <strong>proves</strong> it finished — with an exit code, not a feeling.</p>
+    <p class="footline">Greg Ceccarelli · Co-founder, SpecStory · July 14, 2026</p>
+  </div>
+</section>
+
+<!-- ============ 2 · NAVIGATOR ============ -->
+<section class="slide" data-title="Your navigator">
+  <div class="inner">
+    <div class="kicker">Fix 02 · your navigator · twenty seconds, then we sail</div>
+    <h2>I'm Greg. I ship with agents <span class="tilt">daily.</span></h2>
+    <div class="cols">
+      <div>
+        <p class="lede"><strong>Co-founder of SpecStory</strong> — we capture every AI coding session so you can search, share, and learn from them. Before that: CPO at Pluralsight, data at GitHub, Dropbox, and Google.</p>
+        <p class="lede" data-step style="margin-top:14px">This lesson comes out of <strong>Hardcore Agentic Engineering</strong>, a course I teach with my co-founders. One conviction drives it: the hard part isn't getting agents to <em>produce</em> work — it's <strong>engineering the proof it's correct.</strong></p>
+      </div>
+      <div class="panel">
+        <span class="panel-label">Tonight is one piece of that proof</span>
+        <ul>
+          <li data-step>Thousands of agent sessions captured — the same failure everywhere: <b>"done" that isn't</b></li>
+          <li data-step>The fix is old, boring, and it works — <b>we'll build it in ten lines</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 · HOOK ============ -->
+<section class="slide" data-title="Hook">
+  <div class="inner">
+    <div class="kicker">Fix 03 · the hook</div>
+    <p class="big">Everyone assumes the agent stops <em>because the work is done.</em></p>
+    <p class="big" data-step style="margin-top:20px">It stops because it <em>stopped calling tools.</em></p>
+    <div class="chips" data-step>
+      <span class="chip chat"><span class="tag">Chat</span> What's the last thing your agent claimed was "done"… that wasn't? Put it in the chat.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 · COURSE ============ -->
+<section class="slide" data-title="The course">
+  <div class="inner">
+    <div class="kicker">Fix 04 · course plotted</div>
+    <h2>Five stops. One promise.</h2>
+    <div class="stops">
+      <div class="stop" data-step><span><b>How harnesses actually decide to stop</b> — the while-loop you're already running</span></div>
+      <div class="stop" data-step><span><b>What agile teams figured out 20 years ago</b> — the Definition of Done, and why it worked</span></div>
+      <div class="stop" data-step><span><b>Goals arrive in the harness</b> — and an LLM plays judge</span></div>
+      <div class="stop" data-step><span><b>The ten-line loop</b> where a shell script is the judge<span class="live">live demo</span></span></div>
+      <div class="stop" data-step><span><b>When to skip all of this</b> — not every task needs a gate</span></div>
+    </div>
+    <p class="footline" data-step>Promise: by stop 04 you have something you can run tonight.</p>
+  </div>
+</section>
+
+<!-- ============ 4 · WHAT'S AN AGENT ============ -->
+<section class="slide" data-title="New here? Agent 101">
+  <div class="inner">
+    <div class="kicker">Fix 05 · <b>Part 1</b> · agent 101 — never run one? sixty seconds and you're caught up</div>
+    <h2>A coding agent is a <span class="tilt">conversation with hands</span></h2>
+    <div class="cols">
+      <div>
+        <p class="lede">Claude Code and Codex are terminal programs. You type a request in plain English; an AI <strong>edits your files and runs your commands</strong> to fulfill it.</p>
+        <p class="lede" data-step style="margin-top:14px">Each turn, the model answers with one of two things: <strong>words</strong>, or a <strong>tool call</strong> — "run this command," "edit this file." The program executes the call and hands back the result.</p>
+      </div>
+      <div class="term" data-step>
+        <div class="bar">~/project · claude</div>
+<pre><span class="p">&gt;</span> add a /healthz endpoint
+
+<span class="c">⚙ tool call:</span> <span class="k">Read</span> src/app.ts
+<span class="c">⚙ tool call:</span> <span class="k">Edit</span> src/app.ts
+<span class="c">⚙ tool call:</span> <span class="k">Bash</span> npm test
+<span class="c">   → 14 passing</span>
+
+<span class="ok">Done!</span> Added /healthz and the
+tests pass. <span class="c">← just words. no tool call.</span></pre>
+      </div>
+    </div>
+    <p class="footline" data-step>Hold on to that last line — words, no tool call. It's about to matter a lot.</p>
+  </div>
+</section>
+
+<!-- ============ 5 · HARNESS 101 ============ -->
+<section class="slide" data-title="Harness 101">
+  <div class="inner">
+    <div class="kicker">Fix 06 · <b>Part 1</b> · harness 101 — sixty seconds of vocabulary</div>
+    <h2>The model can't touch your computer. The <span class="tilt">harness</span> can.</h2>
+    <div class="flow">
+      <div class="node"><small>brain · text in, text out</small>MODEL</div>
+      <div class="arrow">⇄</div>
+      <div class="node"><small>runs the tools · owns the loop</small>HARNESS</div>
+      <div class="arrow">⇄</div>
+      <div class="node"><small>files · shell · git</small>YOUR MACHINE</div>
+    </div>
+    <p class="lede" data-step>The model is a text function — it can <em>ask</em> to run a test; it can't run one. The <strong>harness</strong> is the program wrapped around it: it executes the tool calls, feeds results back… <strong>and decides when to loop and when to stop.</strong></p>
+    <p class="footline" data-step>Claude Code · Codex CLI · Gemini CLI · Copilot CLI — different badges, same job. "Agent" = model + harness.</p>
+  </div>
+</section>
+
+<!-- ============ 5 · HOW HARNESSES STOP ============ -->
+<section class="slide" data-title="P1 · The loop today">
+  <div class="inner">
+    <div class="kicker">Fix 07 · <b>Part 1</b> · how harnesses work today</div>
+    <h2>The loop you're already running</h2>
+    <div class="flow">
+      <div class="node"><small>you</small>PROMPT</div>
+      <div class="arrow">→</div>
+      <div class="node"><small>reason</small>MODEL</div>
+      <div class="arrow" data-step>⇄</div>
+      <div class="node loop" data-step><span class="loopnote">⟲ repeat × N turns</span><small>act · observe</small>TOOL CALLS</div>
+      <div class="arrow" data-step>→</div>
+      <div class="node" data-step><small>one day…</small>REPLY, NO TOOL CALL</div>
+      <div class="arrow" data-step>→</div>
+      <div class="node stop" data-step><small>run ends</small>STOP</div>
+    </div>
+    <p class="lede" data-step>Claude Code, Codex, Gemini CLI, Copilot — different products, <strong>same while-loop</strong>. Reason, act, observe, repeat…</p>
+    <p class="lede" data-step style="margin-top:12px">…and the run ends <strong>the moment the model replies without calling a tool.</strong> Nothing checks anything at that boundary by default.</p>
+  </div>
+</section>
+
+<!-- ============ 5 · DONE IS A FEELING ============ -->
+<section class="slide" data-title="Done is a feeling">
+  <div class="inner">
+    <div class="kicker">Fix 08 · Part 1 · the failure mode</div>
+    <h2>"Done" is a <span class="tilt">feeling</span></h2>
+    <div class="cols">
+      <div>
+        <p class="lede">The green checkmark is a <strong>string the model produced</strong> — not an event in the world.</p>
+        <p class="lede" style="margin-top:14px" data-step>The agent isn't lying. It's predicting the most plausible next sentence — and after a run that <em>looked</em> fine, <strong>"Done!" is extremely plausible.</strong></p>
+        <div class="chips" data-step>
+          <span class="chip shot"><span class="tag">📸 screenshot</span> The agent doesn't stop when it's done. It's "done" when it stops.</span>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="panel-label">Three smells you already know</span>
+        <ul>
+          <li data-step><b>The victory lap</b> — "All tests passing! ✅" (it never ran them)</li>
+          <li data-step><b>The quiet shrink</b> — scope trimmed mid-run so "done" arrives sooner</li>
+          <li data-step><b>The plausible summary</b> — a beautiful description of a state the repo is not in</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 · DOD ORIGIN ============ -->
+<section class="slide" data-title="P2 · DoD origin">
+  <div class="inner">
+    <div class="kicker">Fix 09 · <b>Part 2</b> · humans hit this first</div>
+    <h2>Definition of Done — the origin</h2>
+    <div class="cols">
+      <div>
+        <p class="lede" data-step>Mid-2000s agile teams kept demoing work that was <strong>"90% done"</strong> — coded but untested, unreviewed, undeployable. <em>"Done-done"</em> entered the vocabulary as a joke…</p>
+        <p class="lede" style="margin-top:14px" data-step>…and Scrum made it a discipline. The <strong>2020 Scrum Guide</strong> elevates the Definition of Done to the formal <strong>commitment</strong> attached to every Increment.</p>
+        <p class="lede" style="margin-top:14px" data-step>Work that doesn't meet it isn't part of the Increment at all — it can't even be <em>shown</em> at Sprint Review. Meet it, and — their phrase — <strong>"an Increment is born."</strong></p>
+      </div>
+      <div class="panel plain" data-step>
+        <span class="panel-label">A team's Definition of Done (typical)</span>
+        <ul>
+          <li>Code peer-reviewed</li>
+          <li>Tests pass in CI</li>
+          <li>Deployed to staging</li>
+          <li>Docs updated</li>
+          <li>No new lint errors</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7 · WHY IT WORKED ============ -->
+<section class="slide" data-title="Why DoD worked">
+  <div class="inner">
+    <div class="kicker">Fix 10 · Part 2 · the transferable insight</div>
+    <h2>Why it worked — and why it transfers</h2>
+    <div class="cols">
+      <div class="panel">
+        <span class="panel-label">Four properties</span>
+        <ul>
+          <li data-step><b>Written before the work</b> — goalposts committed in advance</li>
+          <li data-step><b>A checklist, not a vibe</b> — each item checkable by anyone</li>
+          <li data-step><b>Binary</b> — there is no 90% done</li>
+          <li data-step><b>Shared</b> — the worker doesn't privately define done</li>
+        </ul>
+      </div>
+      <div>
+        <p class="big" data-step>Scrum wrote the DoD for humans who fool themselves.</p>
+        <p class="big" data-step style="margin-top:16px">Agents fool themselves <em>faster</em> — at 3&nbsp;a.m., unattended.</p>
+      </div>
+    </div>
+    <p class="footline" data-step>Increment ↔ the diff &nbsp;·&nbsp; developer says "done" ↔ model says "done" &nbsp;·&nbsp; DoD ↔ executable checks &nbsp;·&nbsp; Sprint Review gate ↔ the loop's exit condition</p>
+  </div>
+</section>
+
+<!-- ============ 8 · GOALS ARRIVE ============ -->
+<section class="slide" data-title="P3 · /goal arrives">
+  <div class="inner">
+    <div class="kicker">Fix 11 · <b>Part 3</b> · goals arrive in the harness</div>
+    <h2>2026: the loop gets a target</h2>
+    <div class="timeline">
+      <div class="tl" data-step>
+        <span class="when">Apr 30, 2026</span>
+        <h3>Codex CLI ships <code>/goal</code></h3>
+        <p>A session-scoped completion condition, re-injected every turn with a built-in completion audit — "treat uncertainty as not achieved."</p>
+      </div>
+      <div class="tl" data-step>
+        <span class="when">May 12, 2026</span>
+        <h3>Claude Code ships <code>/goal</code></h3>
+        <p>Implemented as a Stop hook: each time Claude finishes a turn, the condition + conversation go to a small fast model that answers <b>yes/no</b>. No yes, no stopping.</p>
+      </div>
+      <div class="tl mg" data-step>
+        <span class="when">May 2026</span>
+        <h3>Goal engineering <span style="font-weight:500;font-style:italic">(Ceccarelli)</span></h3>
+        <p>The practice around it: a checked-in <b>goal</b> (≤4,000 chars — the cap Codex enforces) + a <b>rider</b> with phases and named tests. The brief becomes an artifact with a SHA.</p>
+      </div>
+    </div>
+    <p class="lede" data-step style="margin-top:18px">Real progress: the loop finally has a <strong>destination</strong>, and the harness won't let the model wander off. But look who decides you've arrived…</p>
+  </div>
+</section>
+
+<!-- ============ 9 · WHO GRADES ============ -->
+<section class="slide" data-title="Who grades? (centerpiece)">
+  <div class="inner">
+    <div class="kicker">Fix 12 · Part 3 · <b>compare &amp; contrast</b></div>
+    <h2>Who's grading the homework?</h2>
+    <table class="compare">
+      <thead>
+        <tr><th></th><th>LLM-as-judge (<code>/goal</code> today)</th><th>Deterministic checks</th></tr>
+      </thead>
+      <tbody>
+        <tr data-step><td><b>Who decides</b></td><td>A model reads the transcript, answers "done?"</td><td>A script exits 0 or non-zero</td></tr>
+        <tr data-step><td><b>The verdict is</b></td><td class="verdict op">Opinion — probabilistic, persuadable</td><td class="verdict ev">Evidence — binary, reproducible</td></tr>
+        <tr data-step><td><b>Cost per turn</b></td><td>One more model call</td><td>Milliseconds</td></tr>
+        <tr data-step><td><b>Fuzzy criteria</b> ("prose is friendly")</td><td>Yes — its superpower</td><td>No — only what you encoded</td></tr>
+        <tr data-step><td><b>Swayed by a confident summary?</b></td><td>Yes — it judges the same conversation</td><td>Never reads the transcript</td></tr>
+        <tr data-step><td><b>Setup cost</b></td><td>Zero</td><td>You write the checks</td></tr>
+      </tbody>
+    </table>
+    <div class="chips">
+      <span class="chip shot" data-step><span class="tag">📸 screenshot</span> A judge answers "does this <i>look</i> done?" A check answers "<b>is</b> this done?"</span>
+      <span class="chip chat" data-step><span class="tag">Chat</span> Which of your recurring agent tasks has a fact-shaped "done"? Drop one in.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 · THE LOOP ============ -->
+<section class="slide" data-title="P4 · The ten-line loop">
+  <div class="inner">
+    <div class="kicker">Fix 13 · <b>Part 4</b> · the smallest harness that can't be fooled</div>
+    <h2>Two files. That's the lesson.</h2>
+    <div class="files">
+      <div class="term" data-step>
+        <div class="bar">check.sh — the definition of done</div>
+<pre><span class="c">#!/usr/bin/env bash</span>
+<span class="k">set</span> -e
+npm test                <span class="c"># tests pass</span>
+<span class="k">test</span> -f dist/app.js     <span class="c"># artifact exists</span>
+grep -q '"/healthz"' \
+  src/app.ts            <span class="c"># it's really there</span></pre>
+      </div>
+      <div class="term" data-step>
+        <div class="bar">loop.sh — the harness</div>
+<pre><span class="c">#!/usr/bin/env bash</span>
+<span class="k">until</span> ./check.sh; <span class="k">do</span>
+  claude -p <span class="p">"Goal in TODO.md. Run ./check.sh,
+    read the first failure, fix it, commit."</span> \
+    --allowedTools <span class="p">"Bash,Read,Edit"</span> \
+    --permission-mode acceptEdits
+<span class="k">done</span>
+<span class="k">echo</span> <span class="ok">"DONE — check.sh exited 0"</span></pre>
+      </div>
+    </div>
+    <p class="lede" data-step style="margin-top:16px"><strong><code style="font-family:var(--mono)">until</code> is the whole orchestration layer.</strong> The exit code is the Definition of Done. The model's opinion never touches the exit condition. <em>Exit 0 = an Increment is born.</em></p>
+    <p class="footline" data-step>Codex flavor: swap the middle line for&nbsp; <b>codex exec --full-auto "Goal in TODO.md. Run ./check.sh, fix the first failure, commit."</b></p>
+  </div>
+</section>
+
+<!-- ============ 11 · DEMO ============ -->
+<section class="slide" data-title="Live demo / simulator">
+  <div class="inner">
+    <div class="kicker">Fix 14 · Part 4 · <b>watch it run</b> — live demo (this simulator is your backup)</div>
+    <div class="term" style="max-width:900px">
+      <div class="bar">~/demo · ./loop.sh</div>
+<pre><span class="p">$</span> ./loop.sh
+<span data-step><span class="c">── turn 1 ─────────────────────────────</span>
+<span class="p">$</span> ./check.sh
+<span class="bad">✗ npm test</span>              2 failing
+<span class="mg">exit 1</span> → claude -p <span class="c">"…fix the first failure…"</span>
+</span><span data-step>  ⚙ read failures · edited src/date.ts · commit 9f3a21c
+</span><span data-step><span class="c">── turn 2 ─────────────────────────────</span>
+<span class="p">$</span> ./check.sh
+<span class="ok">✓ npm test</span>
+<span class="bad">✗ test -f dist/app.js</span>   missing
+<span class="mg">exit 1</span> → claude -p …
+</span><span data-step>  ⚙ ran npm run build · commit 4c81d02
+</span><span data-step><span class="c">── turn 3 ─────────────────────────────</span>
+<span class="p">$</span> ./check.sh
+<span class="ok">✓ npm test</span>
+<span class="ok">✓ test -f dist/app.js</span>
+<span class="ok">✓ grep -q '"/healthz"' src/app.ts</span>
+<span class="ok">exit 0</span></span></pre>
+    </div>
+    <p data-step style="margin-top:18px"><span class="stamp inkpad">Done · exit 0 · stamped by the check, not the model</span></p>
+    <p class="lede" data-step style="margin-top:16px">I didn't decide it was done. The model didn't decide. <strong>The exit code decided.</strong></p>
+  </div>
+</section>
+
+<!-- ============ 13 · ONE STEP FURTHER ============ -->
+<section class="slide" data-title="One step further">
+  <div class="inner">
+    <div class="kicker">Fix 15 · Part 4 · one step further — three patches, five lines</div>
+    <h2>The loop, one step <span class="tilt">further</span></h2>
+    <div class="cols">
+      <div class="panel">
+        <span class="panel-label">Your ten-liner's three blind spots</span>
+        <ul>
+          <li data-step><b>① It retries blind</b> — the agent never hears <em>why</em> the gate said no. Pipe check.sh's output into the next prompt.</li>
+          <li data-step><b>② It retries forever</b> — no budget. Cap the attempts; <b>NOT&nbsp;DONE is an honest result too.</b></li>
+          <li data-step><b>③ It trusts the agent near the gate</b> — <code style="font-family:var(--mono)">chmod 444 check.sh</code>: fix the code, never the check.</li>
+        </ul>
+      </div>
+      <div class="term" data-step>
+        <div class="bar">loop.sh — v2 · feedback + budget + lock</div>
+<pre><span class="c">#!/usr/bin/env bash</span>
+chmod 444 check.sh          <span class="c"># ③ lock the gate</span>
+<span class="k">for</span> attempt <span class="k">in</span> 1 2 3 4 5; <span class="k">do</span>  <span class="c"># ② budget</span>
+  out=$(./check.sh 2&gt;&amp;1) &amp;&amp;
+    { <span class="k">echo</span> <span class="ok">"DONE on try $attempt"</span>; <span class="k">exit</span> 0; }
+  <span class="c"># ① feed the failure back in:</span>
+  claude -p <span class="p">"Goal in TODO.md. check.sh failed:
+$out
+Fix the code — never the check. Commit."</span> \
+    --allowedTools <span class="p">"Bash,Read,Edit"</span> \
+    --permission-mode acceptEdits
+<span class="k">done</span>
+<span class="k">echo</span> <span class="bad">"NOT DONE after 5 tries"</span>; <span class="k">exit</span> 1</pre>
+      </div>
+    </div>
+    <p class="footline" data-step>Feedback → deadreckon's per-turn gate report · the budget → its spend caps &amp; resumable turns · the lock → dr-gate. <b>You just reinvented the next slide.</b></p>
+  </div>
+</section>
+
+<!-- ============ 14 · DEADRECKON ============ -->
+<section class="slide" data-title="Outgrowing ten lines → deadreckon">
+  <div class="inner">
+    <div class="kicker">Fix 16 · when you outgrow ten lines</div>
+    <h2>Same idea, <span class="tilt">industrial grade</span></h2>
+    <table class="compare">
+      <thead><tr><th style="width:44%">Your ten-liner</th><th>deadreckon.sh</th></tr></thead>
+      <tbody>
+        <tr data-step><td>Agent <i>could</i> just edit <code style="font-family:var(--mono)">check.sh</code></td><td><b>dr-gate</b>: a watchdog <b>outside the sandbox</b> holds a per-run secret and re-runs the checks itself — the agent can't stamp its own pass</td></tr>
+        <tr data-step><td>Runs loose in your repo</td><td>Isolated git worktree — your branch untouched until promotion</td></tr>
+        <tr data-step><td>Dies with your laptop</td><td>Every turn snapshotted to disk; resume from the last completed turn</td></tr>
+        <tr data-step><td>Leaves a transcript to take on faith</td><td>Evidence artifacts: run narrative, decisions, per-file provenance</td></tr>
+        <tr data-step><td>You write checks by hand</td><td><span style="font-family:var(--mono);font-size:.92em">deadreckon def-done "sign up, log in, save a drawing"</span> → compiled to executable checks</td></tr>
+      </tbody>
+    </table>
+    <p class="footline" data-step>curl -fsSL https://deadreckon.sh/install.sh | sh &nbsp;·&nbsp; open source · MIT · supervises the CLI you already use (Claude Code, Codex, Gemini, Copilot…)</p>
+  </div>
+</section>
+
+<!-- ============ 13 · WHEN NOT TO ============ -->
+<section class="slide" data-title="P5 · When to skip it">
+  <div class="inner">
+    <div class="kicker">Fix 17 · <b>Part 5</b> · you don't always need one</div>
+    <h2>When to skip the ceremony</h2>
+    <div class="cols">
+      <div class="panel">
+        <span class="panel-label">Skip the definition of done when…</span>
+        <ul>
+          <li data-step>You're sitting there watching — <b>you</b> are the gate</li>
+          <li data-step>The output is learning, not an artifact — spikes, exploration</li>
+          <li data-step>"Done" is taste-shaped — naming, tone, design (a judge is right here)</li>
+          <li data-step>The change is smaller than the ceremony — a five-line tweak</li>
+        </ul>
+      </div>
+      <div class="panel" style="background:var(--magenta-soft);border-color:var(--magenta)">
+        <span class="panel-label" style="color:#8E1450">Write one when…</span>
+        <ul>
+          <li data-step>You're walking away — overnight, lunch, the weekend</li>
+          <li data-step>The task repeats — batch migrations, fleets of repos</li>
+          <li data-step>"Done" is fact-shaped — tests green, build passes, endpoint responds</li>
+          <li data-step>You intend to trust the result <b>without reading the transcript</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="chips">
+      <span class="chip shot" data-step><span class="tag">📸 screenshot</span> If you're watching, <b>you</b> are the definition of done. If you're walking away, write one a machine can check.</span>
+      <span class="chip chat" data-step><span class="tag">Chat</span> One task you'd hand to this loop tonight — put it in the chat.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14 · RECAP ============ -->
+<section class="slide" data-title="Recap — screenshot">
+  <div class="inner">
+    <div class="kicker">Fix 18 · recap · <b>📸 screenshot this one</b></div>
+    <h2>Five things to keep</h2>
+    <div class="takes">
+      <div class="take" data-step>Harnesses stop when the model stops calling tools — <b>a feeling, not a fact</b></div>
+      <div class="take" data-step>Scrum's Definition of Done: written first, checklist, binary, shared — <b>no Done, no Increment</b></div>
+      <div class="take" data-step><code style="font-family:var(--mono)">/goal</code> gives the loop a target, but an LLM judges arrival — <b>opinion</b></div>
+      <div class="take" data-step><code style="font-family:var(--mono)">until ./check.sh</code> makes done an exit code — <b>evidence</b></div>
+      <div class="take" data-step>Match the gate to the stakes: <b>watching vs. walking away</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 15 · TONIGHT + PITCH ============ -->
+<section class="slide" data-title="Tonight + the course">
+  <div class="inner">
+    <div class="kicker">Fix 19 · try it tonight → go deeper</div>
+    <h2>Tonight, in three steps</h2>
+    <div class="stops" style="margin-bottom:22px">
+      <div class="stop" data-step><span>Pick one <b>fact-shaped</b> task. Write <b>check.sh before you prompt.</b></span></div>
+      <div class="stop" data-step><span>Run the <b>until-loop</b> with <b>claude -p</b> or <b>codex exec</b> — in a throwaway worktree. When it sticks, graduate to the <b>v2 loop</b>.</span></div>
+      <div class="stop" data-step><span>Want the gate outside the agent's reach? <b>deadreckon.sh</b></span></div>
+    </div>
+    <div class="panel" data-step style="max-width:840px;background:var(--magenta-soft);border-color:var(--magenta)">
+      <span class="panel-label" style="color:#8E1450">Tonight was one loop. Shipping is a system.</span>
+      <ul>
+        <li><b>Hardcore Agentic Engineering</b> — <i>for builders who ship</i> · Aug 3–21 on Maven · ten live sessions</li>
+        <li>The full discipline: <b>Brief → Steer → Verify</b> — you build <b>prove-it</b>, a harness that survives <code style="font-family:var(--mono)">kill -9</code> and gates "done" behind checks the agent can't reach</li>
+        <li>Enroll at <b style="font-family:var(--mono)">get.specstory.com/agentic-engineering</b> — applies promo code <b style="font-family:var(--mono)">HARDCORE</b> for you</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 17 · REST OF THE SERIES + BOOK ============ -->
+<section class="slide" data-title="Next fixes + the book">
+  <div class="inner">
+    <div class="kicker">Fix 20 · the next two fixes are already plotted · <b>all free</b></div>
+    <h2>Two more lessons this month</h2>
+    <div class="cols">
+      <div class="timeline">
+        <div class="tl" data-step>
+          <span class="when">Mon · Jul 20</span>
+          <h3>Build an environment-aware AI Agent from Scratch</h3>
+          <p>An agent harness isn't a black box — it's a loop you can build yourself in an afternoon. With <b>John Berryman</b> (GitHub Copilot; author, <i>Prompt Engineering for LLMs</i>).</p>
+        </div>
+        <div class="tl" data-step>
+          <span class="when">Mon · Jul 27</span>
+          <h3>Make Your Repo Agent-Ready: Rules, Docs, Reviews</h3>
+          <p>Most agent failures aren't the model's fault — they're the repo's. With <b>Dan Gerlanc</b> (co-founder, .txt / Outlines).</p>
+        </div>
+      </div>
+      <div class="panel" data-step>
+        <span class="panel-label">And for your chart table — the field guide</span>
+        <ul>
+          <li><b>25 Patterns in Agentic Engineering</b> — free PDF</li>
+          <li>The moves that ship software when the agent writes the code and the human owns the proof</li>
+          <li>Drawn from 1,310 captured agent sessions &amp; 4,670 commits</li>
+          <li style="font-family:var(--mono);font-size:.78em">specstory.com/books/25-patterns-in-agentic-engineering-book-2026.pdf</li>
+        </ul>
+      </div>
+    </div>
+    <p class="footline" data-step>Watching the recording? Everything lives at <b>maven.com/specstory</b> — lessons, recordings, and the course.</p>
+  </div>
+</section>
+
+<!-- ============ 16 · Q&A ============ -->
+<section class="slide" data-title="Q&A">
+  <div class="inner">
+    <div class="kicker">Fix 21 · Q&amp;A · next 10 minutes</div>
+    <h2>Questions — <span class="tilt">put them in the chat</span></h2>
+    <p class="lede">👍 the ones you want answered. Specific beats general — bring your actual task.</p>
+    <div class="chips" style="margin-top:26px">
+      <span class="chip shot">deadreckon.sh</span>
+      <span class="chip shot">github.com/specstoryai/hardcore-agentic-engineering — this deck + the demo</span>
+      <span class="chip shot">greg@specstory.com · @gregce10</span>
+    </div>
+    <p class="footline">Sources: deadreckon.sh · Ceccarelli, "Goal Engineering" &amp; "The Green Checkmark is Not a Fact" · Scrum Guide 2020 · Claude Code &amp; Codex CLI docs</p>
+  </div>
+</section>
+
+</main>
+
+<div id="overview" role="dialog" aria-label="Slide overview"><div class="grid" id="ovGrid"></div></div>
+
+<footer class="chrome-bottom">
+  <svg class="plot" id="plot" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <div class="legendline"><span>Dead reckoning: position by known course + checks passed — not by the pilot's word</span><span id="plotLabel">FIX 01 · TITLE</span></div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var N = slides.length;
+  var cur = 0;
+
+  /* ---------- steps ---------- */
+  function stepsOf(i){ return Array.prototype.slice.call(slides[i].querySelectorAll("[data-step]")); }
+  function shownSteps(i){ return stepsOf(i).filter(function(s){ return s.classList.contains("on"); }).length; }
+  function revealAll(i){ stepsOf(i).forEach(function(s){ s.classList.add("on"); }); }
+  function hideAll(i){ stepsOf(i).forEach(function(s){ s.classList.remove("on"); }); }
+
+  /* ---------- course plot ---------- */
+  var plot = document.getElementById("plot");
+  var plotLabel = document.getElementById("plotLabel");
+  function drawPlot(){
+    var w = plot.clientWidth || 1000, h = 30;
+    plot.setAttribute("viewBox", "0 0 " + w + " " + h);
+    var pad = 14, span = w - pad*2;
+    var pts = [];
+    for (var i=0;i<N;i++){
+      var x = pad + span * (N===1 ? 0 : i/(N-1));
+      var y = h/2 + (i%2===0 ? -4 : 4); /* gentle plotted zigzag */
+      pts.push([x,y]);
+    }
+    function path(list){ return list.map(function(p,j){ return (j? "L":"M")+p[0]+" "+p[1]; }).join(" "); }
+    var doneP = pts.slice(0, cur+1), aheadP = pts.slice(cur);
+    var svg = "";
+    if (aheadP.length>1) svg += '<path class="course-ahead" d="'+path(aheadP)+'"/>';
+    if (doneP.length>1)  svg += '<path class="course-done" d="'+path(doneP)+'"/>';
+    for (var k=0;k<N;k++){
+      var cls = k<cur ? "fixpt done" : (k===cur ? "fixpt here" : "fixpt");
+      if (k===cur) svg += '<circle class="ring" cx="'+pts[k][0]+'" cy="'+pts[k][1]+'" r="8"/>';
+      svg += '<circle class="'+cls+'" cx="'+pts[k][0]+'" cy="'+pts[k][1]+'" r="'+(k===cur?4.5:3)+'"/>';
+    }
+    plot.innerHTML = svg;
+    plotLabel.textContent = "FIX " + String(cur+1).padStart(2,"0") + " · " + (slides[cur].dataset.title||"").toUpperCase();
+  }
+
+  /* ---------- navigation ---------- */
+  var fixCount = document.getElementById("fixCount");
+  function go(i, fromBack){
+    i = Math.max(0, Math.min(N-1, i));
+    if (i === cur && slides[i].classList.contains("active")) return;
+    slides[cur].classList.remove("active");
+    cur = i;
+    var s = slides[cur];
+    s.classList.add("active");
+    if (fromBack) revealAll(cur); else hideAll(cur);
+    s.scrollTop = 0;
+    fixCount.textContent = "FIX " + String(cur+1).padStart(2,"0") + " / " + N;
+    location.hash = "/" + (cur+1);
+    drawPlot();
+    markOverview();
+  }
+  function next(){
+    var pending = stepsOf(cur).filter(function(s){ return !s.classList.contains("on"); });
+    if (pending.length){ pending[0].classList.add("on"); return; }
+    if (cur < N-1) go(cur+1);
+  }
+  function prev(){
+    var on = stepsOf(cur).filter(function(s){ return s.classList.contains("on"); });
+    if (on.length){ on[on.length-1].classList.remove("on"); return; }
+    if (cur > 0) go(cur-1, true);
+  }
+
+  /* ---------- overview ---------- */
+  var overview = document.getElementById("overview");
+  var ovGrid = document.getElementById("ovGrid");
+  slides.forEach(function(s, i){
+    var b = document.createElement("button");
+    b.innerHTML = '<span class="n">FIX ' + String(i+1).padStart(2,"0") + "</span>" + (s.dataset.title || "");
+    b.addEventListener("click", function(){ overview.classList.remove("open"); go(i); });
+    ovGrid.appendChild(b);
+  });
+  function markOverview(){
+    Array.prototype.forEach.call(ovGrid.children, function(b, i){ b.classList.toggle("here", i===cur); });
+  }
+  function toggleOverview(){ overview.classList.toggle("open"); markOverview(); }
+
+  /* ---------- timer (30:00 countdown) ---------- */
+  var clock = document.getElementById("clock");
+  var TOTAL = 30*60, left = TOTAL, running = false, tick = null;
+  function fmt(s){ var m = Math.floor(Math.abs(s)/60), r = Math.abs(s)%60; return (s<0?"-":"")+String(m).padStart(2,"0")+":"+String(r).padStart(2,"0"); }
+  function renderClock(){
+    clock.textContent = fmt(left);
+    clock.classList.toggle("low", left <= 5*60);
+    clock.classList.toggle("running", running);
+  }
+  function toggleTimer(){
+    running = !running;
+    if (running){ tick = setInterval(function(){ left--; renderClock(); }, 1000); }
+    else { clearInterval(tick); }
+    renderClock();
+  }
+  function resetTimer(){ running = false; clearInterval(tick); left = TOTAL; renderClock(); }
+  clock.addEventListener("click", toggleTimer);
+  renderClock();
+
+  /* ---------- input ---------- */
+  document.addEventListener("keydown", function(e){
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (overview.classList.contains("open") && k === "Escape"){ toggleOverview(); return; }
+    switch(k){
+      case "ArrowRight": case " ": case "PageDown": e.preventDefault(); next(); break;
+      case "ArrowLeft": case "PageUp": e.preventDefault(); prev(); break;
+      case "Home": go(0); break;
+      case "End": go(N-1); break;
+      case "g": case "G": toggleOverview(); break;
+      case "t": case "T": toggleTimer(); break;
+      case "r": case "R": resetTimer(); break;
+      case "f": case "F":
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+        break;
+    }
+  });
+  document.getElementById("deck").addEventListener("click", function(e){
+    if (e.target.closest("a,button")) return;
+    var x = e.clientX / window.innerWidth;
+    if (x < 0.2) prev(); else next();
+  });
+  window.addEventListener("resize", drawPlot);
+
+  /* ---------- boot ---------- */
+  var m = location.hash.match(/\/(\d+)/);
+  var start = m ? (parseInt(m[1],10)-1) : 0;
+  if (isNaN(start)) start = 0;
+  cur = Math.max(0, Math.min(N-1, start));
+  slides[cur].classList.add("active");
+  if (cur > 0) revealAll(cur); else hideAll(cur);
+  fixCount.textContent = "FIX " + String(cur+1).padStart(2,"0") + " / " + N;
+  location.hash = "/" + (cur+1);
+  drawPlot();
+  markOverview();
+})();
+</script>
+</body>
+</html>

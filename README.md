@@ -59,4 +59,4 @@ Each lesson folder has its own README explaining the deck and how to run the dem
 
 - **[25 Patterns in Agentic Engineering](https://specstory.com/books/25-patterns-in-agentic-engineering-book-2026.pdf)**: Greg's free field guide to shipping software by steering agents, drawn from ~1,310 captured agent sessions and 4,670 commits of building [Stoa](https://withstoa.com)
 - **[deadreckon.sh](https://deadreckon.sh)**: run your coding agent unattended, and trust the result. The industrial-grade version of the loops these lessons teach
-- **[SpecStory](https://specstory.com)**: capture, search, and learn from every AI coding session
+- **[SpecStory](https://specstory.com)** ([github.com/specstoryai/getspecstory](https://github.com/specstoryai/getspecstory)): capture, search, and learn from every AI coding session

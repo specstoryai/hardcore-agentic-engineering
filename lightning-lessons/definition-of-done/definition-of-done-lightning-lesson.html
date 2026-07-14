@@ -365,8 +365,8 @@ code{font-family:var(--mono);font-size:.95em}
       <div class="term" data-step style="font-size:clamp(.72rem,1.15vw,.98rem)">
         <div class="bar">openai/codex · codex-rs/core/src/session/turn.rs · run_turn()</div>
 <pre><span class="c">// every item the model streams either</span>
-<span class="c">// schedules a tool call, or doesn't:</span>
-needs_follow_up |= output_result.needs_follow_up; <span class="c">// :2134</span>
+<span class="c">// schedules a tool call, or doesn't (:2134)</span>
+needs_follow_up |= output_result.needs_follow_up;
 
 <span class="k">if</span> !needs_follow_up {
     <span class="k">break</span>;  <span class="mg">// ← no tool call. the run ends. :373</span>
@@ -715,7 +715,8 @@ Fix the code, never the check. Commit."</span> \
   - kind: <span class="k">file_exists</span>       <span class="c"># {working_dir}/dist/app.js</span>
   - kind: <span class="k">content_match</span>     <span class="c"># "/healthz" in src/app.ts</span>
 </span><span data-step><span class="p">$</span> deadreckon start <span class="p">"Goal in TODO.md"</span>
-<span class="c">dr-gate re-runs these checks itself and signs the pass. the agent can't reach either.</span>
+<span class="c">dr-gate re-runs these checks itself and signs the pass.</span>
+<span class="c">the agent can't reach either one.</span>
 </span><span data-step><span class="ok">✓ gate passed · run promoted</span></span></pre>
     </div>
     <p class="lede" data-step style="margin-top:16px">The same three check species you just wrote by hand in check.sh. <strong>Here the English is the source, and the gate lives outside the agent's reach.</strong></p>

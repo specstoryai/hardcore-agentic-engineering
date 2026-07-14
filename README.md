@@ -8,6 +8,11 @@ Free lightning lessons from<br>
 out of coding agents and proving that work is correct.
 </p>
 
+<p align="center">
+<strong>The course runs August 3&ndash;21, 2026.</strong><br>
+<a href="https://get.specstory.com/agentic-engineering"><strong>Register here</strong></a> (the link applies promo code <code>HARDCORE</code> for you).
+</p>
+
 ---
 
 ## The course, from ten thousand feet

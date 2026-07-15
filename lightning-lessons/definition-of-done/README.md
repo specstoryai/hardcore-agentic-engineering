@@ -7,6 +7,11 @@ A one-hour Maven lightning lesson on why coding agents say "done" when they aren
 and the smallest possible loop that makes "done" an exit code instead of a feeling.
 </p>
 
+<p align="center">
+<a href="https://www.youtube.com/watch?v=vLemEkD35V0"><strong>▶&nbsp;Watch the recording on YouTube</strong></a><br>
+<sub>delivered live on July 14, 2026</sub>
+</p>
+
 ---
 
 ## The premise
@@ -44,6 +49,7 @@ The demo folder has its own README with single-run and side-by-side instructions
 
 ## Links
 
-- [Lesson page on Maven](https://maven.com/p/e72330/build-a-definition-of-done-for-claude-code-and-codex): Tuesday, July 14, 2026, free
+- [The recording on YouTube](https://www.youtube.com/watch?v=vLemEkD35V0): the full lesson as delivered
+- [Lesson page on Maven](https://maven.com/p/e72330/build-a-definition-of-done-for-claude-code-and-codex): delivered Tuesday, July 14, 2026, free
 - [Hardcore Agentic Engineering](https://maven.com/specstory/hardcore-agentic-engineering-for-builders-who-ship): the full course this lesson comes from
 - [deadreckon.sh](https://deadreckon.sh): where the ten-line loop goes when it grows up

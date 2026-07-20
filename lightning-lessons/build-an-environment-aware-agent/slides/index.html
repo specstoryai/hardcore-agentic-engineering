@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build Your Own Agent – Escaping the Harness</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="deck-shell">
+  <div class="deck-scale" id="deckScale">
+    
+
+    <section class="slide grain active" data-slide-id="build-your-own-agent">
+        <div class="absolute inset-0 p-[96px] flex flex-col justify-start">
+          <div class="note topbar">
+            <span id="build-your-own-agent.event_line">John Berryman · O'Reilly Superstream · July 23, 2026</span>
+            <span id="build-your-own-agent.frame_label">Opening frame</span>
+            <span id="build-your-own-agent.slide_counter">№<span id="build-your-own-agent.slide_number">1</span> / <span id="build-your-own-agent.slide_count">18</span></span>
+          </div>
+          <div class="h-[24px]"></div>
+          <div class="grid grid-cols-[1.15fr_0.85fr] gap-10 items-center" id="build-your-own-agent.348fd2c7" data-pw-generated-id="true" style="margin-top:92px;">
+            <div>
+              <h1 class="h-hero" id="build-your-own-agent.hero_title">Build Your <span class="accent">Own</span> Agent</h1>
+              <div class="h-lg mt-6" id="build-your-own-agent.hero_subtitle">Escape the <span class="accent">Harness</span></div>
+              <p class="body-lg muted mt-12 max-w-[980px]" id="build-your-own-agent.supporting_line">Agents are <span class="accent">way simpler</span> than they look,<br>they can do <span class="accent">far more</span> than software development,<br>and we can take them  <span class="accent">almost anywhere</span>.</p>
+            </div>
+            <div class="panel rounded-[34px] p-10">
+              <div class="flex items-center justify-between mb-8">
+                <div class="text-[46px] font-black tracking-[-.04em]" id="build-your-own-agent.card_brand">Agentic Engineering</div>
+                <div class="chip" id="build-your-own-agent.card_chip">Superstream</div>
+              </div>
+              <div class="flex items-center gap-6">
+                <img class="w-32 h-32 rounded-full object-cover img-border" id="build-your-own-agent.speaker_photo_src" src="assets/john_berryman_face.jpg" alt="John Berryman">
+                <div>
+                  <div class="text-[40px] font-bold" id="build-your-own-agent.speaker_name">John Berryman</div>
+                  <div class="body-sm muted mt-2" id="build-your-own-agent.speaker_org">Arcturus Labs</div>
+                </div>
+              </div>
+              <div class="mt-8 flex items-center gap-4">
+                <img class="w-16 h-16 object-contain" id="build-your-own-agent.org_logo_src" src="assets/arcturus_logo.png" alt="Arcturus Labs logo">
+                <div class="body-sm muted" id="build-your-own-agent.org_line">AI product consulting · applied agent systems</div>
+              </div>
+            </div>
+          </div>
+          <div class="footer-note" id="build-your-own-agent.footnote">https://arcturus-labs.com</div>
+        </div>
+      </section>
+
+    <section class="slide grain" data-slide-id="constrained-harness-view">
+        <div class="absolute inset-0 px-[96px] py-[96px] flex flex-col justify-start">
+          <div class="note topbar">
+            <span id="constrained-harness-view.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span>
+            <span id="constrained-harness-view.topbar_center"></span>
+            <span id="constrained-harness-view.slide_counter">№<span id="constrained-harness-view.slide_number">2</span> / <span id="constrained-harness-view.slide_count">18</span></span>
+          </div>
+          <div class="h-[24px]"></div>
+          <div class="max-w-[1200px]">
+            <h1 class="h-lg" id="constrained-harness-view.title">The way we're thinking about agents is <span class="accent"> way too narrow</span>.</h1>
+          </div>
+          <div class="grid grid-cols-3 gap-8 mt-20 flex-1" id="constrained-harness-view.348fd260" data-pw-generated-id="true" style="margin-bottom:30px;">
+            <div class="panel rounded-[28px] p-8 min-h-[360px] flex items-center">
+              <div class="text-[46px] leading-[1.08] font-black tracking-[-.04em] text-center w-full" id="constrained-harness-view.assumption_1">Agents are <span class="accent">too complex</span> for normal developers to build</div>
+            </div>
+            <div class="panel rounded-[28px] p-8 min-h-[360px] flex items-center">
+              <div class="text-[46px] leading-[1.08] font-black tracking-[-.04em] text-center w-full" id="constrained-harness-view.assumption_2">Agents are mostly just good at <span class="accent">software development</span></div>
+            </div>
+            <div class="panel rounded-[28px] p-8 min-h-[360px] flex items-center">
+              <div class="text-[46px] leading-[1.08] font-black tracking-[-.04em] text-center w-full" id="constrained-harness-view.assumption_3">The main way to use agents are from <span class="accent">within a  terminal</span></div>
+            </div>
+          </div>
+          <div class="footer-note" id="constrained-harness-view.footnote">https://arcturus-labs.com</div>
+        </div>
+      </section>
+
+    <section class="slide grain" data-slide-id="what-we-will-prove-today">
+        <div class="absolute inset-0 px-[96px] py-[96px] flex flex-col justify-start">
+          <div class="note topbar">
+            <span id="what-we-will-prove-today.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span>
+            <span id="what-we-will-prove-today.topbar_center"></span>
+            <span id="what-we-will-prove-today.slide_counter">№<span id="what-we-will-prove-today.slide_number">3</span> / <span id="what-we-will-prove-today.slide_count">18</span></span>
+          </div>
+          <div class="h-[24px]"></div>
+          <h1 class="h-lg max-w-[1200px]" id="what-we-will-prove-today.title" style="width:1920px;">Today <span class="accent">we will demonstrate</span> that</h1>
+          <div class="grid grid-cols-3 gap-8 mt-20 flex-1" id="what-we-will-prove-today.348fd2c7" data-pw-generated-id="true" style="margin-bottom:44px;">
+            <div class="panel rounded-[28px] p-8 min-h-[360px] flex items-center">
+              <div class="text-[46px] leading-[1.08] font-black tracking-[-.04em] text-center w-full" id="what-we-will-prove-today.proof_1">Agents are <span class="accent">way simpler</span> than you think</div>
+            </div>
+            <div class="panel rounded-[28px] p-8 min-h-[360px] flex items-center">
+              <div class="text-[46px] leading-[1.08] font-black tracking-[-.04em] text-center w-full" id="what-we-will-prove-today.proof_2">Agents can do <span class="accent">way more</span> than software development</div>
+            </div>
+            <div class="panel rounded-[28px] p-8 min-h-[360px] flex items-center">
+              <div class="text-[46px] leading-[1.08] font-black tracking-[-.04em] text-center w-full" id="what-we-will-prove-today.proof_3">Agents can are useful in <span class="accent">many more places</span> besides the terminal</div>
+            </div>
+          </div>
+          <div class="footer-note" id="what-we-will-prove-today.footnote">https://arcturus-labs.com</div>
+        </div>
+      </section>
+
+    <section class="slide grain" data-slide-id="agents-are-way-simpler-than-you-think">
+        <div class="absolute inset-0 px-[96px] py-[96px] flex flex-col justify-start">
+          <div class="note topbar">
+            <span id="agents-are-way-simpler-than-you-think.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span>
+            <span id="agents-are-way-simpler-than-you-think.topbar_center"></span>
+            <span id="agents-are-way-simpler-than-you-think.slide_counter">№<span id="agents-are-way-simpler-than-you-think.slide_number">4</span> / <span id="agents-are-way-simpler-than-you-think.slide_count">18</span></span>
+          </div>
+          <div class="flex-1 flex flex-col justify-between pt-[120px] pb-[120px]" id="agents-are-way-simpler-than-you-think.title">
+            <div class="max-w-[1180px] self-start text-left">
+              <div class="h-hero" id="agents-are-way-simpler-than-you-think.title_top">Let’s strip the harness <span class="accent">down to its core.</span></div>
+            </div>
+            <div class="max-w-[1180px] self-end text-right">
+              <div class="h-hero" id="agents-are-way-simpler-than-you-think.title_bottom">Then let's <br><span class="accent">build it back up.</span></div>
+            </div>
+          </div>
+          <div class="footer-note" id="agents-are-way-simpler-than-you-think.footnote">https://arcturus-labs.com</div>
+        </div>
+      </section>
+
+    <section class="slide grain" data-slide-id="this-all-looks-insanely-complex">
+        <div class="absolute inset-0 px-[96px] pt-[88px] pb-[88px] flex flex-col justify-start">
+          <div class="note topbar">
+            <span id="this-all-looks-insanely-complex.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span>
+            <span id="this-all-looks-insanely-complex.topbar_center"></span>
+            <span id="this-all-looks-insanely-complex.slide_counter">№<span id="this-all-looks-insanely-complex.slide_number">5</span> / <span id="this-all-looks-insanely-complex.slide_count">18</span></span>
+          </div>
+          <div class="h-[24px]"></div>
+          <h1 class="h-lg max-w-[1200px]" id="this-all-looks-insanely-complex.title">Today's <span class="accent">coding agents</span> look insanely complex</h1>
+          <div class="grid grid-cols-[0.9fr_1.1fr] gap-8 mt-12 mb-[140px] items-start">
+            <div class="max-w-[980px]">
+              <div class="panel rounded-[28px] p-8">
+                <div class="eyebrow mb-5" id="this-all-looks-insanely-complex.left_panel_title">The visible product surface</div>
+                <ul class="bullet-lg space-y-5">
+                  <li id="this-all-looks-insanely-complex.item_1">Slash commands</li>
+                  <li id="this-all-looks-insanely-complex.item_2">Tons of built-in tools</li>
+                  <li id="this-all-looks-insanely-complex.item_3">MCP / extensions / integrations</li>
+                  <li id="this-all-looks-insanely-complex.item_4">Permission systems</li>
+                  <li id="this-all-looks-insanely-complex.item_5">Complex TUI</li>
+                  <li id="this-all-looks-insanely-complex.item_6">Numerous hooks</li>
+                  <li id="this-all-looks-insanely-complex.item_7">Subagents / Agent Teams</li>
+                </ul>
+              </div>
+            </div>
+            <div class="relative h-[620px]">
+              <video class="absolute left-[0px] top-[-40px] w-[470px]" id="this-all-looks-insanely-complex.video_1" autoplay="" muted="" loop="" playsinline="" style="height:620.09px;width:654px;">
+                <source src="assets/agent-demo-1.mp4" type="video/mp4">
+              </video>
+              <video class="absolute left-[210px] top-[130px] w-[470px]" id="this-all-looks-insanely-complex.video_2" autoplay="" muted="" loop="" playsinline="" style="height:592.09px;width:766px;">
+                <source src="assets/agent-demo-2.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="footer-note" id="this-all-looks-insanely-complex.footnote">https://arcturus-labs.com</div>
+        </div>
+      </section>
+
+    <section class="slide grain" data-slide-id="just-a-prompt-and-a-model">
+        <div class="absolute inset-0 px-[96px] py-[92px] flex flex-col justify-start">
+          <div class="note topbar">
+            <span id="just-a-prompt-and-a-model.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span>
+            <span id="just-a-prompt-and-a-model.topbar_center"></span>
+            <span id="just-a-prompt-and-a-model.slide_counter">№<span id="just-a-prompt-and-a-model.slide_number">6</span> / <span id="just-a-prompt-and-a-model.slide_count">18</span></span>
+          </div>
+          <div class="h-[22px]"></div>
+          <h1 class="h-lg max-w-[1700px]" id="just-a-prompt-and-a-model.title" style="width:2028px;height:328.47px;">Demo 1 - just a <span class="accent">prompt</span> and a <span class="accent">model</span></h1>
+          <div class="grid grid-cols-[0.92fr_1.08fr] gap-8 mt-10 mb-[140px] items-start">
+            <div class="panel rounded-[28px] p-10 relative overflow-hidden min-h-[560px]" id="just-a-prompt-and-a-model.left_panel">
+              <div class="eyebrow mb-6" id="just-a-prompt-and-a-model.left_label">What Matters</div>
+              <ul class="bullet-lg space-y-6 max-w-[90%]">
+                <li id="just-a-prompt-and-a-model.bullet_1">Smallest possible <span class="accent">useful "agent"</span></li>
+                <li id="just-a-prompt-and-a-model.bullet_2">Just a <span class="accent">prompt</span> plus a <span class="accent">model call</span></li>
+              </ul>
+              <img class="absolute right-8 bottom-8 w-[500px] opacity-35" id="just-a-prompt-and-a-model.easy_stamp" src="assets/easy-stamp.png" alt="Easy stamp">
+            </div>
+            <div class="panel rounded-[28px] p-10 min-h-[560px]" id="just-a-prompt-and-a-model.right_panel">
+              <div class="eyebrow mb-6" id="just-a-prompt-and-a-model.right_label">Run it</div>
+              <div class="body-md mono" id="just-a-prompt-and-a-model.artifact_1"><a class="link" href="https://github.com/arcturus-labs/agents-showcase/blob/main/src/1-just-a-model.py">The smallest possible agent script</a></div>
+              <div class="eyebrow mt-8 mb-3" id="just-a-prompt-and-a-model.command_label">Command</div>
+              <div class="code panel rounded-[20px] p-6" id="just-a-prompt-and-a-model.command">cd /Users/johnberryman/projects/github/arcturus-labs/agents-showcase &amp;&amp; uv run src/1-just-a-model.py</div>
+              <div class="eyebrow mt-8 mb-3" id="just-a-prompt-and-a-model.prompt_label">Prompt</div>
+              <div class="body-lg" id="just-a-prompt-and-a-model.prompt">tell me a joke</div>
+            </div>
+          </div>
+          <div class="footer-note" id="just-a-prompt-and-a-model.footnote">https://arcturus-labs.com</div>
+        </div>
+      </section>
+
+    <section class="slide grain" data-slide-id="introduce-the-tool-loop"><div class="absolute inset-0 px-[96px] py-[92px] flex flex-col justify-start"><div class="note topbar"><span id="introduce-the-tool-loop.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="introduce-the-tool-loop.topbar_center"></span><span id="introduce-the-tool-loop.slide_counter">№<span id="introduce-the-tool-loop.slide_number">7</span> / <span id="introduce-the-tool-loop.slide_count">18</span></span></div><div class="h-[22px]"></div><h1 class="h-lg max-w-[1700px]" id="introduce-the-tool-loop.title">Demo 2 - introduce the <span class="accent">tool loop</span></h1><div class="grid grid-cols-[0.92fr_1.08fr] gap-8 mt-10 mb-[140px] items-start"><div class="panel rounded-[28px] p-10 relative overflow-hidden min-h-[560px]" id="introduce-the-tool-loop.left_panel"><div class="eyebrow mb-6" id="introduce-the-tool-loop.left_label">What Matters</div><ul class="bullet-lg space-y-6 max-w-[90%]"><li id="introduce-the-tool-loop.bullet_1">Tool lets the model <span class="accent">see and interact with the outside world</span></li><li id="introduce-the-tool-loop.bullet_2">It's just a while loop that <span class="accent">wraps the model and tool execution</span></li></ul><img class="absolute right-8 bottom-8 w-[500px] opacity-35" id="introduce-the-tool-loop.easy_stamp" src="assets/easy-stamp.png" alt="Easy stamp" style="object-fit:cover;height:195.19px;"></div><div class="panel rounded-[28px] p-10 min-h-[560px]" id="introduce-the-tool-loop.right_panel"><div class="eyebrow mb-6" id="introduce-the-tool-loop.right_label">Run it</div><div class="body-md mono" id="introduce-the-tool-loop.artifact_1"><a class="link" href="https://github.com/arcturus-labs/agents-showcase/blob/main/src/2-tool-loop.py">A manual tool loop example</a></div><div class="eyebrow mt-8 mb-3" id="introduce-the-tool-loop.command_label">Command</div><div class="code panel rounded-[20px] p-6" id="introduce-the-tool-loop.command">cd /Users/johnberryman/projects/github/arcturus-labs/agents-showcase &amp;&amp; uv run src/2-tool-loop.py</div><div class="eyebrow mt-8 mb-3" id="introduce-the-tool-loop.prompt_label">Prompt</div><div class="body-lg" id="introduce-the-tool-loop.prompt">Does Hacker News have any book recommendations about building AI Assistants?</div></div></div><div class="footer-note" id="introduce-the-tool-loop.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="standardizing-tool-usage"><div class="absolute inset-0 px-[96px] py-[92px] flex flex-col justify-start"><div class="note topbar"><span id="standardizing-tool-usage.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="standardizing-tool-usage.topbar_center"></span><span id="standardizing-tool-usage.slide_counter">№<span id="standardizing-tool-usage.slide_number">8</span> / <span id="standardizing-tool-usage.slide_count">18</span></span></div><div class="h-[22px]"></div><h1 class="h-lg max-w-[1700px]" id="standardizing-tool-usage.title">Demo 3 - tool usage <span class="accent">standardized</span></h1><div class="grid grid-cols-[0.92fr_1.08fr] gap-8 mt-10 mb-[140px] items-start"><div class="panel rounded-[28px] p-10 relative overflow-hidden min-h-[560px]" id="standardizing-tool-usage.left_panel"><div class="eyebrow mb-6" id="standardizing-tool-usage.left_label">What Matters</div><ul class="bullet-lg space-y-6 max-w-[90%]"><li id="standardizing-tool-usage.bullet_1">Same <span class="accent">tool-calling pattern</span></li><li id="standardizing-tool-usage.bullet_2">Much better <span class="accent">developer ergonomics</span></li></ul><img class="absolute right-8 bottom-8 w-[500px] opacity-35" id="standardizing-tool-usage.easy_stamp" src="assets/easy-stamp.png" alt="Easy stamp"></div><div class="panel rounded-[28px] p-10 min-h-[560px]" id="standardizing-tool-usage.right_panel"><div class="eyebrow mb-6" id="standardizing-tool-usage.right_label">Run it</div><div class="body-md mono" id="standardizing-tool-usage.artifact_1"><a class="link" href="https://github.com/arcturus-labs/agents-showcase/blob/main/src/3-pydantic-ai.py">A PydanticAI version of the same pattern</a></div><div class="eyebrow mt-8 mb-3" id="standardizing-tool-usage.command_label">Command</div><div class="code panel rounded-[20px] p-6" id="standardizing-tool-usage.command">cd /Users/johnberryman/projects/github/arcturus-labs/agents-showcase &amp;&amp; uv run src/3-pydantic-ai.py</div><div class="eyebrow mt-8 mb-3" id="standardizing-tool-usage.prompt_label">Prompt</div><div class="body-lg" id="standardizing-tool-usage.prompt">Does Hacker News have any book recommendations about building AI Assistants?</div></div></div><div class="footer-note" id="standardizing-tool-usage.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="add-3-tools-for-a-coding-agent"><div class="absolute inset-0 px-[96px] py-[92px] flex flex-col justify-start"><div class="note topbar"><span id="add-3-tools-for-a-coding-agent.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="add-3-tools-for-a-coding-agent.topbar_center"></span><span id="add-3-tools-for-a-coding-agent.slide_counter">№<span id="add-3-tools-for-a-coding-agent.slide_number">9</span> / <span id="add-3-tools-for-a-coding-agent.slide_count">18</span></span></div><div class="h-[22px]"></div><h1 class="h-lg max-w-[1700px]" id="add-3-tools-for-a-coding-agent.title">Demo 4 - your first actual <span class="accent">coding agent</span></h1><div class="grid grid-cols-[0.9fr_1.1fr] gap-8 mt-10 mb-[140px] items-start"><div class="panel rounded-[28px] p-10 relative overflow-hidden min-h-[560px]" id="add-3-tools-for-a-coding-agent.left_panel"><div class="eyebrow mb-6" id="add-3-tools-for-a-coding-agent.left_label">What Matters</div><ul class="bullet-lg space-y-6 max-w-[90%]"><li id="add-3-tools-for-a-coding-agent.bullet_1"><span class="accent">Read</span>, <span class="accent">write</span>, and <span class="accent">shell</span> are sufficient tools to make a <span class="accent">simple coding agent</span></li><li id="add-3-tools-for-a-coding-agent.bullet_2">Models are so tuned for software that you <span class="accent">don't need instructions</span></li></ul><img class="absolute right-8 bottom-8 w-[500px] opacity-35" id="add-3-tools-for-a-coding-agent.easy_stamp" src="assets/easy-stamp.png" alt="Easy stamp" style="height:179.19px;object-fit:cover;"></div><div class="panel rounded-[28px] p-10 min-h-[560px]" id="add-3-tools-for-a-coding-agent.right_panel"><div class="eyebrow mb-6" id="add-3-tools-for-a-coding-agent.right_label">Run it</div><div class="body-md mono" id="add-3-tools-for-a-coding-agent.artifact_1"><a class="link" href="https://github.com/arcturus-labs/agents-showcase/blob/main/src/4-pydantic-ai-read-write-edit.py">A read/write/shell agent</a></div><div class="eyebrow mt-8 mb-3" id="add-3-tools-for-a-coding-agent.command_label">Command</div><div class="code panel rounded-[20px] p-6" id="add-3-tools-for-a-coding-agent.command">cd /Users/johnberryman/projects/github/arcturus-labs/agents-showcase &amp;&amp; uv run src/4-pydantic-ai-read-write-edit.py</div><div class="eyebrow mt-8 mb-3" id="add-3-tools-for-a-coding-agent.prompt_label">Prompt</div><div class="code panel rounded-[20px] p-6" id="add-3-tools-for-a-coding-agent.prompt">In /Users/johnberryman/projects/github/arcturus-labs/agents-showcase/scratch_space, create a cli tool in rust that generates the first N primes (N provided as argument), make standard rust package, build it, tell me how to run it as a one-liner (use absolute paths).</div><div class="eyebrow mt-8 mb-3" id="add-3-tools-for-a-coding-agent.follow_up_label">Then</div><div class="body-lg" id="add-3-tools-for-a-coding-agent.follow_up">Review the code and run it.</div></div></div><div class="footer-note" id="add-3-tools-for-a-coding-agent.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="introducing-agent-skills"><div class="absolute inset-0 px-[96px] py-[92px] flex flex-col justify-start"><div class="note topbar"><span id="introducing-agent-skills.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="introducing-agent-skills.topbar_center"></span><span id="introducing-agent-skills.slide_counter">№<span id="introducing-agent-skills.slide_number">10</span> / <span id="introducing-agent-skills.slide_count">18</span></span></div><div class="h-[22px]"></div><h1 class="h-lg max-w-[1700px]" id="introducing-agent-skills.title">Demo 5 - introducing agent <span class="accent">skills</span></h1><div class="grid grid-cols-[0.92fr_1.08fr] gap-8 mt-10 mb-[140px] items-start"><div class="panel rounded-[28px] p-10 relative overflow-hidden min-h-[560px]" id="introducing-agent-skills.left_panel"><div class="eyebrow mb-6" id="introducing-agent-skills.left_label">What Matters</div><ul class="bullet-lg space-y-5 max-w-[90%]"><li id="introducing-agent-skills.bullet_1">If an agent can <span class="accent"><code>read</code></span>, you can save instruction files for it, <span class="accent">agent skills</span></li><li id="introducing-agent-skills.bullet_2">English becomes <span class="accent">the programming language</span></li><li id="introducing-agent-skills.bullet_3">Agent skills <span class="accent">are the programs</span></li><li id="introducing-agent-skills.bullet_4">Agents are the <span class="accent">AI software runtime</span></li></ul><img class="absolute right-8 bottom-8 w-[500px] opacity-35" id="introducing-agent-skills.easy_stamp" src="assets/easy-stamp.png" alt="Easy stamp" style="height:227.19px;object-fit:cover;"></div><div class="panel rounded-[28px] p-10 min-h-[560px]" id="introducing-agent-skills.right_panel"><div class="eyebrow mb-6" id="introducing-agent-skills.right_label">Run it</div><div class="body-md mono space-y-3"><div id="introducing-agent-skills.artifact_1"><a class="link" href="https://github.com/arcturus-labs/agents-showcase/blob/main/src/5-pydantic-ai-research-skills.py">A skills-enabled research agent</a></div><div id="introducing-agent-skills.artifact_2"><a class="link" href="https://github.com/arcturus-labs/agents-showcase/blob/main/scratch_space/.agents/skills/wikipedia-researcher/SKILL.md">The wikipedia-research skill</a></div></div><div class="eyebrow mt-8 mb-3" id="introducing-agent-skills.command_label">Command</div><div class="code panel rounded-[20px] p-6" id="introducing-agent-skills.command">cd /Users/johnberryman/projects/github/arcturus-labs/agents-showcase &amp;&amp; uv run src/5-pydantic-ai-research-skills.py</div><div class="eyebrow mt-8 mb-3" id="introducing-agent-skills.prompt_label">Prompt</div><div class="body-lg" id="introducing-agent-skills.prompt">Why did the Roman Republic turn into the Roman Empire?</div></div></div><div class="footer-note" id="introducing-agent-skills.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="sessions-hooks-and-compaction"><div class="absolute inset-0 px-[96px] py-[92px] flex flex-col justify-start"><div class="note topbar"><span id="sessions-hooks-and-compaction.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="sessions-hooks-and-compaction.topbar_center"></span><span id="sessions-hooks-and-compaction.slide_counter">№<span id="sessions-hooks-and-compaction.slide_number">11</span> / <span id="sessions-hooks-and-compaction.slide_count">18</span></span></div><div class="h-[22px]"></div><h1 class="h-lg max-w-[1700px]" id="sessions-hooks-and-compaction.title">Demo 6 - <span class="accent">sessions/hooks/compaction</span></h1><div class="grid grid-cols-[0.92fr_1.08fr] gap-8 mt-10 mb-[140px] items-start"><div class="panel rounded-[28px] p-10 relative overflow-hidden min-h-[560px]" id="sessions-hooks-and-compaction.left_panel"><div class="eyebrow mb-6" id="sessions-hooks-and-compaction.left_label">What Matters</div><ul class="bullet-lg space-y-6 max-w-[90%]"><li id="sessions-hooks-and-compaction.bullet_1">User input is just <span class="accent">another loop around the tool calling loop</span></li><li id="sessions-hooks-and-compaction.bullet_2">Hooks are callback functions executed at <span class="accent">specific lifecycle points</span></li></ul><img class="absolute right-8 bottom-8 w-[500px] opacity-35" id="sessions-hooks-and-compaction.easy_stamp" src="assets/easy-stamp.png" alt="Easy stamp" style="object-fit:cover;height:207.19px;"></div><div class="panel rounded-[28px] p-10 min-h-[560px]" id="sessions-hooks-and-compaction.right_panel"><div class="eyebrow mb-6" id="sessions-hooks-and-compaction.right_label">Run it</div><div class="body-md mono" id="sessions-hooks-and-compaction.artifact_1"><a class="link" href="https://github.com/arcturus-labs/agents-showcase/blob/main/src/6-pydantic-ai-assistant-w-compaction.py">An assistant with history compaction</a></div><div class="eyebrow mt-8 mb-3" id="sessions-hooks-and-compaction.command_label">Command</div><div class="code panel rounded-[20px] p-6" id="sessions-hooks-and-compaction.command">cd /Users/johnberryman/projects/github/arcturus-labs/agents-showcase &amp;&amp; uv run src/6-pydantic-ai-assistant-w-compaction.py</div><div class="eyebrow mt-8 mb-3" id="sessions-hooks-and-compaction.prompt_flow_label">Prompt flow</div><div class="body-lg space-y-2"><div id="sessions-hooks-and-compaction.prompt_1">1. Tell me a joke</div><div id="sessions-hooks-and-compaction.prompt_2">2. Explain the joke</div><div id="sessions-hooks-and-compaction.prompt_3">3. Why?</div><div id="sessions-hooks-and-compaction.prompt_4">4. Why?</div><div id="sessions-hooks-and-compaction.prompt_5">5. Why? Keep going until compaction happens</div></div></div></div><div class="footer-note" id="sessions-hooks-and-compaction.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="ecosystem-is-standardizing">
+        <div class="absolute inset-0 px-[96px] py-[88px] flex flex-col justify-start">
+          <div class="note topbar">
+            <span id="ecosystem-is-standardizing.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span>
+            <span id="ecosystem-is-standardizing.topbar_center"></span>
+            <span id="ecosystem-is-standardizing.slide_counter">№<span id="ecosystem-is-standardizing.slide_number">12</span> / <span id="ecosystem-is-standardizing.slide_count">18</span></span>
+          </div>
+          <div class="h-[18px]"></div>
+          <h1 class="h-lg max-w-[1500px]" id="ecosystem-is-standardizing.title">The ecosystem is <span class="accent">standardizing</span></h1>
+          <div class="grid grid-cols-2 gap-8 mt-8 mb-[140px] items-start">
+            <div class="panel rounded-[28px] p-8 min-h-[760px]" id="ecosystem-is-standardizing.left_panel">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-[64px] font-black tracking-[-.05em]" id="ecosystem-is-standardizing.left_label">Pi</div>
+                <div class="chip" id="ecosystem-is-standardizing.left_chip">Extension-first</div>
+              </div>
+              <div class="code panel rounded-[20px] p-5" id="ecosystem-is-standardizing.left_code">export default (pi: ExtensionAPI) =&gt; {
+  pi.registerTool({
+    name: "search_docs",
+    description: "Search company docs",
+    parameters: Type.Object({ query: Type.String() }),
+    async execute(_id, { query }, signal) {
+      return {
+        content: [{ type: "text", text: await searchDocs(query, signal) }],
+        details: {},
+      };
+    },
+  });
+
+  pi.registerCommand("dashboard", {
+    description: "Open the dashboard",
+    handler: (_args, ctx) =&gt; openDashboard(ctx.cwd),
+  });
+};</div>
+            </div>
+            <div class="panel rounded-[28px] p-8 min-h-[760px]" id="ecosystem-is-standardizing.right_panel">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-[64px] font-black tracking-[-.05em]" id="ecosystem-is-standardizing.right_label">Flue</div>
+                <div class="chip" id="ecosystem-is-standardizing.right_chip">App building blocks</div>
+              </div>
+              <div class="code panel rounded-[20px] p-5" id="ecosystem-is-standardizing.right_code">const instructions = `
+Triage a bug report end-to-end: reproduce the bug,
+diagnose the root cause, verify whether the behavior is
+intentional, and attempt a fix.`
+
+export default defineAgent(() =&gt; ({
+  model: 'anthropic/claude-sonnet-4-6',
+  tools: [replyToIssue],
+  skills: [triage, verify],
+  sandbox: local(),
+  instructions,
+}))</div>
+            </div>
+          </div>
+          <div class="footer-note" id="ecosystem-is-standardizing.footnote">https://arcturus-labs.com</div>
+        </div>
+      </section>
+
+    <section class="slide grain" data-slide-id="now-lets-unharness-the-agent"><div class="absolute inset-0 px-[96px] py-[96px] flex flex-col justify-start"><div class="note topbar"><span id="now-lets-unharness-the-agent.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="now-lets-unharness-the-agent.topbar_center"></span><span id="now-lets-unharness-the-agent.slide_counter">№<span id="now-lets-unharness-the-agent.slide_number">13</span> / <span id="now-lets-unharness-the-agent.slide_count">18</span></span></div><div class="flex-1 flex flex-col justify-between pt-[120px] pb-[120px]" id="now-lets-unharness-the-agent.title"><div class="max-w-[1180px] self-start text-left"><div class="h-hero" id="now-lets-unharness-the-agent.title_top" style="width:1092px;transform:translateY(-100px);">Great, building agents <span class="accent">isn't that hard.</span></div></div><div class="max-w-[1180px] self-end text-right"><div class="h-hero" id="now-lets-unharness-the-agent.title_bottom" style="width:1188px;margin-top:0px;">Now it's time to <br><span class="accent">unharness them.</span></div></div></div><div class="footer-note" id="now-lets-unharness-the-agent.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="ai-reviewer"><div class="absolute inset-0 px-[96px] py-[92px] flex flex-col justify-start"><div class="note topbar"><span id="ai-reviewer.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="ai-reviewer.topbar_center"></span><span id="ai-reviewer.slide_counter">№<span id="ai-reviewer.slide_number">14</span> / <span id="ai-reviewer.slide_count">18</span></span></div><div class="h-[22px]"></div><div class="eyebrow" id="ai-reviewer.kicker">Agents can live inside software products</div><h1 class="h-lg max-w-[1700px] mt-4" id="ai-reviewer.title">Example: <span class="accent">Job application review assistant</span></h1><div class="grid grid-cols-[0.92fr_1.08fr] gap-8 mt-10 mb-[140px] items-start"><div class="panel rounded-[28px] p-10 min-h-[560px]"><div class="eyebrow mb-6" id="ai-reviewer.left_label">What Matters</div><ul class="bullet-lg space-y-5 max-w-[92%]"><li id="ai-reviewer.bullet_1">Same model, skills, tools, instructions – adds <span class="accent">structured output</span></li><li id="ai-reviewer.bullet_3">Traditional application code <span class="accent">call the agent</span> to execute a workflow</li><li id="ai-reviewer.bullet_4">Since the program is English, the <span class="accent"><i>user</i> can read and fix code.</span></li></ul></div><div class="panel rounded-[28px] p-10 min-h-[560px]"><div class="eyebrow mb-6" id="ai-reviewer.right_label">Run it</div><div class="body-md mono space-y-3"><div id="ai-reviewer.artifact_1"><a class="link" href="https://github.com/arcturus-labs/agents-showcase/blob/main/src/7-pydantic-ai-reviewer.py">The AI reviewer agent implementation</a></div><div id="ai-reviewer.artifact_2"><a class="link" href="https://github.com/arcturus-labs/agents-showcase/blob/main/skills/screen-candidate/SKILL.md">The screen-candidate skill file</a></div></div><div class="eyebrow mt-8 mb-3" id="ai-reviewer.command_label">Command</div><div class="code panel rounded-[20px] p-6" id="ai-reviewer.command">cd /Users/johnberryman/projects/github/arcturus-labs/agents-showcase &amp;&amp; uv run src/7-pydantic-ai-reviewer.py</div></div></div><div class="footer-note" id="ai-reviewer.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="bring-your-own-agent"><div class="absolute inset-0 px-[96px] py-[96px] flex flex-col justify-start"><div class="note topbar"><span id="bring-your-own-agent.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="bring-your-own-agent.topbar_center"></span><span id="bring-your-own-agent.slide_counter">№<span id="bring-your-own-agent.slide_number">15</span> / <span id="bring-your-own-agent.slide_count">18</span></span></div><div class="h-[22px]"></div><div class="eyebrow" id="bring-your-own-agent.kicker">assistants can help us interact with software</div><h1 class="h-lg max-w-[1500px] mt-4" id="bring-your-own-agent.title">B.Y.O.A. – <span class="accent">Bring Your Own Agent</span></h1><div class="mt-12 mb-[140px] max-w-[880px]"><div class="panel rounded-[28px] p-10 min-h-[620px]"><div class="eyebrow mb-6" id="bring-your-own-agent.right_label">Why it matters</div><ul class="bullet-lg space-y-5 max-w-[92%]"><li id="bring-your-own-agent.point_1">Built-in website assistants have <span class="accent">tools</span>, but not your full <span class="accent">context.</span></li><li id="bring-your-own-agent.point_2"><i>Your</i> assistant knows <span class="accent">everything about your current task at hand.</span></li><li id="bring-your-own-agent.point_3">Imagine if your assistant was given <span class="accent">tools and instructions</span> to interact with the website.</li><li id="bring-your-own-agent.point_4">You and the assistant can work on the <span class="accent">same surface</span>.</li></ul></div></div><img class="absolute right-[0px] top-[100px] w-[760px] h-[620px] object-contain" id="bring-your-own-agent.github_copilot_image" src="assets/github-copilot.png" alt="GitHub Copilot screenshot" style="height:903px;width:868.65px;margin-top:126px;"><div class="footer-note" id="bring-your-own-agent.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="bring-your-agent-into-the-physical-world"><div class="absolute inset-0 px-[96px] py-[96px] flex flex-col justify-start"><div class="note topbar"><span id="bring-your-agent-into-the-physical-world.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="bring-your-agent-into-the-physical-world.topbar_center"></span><span id="bring-your-agent-into-the-physical-world.slide_counter">№<span id="bring-your-agent-into-the-physical-world.slide_number">16</span> / <span id="bring-your-agent-into-the-physical-world.slide_count">18</span></span></div><div class="h-[22px]"></div><div class="eyebrow" id="bring-your-agent-into-the-physical-world.kicker">Agents can help us navigate physical environments and locations</div><h1 class="h-lg max-w-[1500px] mt-4" id="bring-your-agent-into-the-physical-world.title">B.Y.O.A. into the <span class="accent">real world</span></h1><div class="mt-12 mb-[140px] max-w-[880px]"><div class="panel rounded-[28px] p-10 min-h-[620px]"><div class="eyebrow mb-6" id="bring-your-agent-into-the-physical-world.right_label">Why stop at websites and applications?</div><ul class="bullet-lg space-y-5 max-w-[94%]"><li id="bring-your-agent-into-the-physical-world.point_1">Your assistant knows <span class="accent">your goals</span> and has access to <span class="accent">your information</span>.</li><li id="bring-your-agent-into-the-physical-world.point_2">When you enter a <span class="accent">location</span>, your assistant gains <span class="accent">tools and instructions</span> for that environment.</li><li id="bring-your-agent-into-the-physical-world.point_3">Grocery stores: reads your <span class="accent">shopping list</span>, helps you <span class="accent">navigate inventory and aisles</span>.</li><li id="bring-your-agent-into-the-physical-world.point_4">Home environment: sets your <span class="accent">thermostat</span>, interacts with <span class="accent">IoT devices</span></li></ul></div></div><img class="absolute right-[0px] top-[-100px] w-[760px] h-[620px] object-contain" id="bring-your-agent-into-the-physical-world.rook_iphone_image" src="assets/rook-iphone.png" alt="Rook on iPhone" style="width:952px;height:1156.56px;margin-top:70px;"><img class="absolute right-[40px] top-[360px] w-[220px] h-[220px] object-cover rounded-[42px] shadow-[0_24px_60px_rgba(0,0,0,0.35)]" id="bring-your-agent-into-the-physical-world.rook_logo_gradient" src="assets/rook-logo-gradient.png" alt="Rook gradient logo" style="margin-right:598px;width:176px;height:176px;margin-top:512px;"><div class="footer-note" id="bring-your-agent-into-the-physical-world.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="wrap-up-time"><div class="absolute inset-0 px-[96px] py-[96px] flex flex-col justify-start"><div class="note topbar"><span id="wrap-up-time.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="wrap-up-time.topbar_center"></span><span id="wrap-up-time.slide_counter">№<span id="wrap-up-time.slide_number">17</span> / <span id="wrap-up-time.slide_count">18</span></span></div><div class="h-[22px]"></div><div class="eyebrow" id="wrap-up-time.kicker">the takeaways from this talk</div><h1 class="h-lg max-w-[1500px] mt-4" id="wrap-up-time.title">Wrap-up<span class="accent">:</span></h1><div class="panel rounded-[28px] p-10 mt-12 mb-[140px] min-h-[620px]"><ul class="bullet-lg space-y-5 max-w-[1400px]"><li id="wrap-up-time.point_1">Agents and agent harnesses are <span class="accent">not magic</span></li><li id="wrap-up-time.point_2">Building them increasingly looks like assembling <span class="accent">Lego blocks</span></li><li id="wrap-up-time.point_3">Agents can do any task with the right <span class="accent">instructions</span>, <span class="accent">tools</span>, and <span class="accent">data</span></li><li id="wrap-up-time.point_4">Programming them is getting easier, they speak <span class="accent">English</span></li><li id="wrap-up-time.point_5">Agents can perform functions embedded inside <span class="accent">traditional software</span></li><li id="wrap-up-time.point_6">Agents can exist outside traditional software products and even in <span class="accent">physical environments</span> as universal assistants</li></ul></div><div class="footer-note" id="wrap-up-time.footnote">https://arcturus-labs.com</div></div></section>
+
+    <section class="slide grain" data-slide-id="homework"><div class="absolute inset-0 px-[96px] py-[96px] flex flex-col justify-start"><div class="note topbar"><span id="homework.topbar_left">John Berryman · O'Reilly Superstream · July 23, 2026</span><span id="homework.topbar_center"></span><span id="homework.slide_counter">№<span id="homework.slide_number">18</span> / <span id="homework.slide_count">18</span></span></div><div class="h-[22px]"></div><div class="eyebrow" id="homework.kicker">How can you keep the takeaways?</div><div class="grid grid-cols-[1.02fr_.98fr] gap-10 mt-10 mb-[140px] items-start flex-1"><div><h1 class="h-hero" id="homework.title">Make your <span class="accent">own agent</span> today.</h1></div><div class="space-y-4" id="homework.resources_column"><div class="panel rounded-[28px] p-4 flex items-center gap-5" id="homework.resource_1"><img class="w-[144px] h-[144px] object-contain bg-white rounded-[12px]" id="homework.resource_1_qr" src="assets/qr-agents-showcase.png" alt="Agents Showcase repository QR code"><div><div class="eyebrow mb-2" id="homework.resource_1_label">Code examples</div><div class="body-md" id="homework.resource_1_text">The <span class="accent">agents-showcase</span> repository with the examples from this talk.</div></div></div><div class="panel rounded-[28px] p-4 flex items-center gap-5" id="homework.resource_2"><img class="w-[144px] h-[144px] object-contain bg-white rounded-[12px]" id="homework.resource_2_qr" src="assets/qr-blog.png" alt="AI Product Engineering blog QR code"><div><div class="eyebrow mb-2" id="homework.resource_2_label">My Blog</div><div class="body-md" id="homework.resource_2_text">My blog, where I regularly write about <span class="accent">AI Product Engineering</span>.</div></div></div><div class="panel rounded-[28px] p-4 flex items-center gap-5" id="homework.resource_3"><img class="w-[144px] h-[144px] object-contain bg-white rounded-[12px]" id="homework.resource_3_qr" src="assets/qr-youtube.png" alt="Arcturus Labs YouTube channel QR code"><div><div class="eyebrow mb-2" id="homework.resource_3_label">Videos and streams</div><div class="body-md" id="homework.resource_3_text">My <span class="accent">YouTube channel</span>, where I post videos and live streams building <span class="accent">AI Products.</span></div></div></div><div class="panel rounded-[28px] p-4 flex items-center gap-5" id="homework.resource_4"><img class="w-[144px] h-[144px] object-contain bg-white rounded-[12px]" id="homework.resource_4_qr" src="assets/qr-rook.png" alt="Rook environment-aware assistant QR code"><div><div class="eyebrow mb-2" id="homework.resource_4_label">Rook</div><div class="body-md" id="homework.resource_4_text">My environment-aware <span class="accent">personal assistant.</span></div></div></div></div></div><div class="footer-note" id="homework.footnote">https://arcturus-labs.com</div></div></section>
+  </div>
+</div>
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let index = 0;
+  function fit(){ const s = Math.min(window.innerWidth/1920, window.innerHeight/1080); document.getElementById('deckScale').style.transform = `scale(${s})`; }
+  function show(i,sync=true){ index=Math.max(0,Math.min(slides.length-1,i)); slides.forEach((s,j)=>s.classList.toggle('active',j===index)); if(sync) location.hash=`slide-${index+1}`; }
+  function fromHash(){ const m=location.hash.match(/slide-(\d+)/); if(m) show(parseInt(m[1],10)-1,false); }
+  window.addEventListener('resize',fit);
+  window.addEventListener('hashchange',fromHash);
+  window.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ') show(index+1); if(e.key==='ArrowLeft'||e.key==='PageUp') show(index-1); if(e.key==='Home') show(0); if(e.key==='End') show(slides.length-1); });
+  fit(); if(location.hash) fromHash(); else show(0,false);
+</script>
+</body>
+</html>

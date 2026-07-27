@@ -1,0 +1,1163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repo Readiness</title>
+  <style>
+    :root {
+      --paper: #F3EFE6;
+      --ink: #17201D;
+      --rust: #BD4B2F;
+      --muted: #746C62;
+      --line: #C9BFB0;
+      --green: #2D6A4F;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body { background: #D9D2C7; font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+    /* A deliberately small replacement for Reveal's stage management. */
+    .deck { position: fixed; inset: 0; overflow: hidden; background: #D9D2C7; }
+    .deck .slides {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 1280px; height: 720px;
+      transform-origin: center center;
+      text-align: left;
+    }
+
+    /* Each section IS a paper slide. The controller scales the 1280x720 stage. */
+    .deck .slides section.rr-slide {
+      position: absolute;
+      inset: 0;
+      box-sizing: border-box;
+      width: 1280px;
+      height: 720px;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      padding: 62px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 28px;
+      border: 1px solid rgba(23, 32, 29, .16);
+      box-shadow: 0 18px 60px rgba(23, 32, 29, .16);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 200ms ease;
+    }
+    .deck .slides section.rr-slide.is-active {
+      display: grid !important;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .deck-controls {
+      position: fixed; z-index: 50; right: 18px; bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+      font-family: ui-monospace, monospace;
+    }
+    .deck-controls button {
+      cursor: pointer; border: 1px solid var(--ink); border-radius: 4px;
+      width: 34px; height: 30px; background: rgba(243,239,230,.85);
+      color: var(--ink); font-size: 18px; line-height: 1;
+    }
+    .deck-controls button:disabled { cursor: default; opacity: .35; }
+    .deck-controls button:focus-visible { outline: 3px solid var(--rust); outline-offset: 2px; }
+    .deck-progress {
+      position: fixed; z-index: 50; left: 0; right: 0; bottom: 0;
+      height: 4px; background: rgba(23,32,29,.16);
+    }
+    .deck-progress-bar { height: 100%; width: 0; background: var(--rust); transition: width 200ms ease; }
+
+    .rr-go-dialog {
+      width: min(480px, calc(100vw - 40px));
+      margin: auto;
+      padding: 0;
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 24px 80px rgba(23, 32, 29, .35);
+    }
+    .rr-go-dialog::backdrop { background: rgba(23, 32, 29, .58); }
+    .rr-go-form { padding: 30px; }
+    .rr-go-title {
+      margin: 0 0 24px;
+      font-size: 32px;
+      letter-spacing: -.025em;
+    }
+    .rr-go-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .rr-go-input {
+      width: 100%;
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      padding: 10px 12px;
+      background: #fffdf8;
+      color: var(--ink);
+      font: 30px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .rr-go-input:focus-visible { outline: 3px solid var(--rust); outline-offset: 2px; }
+    .rr-go-hint {
+      min-height: 22px;
+      margin: 10px 0 24px;
+      color: var(--muted);
+      font: 14px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .rr-go-actions { display: flex; justify-content: flex-end; gap: 10px; }
+    .rr-go-actions button {
+      cursor: pointer;
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      padding: 9px 18px;
+      background: transparent;
+      color: var(--ink);
+      font: 15px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .rr-go-actions button[type="submit"] { background: var(--ink); color: var(--paper); }
+    .rr-go-actions button:focus-visible { outline: 3px solid var(--rust); outline-offset: 2px; }
+
+    .rr-kicker, .rr-footer, .rr-mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .rr-kicker {
+      color: var(--rust);
+      font-size: 15px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+    }
+    main { min-height: 0; }
+    .rr-title {
+      font-size: 66px;
+      line-height: .98;
+      letter-spacing: -.045em;
+      margin: 0 0 22px;
+      max-width: 13ch;
+      text-transform: none;
+    }
+    .rr-title.sm { font-size: 52px; max-width: 18ch; }
+    .rr-body { font-size: 25px; line-height: 1.35; }
+    .rr-body p { margin: .5em 0; }
+    .rr-body h2, .rr-body h3 { margin-top: 0; }
+    .rr-body code {
+      background: rgba(23, 32, 29, .08);
+      border-radius: 4px;
+      padding: .08em .28em;
+    }
+    .rr-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    /* Give the denser column the extra width when one side is much shorter. */
+    .rr-grid-2.wide-right { grid-template-columns: .8fr 1.2fr; }
+    .rr-card {
+      border-top: 4px solid var(--rust);
+      padding-top: 14px;
+    }
+    /* A note that belongs to the whole slide, not to the column above it. */
+    .rr-span-note {
+      margin-top: 26px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .rr-grid-2 > div > .rr-card + .rr-card { margin-top: 18px; }
+    .rr-dark {
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 6px;
+      padding: 20px;
+    }
+    .rr-dark h2 { color: var(--paper); margin: 6px 0 0; }
+    .rr-console {
+      position: relative;
+      margin-top: 20px;
+      padding-top: 46px;
+      font-size: 19px;
+      line-height: 1.65;
+    }
+    .rr-console::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 28px;
+      border-bottom: 1px solid rgba(246, 242, 234, .24);
+      background: rgba(246, 242, 234, .08);
+      border-radius: 6px 6px 0 0;
+    }
+    .rr-console::after {
+      content: "● ● ●";
+      position: absolute;
+      top: 5px;
+      left: 12px;
+      color: var(--rust);
+      font-size: 10px;
+      letter-spacing: .08em;
+    }
+    .rr-console-line {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 24px;
+    }
+    .rr-console-line span { color: rgba(246, 242, 234, .72); }
+    .rr-flow {
+      display: grid;
+      grid-template-columns: repeat(var(--count), 1fr);
+      gap: 10px;
+      align-items: stretch;
+      margin-bottom: 14px;
+    }
+    .rr-node {
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 14px;
+      min-height: 60px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      white-space: pre-line;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 17px;
+    }
+    .rr-footer {
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .rr-source { text-align: right; }
+    .rr-source a { color: inherit; }
+    .rr-big-number {
+      font-size: 150px;
+      line-height: .8;
+      /* Tight, but not so tight that the slash collides with the digit
+         beside it at this size. */
+      letter-spacing: -.03em;
+      color: var(--rust);
+      font-weight: 800;
+    }
+    .rr-big-number.sm { font-size: 110px; }
+    .rr-prek-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .rr-prek-summary {
+      border-right: 1px solid var(--line);
+      padding-right: 42px;
+    }
+    .rr-prek-summary strong {
+      display: block;
+      margin: 12px 0 24px;
+      font-size: 23px;
+      line-height: 1.2;
+    }
+    .rr-prek-group {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 22px;
+      padding: 13px 0;
+      border-top: 1px solid var(--line);
+    }
+    .rr-prek-group:first-child {
+      border-top: 4px solid var(--rust);
+      padding-top: 12px;
+    }
+    .rr-prek-label {
+      color: var(--rust);
+      font-size: 15px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .rr-prek-hooks {
+      font-size: 19px;
+      line-height: 1.4;
+    }
+    .ae-logo-image {
+      display: block;
+      width: min(100%, 460px);
+      height: auto;
+      margin: 0 auto;
+    }
+    .rr-about-hero {
+      display: grid;
+      grid-template-columns: 390px 1fr;
+      gap: 48px;
+      align-items: stretch;
+      height: 100%;
+    }
+    .rr-about-photo {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      object-fit: cover;
+      object-position: center 38%;
+      border-radius: 6px;
+      border-bottom: 8px solid var(--rust);
+    }
+    .rr-about-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .rr-about-copy .rr-dark {
+      margin-bottom: 22px;
+    }
+    .rr-about-copy .rr-dark h2 {
+      font-size: 29px;
+      line-height: 1.15;
+    }
+    .ae-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: stretch;
+      height: 100%;
+    }
+    .ae-mark-panel {
+      display: grid;
+      place-items: center;
+      height: 100%;
+      padding: 48px;
+    }
+    .ae-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8px 0;
+    }
+    .ae-copy .rr-kicker {
+      justify-content: flex-start;
+      margin-bottom: 18px;
+    }
+    .ae-copy .rr-title {
+      margin-bottom: 0;
+    }
+    .ae-rule {
+      width: 72px;
+      height: 4px;
+      margin: 24px 0;
+      background: var(--rust);
+    }
+    #score-band { display: block; margin-top: 18px; }
+
+    /* ---- interactive score controls (replaces mo.ui.radio) ---- */
+    .rr-score { margin-top: 16px; }
+    .rr-score .rr-score-label { font-weight: 700; display: block; margin-bottom: 6px; font-size: 16px; }
+    .rr-seg { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+    .rr-seg button {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 6px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 15px;
+      background: rgba(255,255,255,.35);
+      color: var(--ink);
+    }
+    .rr-seg button[aria-pressed="true"] {
+      background: var(--rust);
+      color: var(--paper);
+      border-color: var(--rust);
+    }
+    .rr-seg button:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 3px;
+    }
+    .rr-select {
+      margin-top: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 17px;
+      padding: 8px 10px;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: rgba(255,255,255,.5);
+      color: var(--ink);
+    }
+    .rr-select:disabled { opacity: .7; }
+    .rr-cands { color: var(--muted); font-size: 20px; line-height: 1.4; }
+    .rr-audit-title {
+      font-size: 46px;
+      margin-bottom: 14px;
+      max-width: none;
+    }
+    .rr-audit-sheet {
+      border-top: 4px solid var(--rust);
+    }
+    .rr-audit-row {
+      display: grid;
+      /* Wide enough to keep the longest dimension name on one line, so every
+         row's label sits on the same baseline. */
+      grid-template-columns: 200px 1fr 280px;
+      gap: 18px;
+      align-items: center;
+      min-height: 42px;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .rr-audit-dimension {
+      font-size: 15px;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .rr-audit-dimension span {
+      color: var(--rust);
+      margin-right: 8px;
+    }
+    .rr-audit-question {
+      font-size: 17px;
+      line-height: 1.22;
+    }
+    .rr-score-compact {
+      margin-top: 0;
+      justify-self: end;
+    }
+    .rr-score-compact .rr-score-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .rr-score-compact .rr-seg {
+      flex-wrap: nowrap;
+    }
+    .rr-score-compact .rr-seg button {
+      padding: 5px 7px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .rr-audit-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 24px;
+      padding-top: 10px;
+      font-size: 16px;
+    }
+    .rr-audit-total strong {
+      color: var(--rust);
+      font-size: 25px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="deck" aria-label="Repo Readiness presentation">
+    <div class="slides">
+
+      <!-- 01 -->
+      <section class="rr-slide" data-n="1" data-section="OPEN">
+        <main>
+          <h1 class="rr-title">Is Your Repo Ready for Agents?</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2">
+              <div class="rr-card"><strong>A field guide</strong><br>Audit the interface your coding agents actually use.</div>
+              <div class="rr-dark rr-mono">discover → act → prove</div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 02 -->
+      <section class="rr-slide" data-n="2" data-section="ABOUT DAN" data-source="dangerlanc.com" data-source-url="https://dangerlanc.com/">
+        <main>
+          <div class="rr-about-hero">
+            <img class="rr-about-photo" src="assets/dan-gerlanc.jpg" alt="Dan Gerlanc">
+            <div class="rr-about-copy">
+              <h1 class="rr-title sm">Dan Gerlanc</h1>
+              <div class="rr-dark">
+                <h2>Engineering leadership for the age of AI.</h2>
+              </div>
+              <div class="rr-body">
+                <div class="rr-card"><strong>Builder</strong><br>Co-founder and CTO of .txt; VP of Eng. at Normal Computing.</div>
+                <div class="rr-card"><strong>Teacher</strong><br>O&rsquo;Reilly instructor on Python, Pandas, and Dask.</div>
+                <div class="rr-card"><strong>Partner</strong><br>Fractional CTO / VP Engineering and advisor for AI/ML teams.</div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 03 -->
+      <section class="rr-slide" data-n="3" data-section="AGENTS &amp; ENGINEERS" data-source="agentsandengineers.com" data-source-url="https://agentsandengineers.com/">
+        <main>
+          <div class="ae-hero">
+            <div class="rr-dark ae-mark-panel">
+              <img class="ae-logo-image" src="assets/agents-and-engineers-logo.png" alt="Agents &amp; Engineers logo">
+            </div>
+            <div class="ae-copy">
+              <div class="rr-kicker">A PODCAST FOR ENGINEERS BUILDING WITH AI</div>
+              <h1 class="rr-title sm">The craft of software engineering is being rewritten.</h1>
+              <div class="ae-rule"></div>
+              <div class="rr-body">
+                Dispatches from engineers building—and building with—agents. Wins, dead ends, and practical lessons.
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 02 -->
+      <section class="rr-slide" data-n="2" data-section="THESIS">
+        <main>
+          <h1 class="rr-title">Your repo is the agent's interface.</h1>
+          <div class="rr-body">
+            The repository configuration determines whether the agent can
+            discover the path, make a safe change, and prove the result.
+          </div>
+        </main>
+      </section>
+
+      <!-- 03 -->
+      <section class="rr-slide" data-n="3" data-section="TENSION">
+        <main>
+          <h1 class="rr-title sm">Probabilistic orchestrator. Deterministic checker.</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2">
+              <div class="rr-card">
+                <div class="rr-big-number sm">LLM</div>
+                <strong>Slow + variable</strong>
+                <div>Spend judgment where judgment matters.</div>
+              </div>
+              <div class="rr-card">
+                <div class="rr-big-number sm">CODE</div>
+                <strong>Fast + exact</strong>
+                <div>Automate every cheap, repeatable decision.</div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 04 -->
+      <section class="rr-slide" data-n="4" data-section="THE AUDIT">
+        <main>
+          <h1 class="rr-title sm">Seven signals of an agent-ready repo</h1>
+          <div class="rr-body">
+            <div class="rr-flow" style="--count:7">
+              <div class="rr-node">static analysis</div>
+              <div class="rr-node">defined tasks</div>
+              <div class="rr-node">durable memory</div>
+              <div class="rr-node">skills</div>
+              <div class="rr-node">observability</div>
+              <div class="rr-node">verification</div>
+              <div class="rr-node">history</div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 05 -->
+      <section class="rr-slide" data-n="5" data-section="01 / CHECKS" data-source="github.com/j178/prek" data-source-url="https://github.com/j178/prek">
+        <main>
+          <h1 class="rr-title">Do not spend tokens on formatting.</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2">
+              <div>
+                Move cheap mechanical judgment into one fast command.
+                <div class="rr-dark rr-mono" style="margin-top:14px">
+                  $ prek install<br>
+                  $ prek run --all-files<br>
+                  ✓ format · lint · types · secrets
+                </div>
+              </div>
+              <div class="rr-card">
+                <strong>Audit question</strong><br>
+                Can one fast command catch routine mistakes?
+                <div class="rr-score" data-score="checks"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 05B -->
+      <section class="rr-slide" data-n="6" data-section="01B / PREK IN PRACTICE" data-source="gist.github.com/dgerlanc/2445eab8c749f431ba6e8358056d71b8" data-source-url="https://gist.github.com/dgerlanc/2445eab8c749f431ba6e8358056d71b8">
+        <main>
+          <h1 class="rr-title sm">One file, three layers of protection.</h1>
+          <div class="rr-body">
+            <div class="rr-prek-layout">
+              <div class="rr-prek-summary">
+                <div class="rr-big-number sm">12</div>
+                <strong>checks on staged files</strong>
+                <div class="rr-dark rr-mono">$ git commit<br>→ prek run</div>
+              </div>
+              <div>
+                <div class="rr-prek-group">
+                  <div class="rr-prek-label rr-mono">Python</div>
+                  <div class="rr-prek-hooks rr-mono"><strong>ruff-check · ruff-format</strong><br>Lint and normalize code.</div>
+                </div>
+                <div class="rr-prek-group">
+                  <div class="rr-prek-label rr-mono">Dependencies</div>
+                  <div class="rr-prek-hooks rr-mono"><strong>uv-lock</strong><br>Keep the lockfile synchronized.</div>
+                </div>
+                <div class="rr-prek-group">
+                  <div class="rr-prek-label rr-mono">Repository</div>
+                  <div class="rr-prek-hooks rr-mono">
+                    <strong>9 built-ins</strong><br>
+                    whitespace · EOF · BOM · JSON · YAML<br>
+                    line endings · symlinks · merge conflicts · private keys
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 06 -->
+      <section class="rr-slide" data-n="6" data-section="02 / TASKS" data-source="github.com/github/scripts-to-rule-them-all" data-source-url="https://github.com/github/scripts-to-rule-them-all">
+        <main>
+          <h1 class="rr-title sm">One obvious task interface</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2">
+              <div class="rr-dark rr-mono">
+                script/bootstrap<br>
+                script/setup<br>
+                script/test<br>
+                script/server
+              </div>
+              <div class="rr-card">
+                <strong>Audit question</strong><br>
+                Are setup, test, and server/run commands unambiguous?
+                <div class="rr-score" data-score="tasks"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 07 -->
+      <section class="rr-slide" data-n="7" data-section="03 / MEMORY">
+        <main>
+          <h1 class="rr-title">Docs are the API between turns.</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2">
+              <div>
+                <div class="rr-flow" style="--count:3">
+                  <div class="rr-node">TURN 14</div>
+                  <div class="rr-node">ARCHITECTURE.md</div>
+                  <div class="rr-node">TURN 15</div>
+                </div>
+                <p>Update architecture docs when a boundary, dependency, or invariant changes.</p>
+                <p class="rr-mono">ARCHITECTURE.md · ADRs · root → nested AGENTS.md</p>
+              </div>
+              <div class="rr-card">
+                <strong>Audit question</strong><br>
+                Can a fresh agent recover what changed and why without the prior conversation?
+                <div class="rr-score" data-score="memory"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 07B -->
+      <section class="rr-slide" data-n="8" data-section="03A / KEEP DOCS CURRENT" data-source="docs.devin.ai/work-with-devin/deepwiki" data-source-url="https://docs.devin.ai/work-with-devin/deepwiki">
+        <main>
+          <h1 class="rr-title sm">Make documentation part of &ldquo;done.&rdquo;</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2">
+              <div>
+                <div class="rr-dark">
+                  <div class="rr-kicker" style="justify-content:flex-start">AGENTS.md / TASK SKILL</div>
+                  <p class="rr-mono">&ldquo;When a change affects architecture, interfaces, or invariants, update the relevant docs before finishing. Delegate the docs pass to a sub-agent.&rdquo;</p>
+                </div>
+                <div class="rr-flow" style="--count:3; margin-top:18px">
+                  <div class="rr-node">code change</div>
+                  <div class="rr-node">docs sub-agent</div>
+                  <div class="rr-node">next turn</div>
+                </div>
+              </div>
+              <div>
+                <div class="rr-card">
+                  <strong>Generated context</strong><br>
+                  DeepWiki in Devin can index a repo and generate a navigable wiki.
+                </div>
+                <div class="rr-card">
+                  <strong>Automated backstops</strong><br>
+                  CI drift checks · scheduled agent runs · docs-freshness pull requests
+                </div>
+                <p class="rr-mono">Default in the workflow. Reinforce on a schedule.</p>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 09 -->
+      <section class="rr-slide" data-n="9" data-section="04 / SKILLS">
+        <main>
+          <h1 class="rr-title">Repo-specific skills encode expert moves.</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2">
+              <div>
+                <div class="rr-card"><strong>Database migration</strong><br>Check tenant row-level security.</div>
+                <div class="rr-card"><strong>Security review</strong><br>Run the repo's actual threat checks.</div>
+              </div>
+              <div class="rr-card">
+                <strong>Audit question</strong><br>
+                Are domain-sensitive tasks executable and verifiable?
+                <div class="rr-score" data-score="skills"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 10 -->
+      <section class="rr-slide" data-n="10" data-section="05 / OBSERVABILITY" data-source="opentelemetry.io · grafana.com/docs" data-source-urls="https://opentelemetry.io/|https://grafana.com/docs/">
+        <main>
+          <h1 class="rr-title sm">Agent-observable systems</h1>
+          <div class="rr-body">
+            <div class="rr-flow" style="--count:6">
+              <div class="rr-node">symptom</div>
+              <div class="rr-node">logs</div>
+              <div class="rr-node">trace</div>
+              <div class="rr-node">code</div>
+              <div class="rr-node">reproduced failure</div>
+              <div class="rr-node">verified fix</div>
+            </div>
+            <div class="rr-grid-2">
+              <div>Give the agent structured logs, traces, metrics, stable fixtures, and documented queries.</div>
+              <div class="rr-card">
+                <strong>Audit question</strong><br>
+                Can an agent reproduce and inspect runtime behavior?
+                <div class="rr-score" data-score="observability"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 11 -->
+      <section class="rr-slide" data-n="11" data-section="06 / VERIFICATION" data-source="roborev.io · deadreckon.sh · github.com/obra/superpowers" data-source-urls="https://www.roborev.io/|https://deadreckon.sh/|https://github.com/obra/superpowers">
+        <main>
+          <h1 class="rr-title sm">The builder should not be the only judge.</h1>
+          <div class="rr-body">
+            <div class="rr-flow" style="--count:4">
+              <div class="rr-node">builder</div>
+              <div class="rr-node">artifact + evidence</div>
+              <div class="rr-node">independent judge</div>
+              <div class="rr-node">verdict</div>
+            </div>
+            <div class="rr-grid-2">
+              <div><strong>Examples</strong><br>RoboRev · deadreckon.sh · Superpowers</div>
+              <div class="rr-card">
+                <strong>Audit question</strong><br>
+                Can an independent check falsify &ldquo;done&rdquo;?
+                <div class="rr-score" data-score="verification"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 08 -->
+      <section class="rr-slide" data-n="8" data-section="06A / DONE CONTRACT" data-source="deadreckon.sh" data-source-url="https://deadreckon.sh/">
+        <main>
+          <h1 class="rr-title sm">Define &ldquo;done&rdquo; before the agent starts.</h1>
+          <div class="rr-body">
+            <div class="rr-flow" style="--count:5">
+              <div class="rr-node">goal
+text or file</div>
+              <div class="rr-node">done contract
+.deadreckon/acceptance.yaml</div>
+              <div class="rr-node">isolated run
+worktree + sandbox</div>
+              <div class="rr-node">dr-gate
+checks + signs</div>
+              <div class="rr-node">deadreckon
+validates completion</div>
+            </div>
+            <div class="rr-grid-2">
+              <div class="rr-card"><strong>Goal</strong><br>Inline or from a file: what must become true.</div>
+              <div class="rr-card"><strong>Done contract</strong><br>Executable, falsifiable checks created by <code>start</code> or <code>def-done</code>.</div>
+            </div>
+            <div class="rr-dark rr-mono rr-console">
+              <div class="rr-console-line"><strong>$ deadreckon start</strong><span>enter your goal and kick-off</span></div>
+              <div class="rr-console-line"><strong>$ deadreckon def-done</strong><span>define the goal</span></div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 12 -->
+      <section class="rr-slide" data-n="12" data-section="07 / HISTORY">
+        <main>
+          <h1 class="rr-title sm">Machine-readable history</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2">
+              <div>
+                <div class="rr-card"><strong>What changed?</strong><br>Focused commits and legible diffs.</div>
+                <div class="rr-card"><strong>Why did it change?</strong><br>A consistent message convention.</div>
+              </div>
+              <div class="rr-card">
+                <strong>Audit question</strong><br>
+                Can an agent infer what changed and why?
+                <div class="rr-score" data-score="history"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 13 -->
+      <section class="rr-slide" data-n="13" data-section="SCORE">
+        <main>
+          <h1 class="rr-title sm">Your Repo Readiness score</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2 wide-right">
+              <div>
+                <div class="rr-big-number"><span id="total-score">0</span>/14</div>
+                <strong id="score-band">START HERE</strong>
+              </div>
+              <div>
+                <strong>Lowest-scoring candidates</strong><br>
+                <span class="rr-cands" id="lowest-cands"></span>
+                <div class="rr-score">
+                  <label class="rr-score-label" for="first-change">Which lowest-scoring gap affects frequent work or carries the most risk?</label>
+                  <select class="rr-select" id="first-change"></select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 14 -->
+      <section class="rr-slide" data-n="14" data-section="ACT">
+        <main>
+          <h1 class="rr-title sm">Choose your first change</h1>
+          <div class="rr-body">
+            <div class="rr-dark">
+              <div class="rr-kicker">YOUR NEXT MOVE</div>
+              <h2 id="next-move">Add one fast deterministic check</h2>
+            </div>
+            <div class="rr-grid-2" style="margin-top:20px">
+              <div class="rr-card"><strong>1 · Lowest score</strong><br>Start with the visible gap.</div>
+              <div class="rr-card"><strong>2 · Frequency or risk</strong><br>Resolve ties with the work that matters most.</div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- 15 -->
+      <section class="rr-slide" data-n="15" data-section="DISCUSS">
+        <main>
+          <h1 class="rr-title">Audit a repo you know.</h1>
+          <div class="rr-body">
+            <div class="rr-grid-2">
+              <div class="rr-card"><strong>Where does an agent lose the trail?</strong></div>
+              <div class="rr-card"><strong>What is the first change you would make?</strong></div>
+            </div>
+            <p class="rr-mono rr-span-note">10–20 minutes · compare scores · challenge assumptions</p>
+          </div>
+        </main>
+      </section>
+
+      <!-- 16 -->
+      <section class="rr-slide" data-n="16" data-section="AUDIT SHEET">
+        <main>
+          <h1 class="rr-title rr-audit-title">Score all seven checks in one place</h1>
+          <div class="rr-audit-sheet">
+            <div class="rr-audit-row">
+              <div class="rr-audit-dimension"><span>01</span><strong>Static analysis</strong></div>
+              <div class="rr-audit-question">Can one fast command catch routine mistakes?</div>
+              <div class="rr-score rr-score-compact" data-score="checks" data-label="Static analysis"></div>
+            </div>
+            <div class="rr-audit-row">
+              <div class="rr-audit-dimension"><span>02</span><strong>Defined tasks</strong></div>
+              <div class="rr-audit-question">Are setup, test, and server/run commands unambiguous?</div>
+              <div class="rr-score rr-score-compact" data-score="tasks" data-label="Defined tasks"></div>
+            </div>
+            <div class="rr-audit-row">
+              <div class="rr-audit-dimension"><span>03</span><strong>Durable memory</strong></div>
+              <div class="rr-audit-question">Can a fresh agent recover what changed and why without the prior conversation?</div>
+              <div class="rr-score rr-score-compact" data-score="memory" data-label="Durable memory"></div>
+            </div>
+            <div class="rr-audit-row">
+              <div class="rr-audit-dimension"><span>04</span><strong>Skills</strong></div>
+              <div class="rr-audit-question">Are domain-sensitive tasks executable and verifiable?</div>
+              <div class="rr-score rr-score-compact" data-score="skills" data-label="Skills"></div>
+            </div>
+            <div class="rr-audit-row">
+              <div class="rr-audit-dimension"><span>05</span><strong>Observability</strong></div>
+              <div class="rr-audit-question">Can an agent reproduce and inspect runtime behavior?</div>
+              <div class="rr-score rr-score-compact" data-score="observability" data-label="Observability"></div>
+            </div>
+            <div class="rr-audit-row">
+              <div class="rr-audit-dimension"><span>06</span><strong>Verification</strong></div>
+              <div class="rr-audit-question">Can an independent check falsify &ldquo;done&rdquo;?</div>
+              <div class="rr-score rr-score-compact" data-score="verification" data-label="Verification"></div>
+            </div>
+            <div class="rr-audit-row">
+              <div class="rr-audit-dimension"><span>07</span><strong>History</strong></div>
+              <div class="rr-audit-question">Can an agent infer what changed and why?</div>
+              <div class="rr-score rr-score-compact" data-score="history" data-label="History"></div>
+            </div>
+            <div class="rr-audit-total rr-mono">
+              <span>0–4 START HERE · 5–9 USEFUL FOUNDATION · 10–14 AGENT-READY</span>
+              <strong><span id="audit-total-score">0</span>/14 · <span id="audit-score-band">START HERE</span></strong>
+            </div>
+          </div>
+        </main>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // ---- Chrome (kicker + footer) injected so each section stays terse ----
+    const allSlides = [...document.querySelectorAll('section.rr-slide')];
+    allSlides.forEach((s, index) => {
+      const n = index + 1;
+      const section = s.dataset.section || '';
+      const source = s.dataset.source || '';
+      const sourceUrl = s.dataset.sourceUrl || '';
+      const sourceUrls = (s.dataset.sourceUrls || sourceUrl).split('|').filter(Boolean);
+      const sourceMarkup = source.split(' · ').map((label, sourceIndex) => {
+        const url = sourceUrls[sourceIndex];
+        return url
+          ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`
+          : label;
+      }).join(' · ');
+      const header = document.createElement('header');
+      header.className = 'rr-kicker';
+      header.innerHTML = `<span>REPO READINESS / ${section}</span><span>${String(n).padStart(2,'0')} / ${allSlides.length}</span>`;
+      const footer = document.createElement('footer');
+      footer.className = 'rr-footer';
+      footer.innerHTML = `<span>IS YOUR REPO READY FOR AGENTS?</span><span class="rr-source">${sourceMarkup}</span>`;
+      s.insertBefore(header, s.firstElementChild);
+      s.appendChild(footer);
+    });
+
+    // ============================================================
+    // Reactive audit scoring — the ONLY thing marimo/Pyodide did.
+    // ~40 lines of vanilla JS, no runtime, no server, no network.
+    // ============================================================
+    const DIMS = ['checks','tasks','memory','skills','observability','verification','history'];
+    const AUDIT_TITLES = {
+      checks: 'Add one fast deterministic check',
+      tasks: 'Create one obvious task interface',
+      memory: 'Create or repair ARCHITECTURE.md',
+      skills: 'Capture one expert workflow as a skill',
+      observability: 'Instrument one real failure path',
+      verification: 'Add one independent verification step',
+      history: 'Adopt a commit convention and smaller commits',
+    };
+    const OPTIONS = [['0 · no',0],['1 · sometimes',1],['2 · yes',2]];
+    const scores = Object.fromEntries(DIMS.map((d) => [d, 0]));
+
+    function scoreBand(total) {
+      if (total <= 4) return 'START HERE';
+      if (total <= 9) return 'USEFUL FOUNDATION';
+      return 'AGENT-READY';
+    }
+    function lowestDimensions() {
+      const min = Math.min(...Object.values(scores));
+      return DIMS.filter((d) => scores[d] === min); // preserves DIMS order, like the Python
+    }
+
+    // Build the segmented score controls into each placeholder.
+    document.querySelectorAll('.rr-score[data-score]').forEach((el) => {
+      const dim = el.dataset.score;
+      const scoreLabel = el.dataset.label || 'Your repo';
+      const seg = OPTIONS.map(([label, val], i) =>
+        `<button type="button" class="rr-score-option" data-value="${val}" aria-label="${scoreLabel}: ${label}" aria-pressed="${i === 0}">${label}</button>`
+      ).join('');
+      el.innerHTML = `<span class="rr-score-label">${scoreLabel}</span><span class="rr-seg">${seg}</span>`;
+      el.addEventListener('click', (e) => {
+        const button = e.target.closest('.rr-score-option');
+        if (!button) return;
+        scores[dim] = Number(button.dataset.value);
+        recompute();
+      });
+    });
+
+    const $total = document.getElementById('total-score');
+    const $band = document.getElementById('score-band');
+    const $auditTotal = document.getElementById('audit-total-score');
+    const $auditBand = document.getElementById('audit-score-band');
+    const $cands = document.getElementById('lowest-cands');
+    const $select = document.getElementById('first-change');
+    const $move = document.getElementById('next-move');
+
+    function recompute() {
+      const total = Object.values(scores).reduce((a, b) => a + b, 0);
+      const lowest = lowestDimensions();
+      $total.textContent = total;
+      $band.textContent = scoreBand(total);
+      $auditTotal.textContent = total;
+      $auditBand.textContent = scoreBand(total);
+      $cands.textContent = lowest.map((d) => AUDIT_TITLES[d]).join(' · ');
+      document.querySelectorAll('.rr-score[data-score]').forEach((el) => {
+        const selected = scores[el.dataset.score];
+        el.querySelectorAll('.rr-score-option').forEach((option) => {
+          option.setAttribute('aria-pressed', String(Number(option.dataset.value) === selected));
+        });
+      });
+
+      // Derived dropdown: options depend on which dimensions tie for lowest.
+      const prev = $select.value;
+      $select.innerHTML = lowest
+        .map((d) => `<option value="${d}">${AUDIT_TITLES[d]}</option>`).join('');
+      $select.value = lowest.includes(prev) ? prev : lowest[0];
+      $select.disabled = lowest.length === 1;
+      $move.textContent = AUDIT_TITLES[$select.value];
+    }
+    $select.addEventListener('change', () => { $move.textContent = AUDIT_TITLES[$select.value]; });
+    recompute();
+
+    // ============================================================
+    // Small browser-native deck controller.
+    // ============================================================
+    const $slides = [...document.querySelectorAll('.rr-slide')];
+    const $deck = document.querySelector('.deck .slides');
+    const $controls = document.createElement('nav');
+    $controls.className = 'deck-controls';
+    $controls.setAttribute('aria-label', 'Slide controls');
+    $controls.innerHTML = '<button type="button" data-direction="prev" aria-label="Previous slide">‹</button>'
+      + '<button type="button" data-direction="next" aria-label="Next slide">›</button>';
+    document.querySelector('.deck').appendChild($controls);
+    const $progress = document.createElement('div');
+    $progress.className = 'deck-progress';
+    $progress.setAttribute('aria-hidden', 'true');
+    $progress.innerHTML = '<div class="deck-progress-bar"></div>';
+    document.querySelector('.deck').appendChild($progress);
+    const $progressBar = $progress.firstElementChild;
+    const $goDialog = document.createElement('dialog');
+    $goDialog.className = 'rr-go-dialog';
+    $goDialog.setAttribute('aria-labelledby', 'rr-go-title');
+    $goDialog.innerHTML = `
+      <form class="rr-go-form">
+        <h2 class="rr-go-title" id="rr-go-title">Go to slide</h2>
+        <label class="rr-go-label" for="rr-go-slide">Slide number</label>
+        <input class="rr-go-input" id="rr-go-slide" name="slide" type="number"
+          min="1" max="${$slides.length}" inputmode="numeric" aria-describedby="rr-go-hint" required>
+        <p class="rr-go-hint" id="rr-go-hint" aria-live="polite"></p>
+        <div class="rr-go-actions">
+          <button type="button" data-action="cancel">Cancel</button>
+          <button type="submit">Go</button>
+        </div>
+      </form>`;
+    document.querySelector('.deck').appendChild($goDialog);
+    const $goForm = $goDialog.querySelector('form');
+    const $goInput = $goDialog.querySelector('input');
+    const $goHint = $goDialog.querySelector('.rr-go-hint');
+    let currentSlide = 0;
+
+    function slideFromHash() {
+      const match = window.location.hash.match(/(?:^#\/?|slide=)(\d+)/);
+      const requested = match ? Number(match[1]) - 1 : 0;
+      return Number.isInteger(requested) && requested >= 0 && requested < $slides.length ? requested : 0;
+    }
+
+    function updateHash(index) {
+      const hash = `#/${index + 1}`;
+      if (window.location.hash !== hash) history.replaceState(null, '', hash);
+    }
+
+    function renderSlide(index, writeHash = true) {
+      currentSlide = Math.max(0, Math.min(index, $slides.length - 1));
+      $slides.forEach((slide, i) => {
+        const active = i === currentSlide;
+        slide.classList.toggle('is-active', active);
+        slide.setAttribute('aria-hidden', String(!active));
+      });
+      $controls.querySelector('[data-direction="prev"]').disabled = currentSlide === 0;
+      $controls.querySelector('[data-direction="next"]').disabled = currentSlide === $slides.length - 1;
+      $progressBar.style.width = `${((currentSlide + 1) / $slides.length) * 100}%`;
+      if (writeHash) updateHash(currentSlide);
+    }
+
+    function updateGoPreview() {
+      const slideNumber = Number($goInput.value);
+      const index = slideNumber - 1;
+      if (Number.isInteger(slideNumber) && index >= 0 && index < $slides.length) {
+        const section = $slides[index].dataset.section || 'SLIDE';
+        $goHint.textContent = `${String(slideNumber).padStart(2, '0')} / ${$slides.length} · ${section}`;
+      } else {
+        $goHint.textContent = `Choose a slide from 1 to ${$slides.length}.`;
+      }
+    }
+
+    function openGoDialog() {
+      $goInput.value = currentSlide + 1;
+      updateGoPreview();
+      $goDialog.showModal();
+      $goInput.focus();
+      $goInput.select();
+    }
+
+    function resizeDeck() {
+      const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+      $deck.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    $controls.addEventListener('click', (event) => {
+      const direction = event.target.closest('button')?.dataset.direction;
+      if (direction) renderSlide(currentSlide + (direction === 'next' ? 1 : -1));
+    });
+
+    $goInput.addEventListener('input', updateGoPreview);
+    $goForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!$goInput.reportValidity()) return;
+      renderSlide(Number($goInput.value) - 1);
+      $goDialog.close();
+    });
+    $goDialog.querySelector('[data-action="cancel"]').addEventListener('click', () => $goDialog.close());
+    $goDialog.addEventListener('click', (event) => {
+      if (event.target === $goDialog) $goDialog.close();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if ($goDialog.open) return;
+      if (event.target.closest('select, input, textarea')) return;
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      if (event.key.toLowerCase() === 'g') {
+        event.preventDefault(); openGoDialog();
+      } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        event.preventDefault(); renderSlide(currentSlide - 1);
+      } else if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+        event.preventDefault(); renderSlide(currentSlide + 1);
+      } else if (event.key === 'Home') {
+        event.preventDefault(); renderSlide(0);
+      } else if (event.key === 'End') {
+        event.preventDefault(); renderSlide($slides.length - 1);
+      }
+    });
+
+    window.addEventListener('hashchange', () => renderSlide(slideFromHash(), false));
+    window.addEventListener('resize', resizeDeck);
+    resizeDeck();
+    renderSlide(slideFromHash(), false);
+  </script>
+</body>
+</html>

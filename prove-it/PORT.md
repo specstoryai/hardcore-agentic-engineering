@@ -69,6 +69,43 @@ openssl rand -hex 64 > control/gate.key
 Do this once, before the first ported run. The gate will not verify receipts
 signed by the old key, so a late swap orphans every receipt you already earned.
 
+## What counts as your code
+
+The gate fingerprints your repository at `open` and again at `check`, so a
+receipt can say *this* code passed rather than *something in that folder*
+passed. It counts the files git knows about: everything tracked, plus new files
+you have not committed yet. Anything `.gitignore` excludes does not count.
+
+That matters because a repository holds more than your code, and the extra
+files change on their own:
+
+| Language | What else lives in the folder |
+|---|---|
+| Python | `__pycache__/`, `.pytest_cache/`, `.venv/` |
+| R | `.Rproj.user/`, `.Rhistory`, `renv/library/` |
+| JavaScript | `node_modules/`, `dist/` |
+
+`.Rproj.user/` is the sharpest case: RStudio rewrites it as you move around the
+editor, with no command run at all. Before this rule, having your editor open
+was enough to stale a receipt while your code sat untouched.
+
+**The thirty-second check, worth doing before your first ported run.** Run your
+check command twice, then:
+
+```sh
+git status --porcelain --ignored
+```
+
+Anything listed is written by your own toolchain. Ignored entries are now
+harmless. Anything *not* ignored is part of your candidate, so decide
+deliberately whether it belongs there.
+
+Two notes. If your candidate is not a git repository, the gate falls back to
+hashing every file in the directory, and the thirty-second check above is the
+only way to see what will move. And every receipt records which method produced
+it, so receipts you earned before this rule existed keep verifying exactly as
+they did, and a run you have already opened finishes the way it started.
+
 ## The three commands
 
 Where each step runs, and where your agent runs:

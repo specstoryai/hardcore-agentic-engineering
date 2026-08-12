@@ -17,6 +17,7 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { gate, loop, makeFixtureRoot } from './helpers.ts';
@@ -261,6 +262,79 @@ for (const [shape, divider] of [
     }
   });
 }
+
+// Candidate identity comes from git's view of the repo, not from every file in
+// the directory. Found the hard way by two students in one week, from two
+// languages: pytest caches in one repo and RStudio's .Rproj.user/ in another
+// moved the candidate tree and staled a receipt while the code sat untouched.
+// .Rproj.user/ needs no command at all — having the editor open is enough.
+test('an ignored file does not move the candidate tree, and a tracked one does', () => {
+  const { root, cleanup } = makeFixtureRoot();
+  const student = makeStudentRepo();
+  try {
+    execFileSync('git', ['init', '-q'], { cwd: student.repo });
+    writeFileSync(join(student.repo, '.gitignore'), '.cache/\n');
+    execFileSync('git', ['add', '-A'], { cwd: student.repo });
+    execFileSync('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', 'commit', '-qm', 'init'], {
+      cwd: student.repo,
+    });
+
+    assert.equal(loop(root, ['open', '--run-id', 'pg', '--contract', student.contract]).status, 0);
+    const run = JSON.parse(readFileSync(join(root, 'runs', 'pg', 'run.json'), 'utf8'));
+    assert.match(run.candidate_tree_start, /^gtree:/, 'a git candidate hashes by git');
+
+    // Editor state, build caches, installed libraries: present, ignored, and
+    // irrelevant to whether the code passed.
+    mkdirSync(join(student.repo, '.cache'), { recursive: true });
+    writeFileSync(join(student.repo, '.cache', 'junk'), 'editor state\n');
+    const c = gate(root, ['check', 'pg']);
+    assert.equal(c.status, 0, c.out);
+    const receipt = JSON.parse(readFileSync(join(root, 'control', 'receipts', 'pg.json'), 'utf8'));
+    assert.match(receipt.candidate_tree, /^gtree:/);
+
+    // The receipt still binds real work: verify passes with the ignored file in
+    // place, and refuses once a tracked file changes.
+    assert.equal(loop(root, ['complete', 'pg']).status, 0, 'ignored file did not stale the receipt');
+    appendFileSync(join(student.repo, 'src', 'parse-duration.mjs'), '// real edit\n');
+    const v = gate(root, ['verify', 'pg']);
+    assert.notEqual(v.status, 0);
+    assert.match(v.out, /receipt stale: candidate tree mismatch/);
+  } finally {
+    cleanup();
+    student.cleanup();
+  }
+});
+
+// Backward compatibility: four receipts were already in students' hands when
+// gtree shipped. A receipt records the algorithm that produced it, and the gate
+// re-hashes with THAT one, so nothing earned under `tree:` needs redoing.
+test('a receipt issued under the old tree algorithm still verifies', () => {
+  const { root, cleanup } = makeFixtureRoot();
+  const student = makeStudentRepo();
+  try {
+    execFileSync('git', ['init', '-q'], { cwd: student.repo });
+    execFileSync('git', ['add', '-A'], { cwd: student.repo });
+    execFileSync('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', 'commit', '-qm', 'init'], {
+      cwd: student.repo,
+    });
+
+    assert.equal(loop(root, ['open', '--run-id', 'pold', '--contract', student.contract]).status, 0);
+    // Rewrite the run as if it had been opened before gtree existed.
+    const runPath = join(root, 'runs', 'pold', 'run.json');
+    const run = JSON.parse(readFileSync(runPath, 'utf8'));
+    run.candidate_tree_start = 'tree:whatever-open-recorded';
+    writeFileSync(runPath, JSON.stringify(run, null, 2));
+
+    const c = gate(root, ['check', 'pold']);
+    assert.equal(c.status, 0, c.out);
+    const receipt = JSON.parse(readFileSync(join(root, 'control', 'receipts', 'pold.json'), 'utf8'));
+    assert.match(receipt.candidate_tree, /^tree:/, 'the run kept the algorithm it opened with');
+    assert.equal(loop(root, ['complete', 'pold']).status, 0, 'an old-algorithm receipt still verifies');
+  } finally {
+    cleanup();
+    student.cleanup();
+  }
+});
 
 test('ported runs keep every gate tooth: smoke worker refused, forged receipt refused, moved goalposts refused', () => {
   const { root, cleanup } = makeFixtureRoot();

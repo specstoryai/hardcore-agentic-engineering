@@ -96,6 +96,111 @@ function selectedFault(artifact) {
   return decision.match(/^answer: (.*)$/m)?.[1] ?? 'not recorded';
 }
 
+function faultStory(answer) {
+  if (answer.startsWith('digit drop')) {
+    return {
+      seeded: '“Top 10 Tools of 2026” incorrectly becomes “top-tools-of”',
+      missing: 'The three original examples contain no digits.',
+      stronger: 'Add an example that requires digits to survive in the slug.',
+    };
+  }
+  if (answer.startsWith('long-title truncation')) {
+    return {
+      seeded: '“A very long title …” incorrectly becomes only “a” once the slug exceeds 60 characters.',
+      missing: 'The three original examples are short, so they never reach the faulty branch.',
+      stronger: 'Add a long-title example that requires every word to survive.',
+    };
+  }
+  return {
+    seeded: answer,
+    missing: 'Read the retained room decision to identify the missing property.',
+    stronger: 'Add an observable example for the selected wrong result.',
+  };
+}
+
+function testNames(content) {
+  return [...String(content ?? '').matchAll(/test\(\s*['"]([^'"]+)['"]/g)].map((match) => match[1]);
+}
+
+const ORIGINAL_TEST_NAMES = testNames(safeRead(join(ROOT, 'working', 'test', 'slugify.test.mjs')));
+
+function addedTestNames(check) {
+  return check?.names?.filter((name) => !ORIGINAL_TEST_NAMES.includes(name)) ?? [];
+}
+
+function checkFacts(content) {
+  const text = String(content ?? '');
+  const title = text.match(/const\s+title\s*=\s*['"]([^'"]+)['"]/s)?.[1] ?? null;
+  return {
+    content: text,
+    names: testNames(text),
+    title,
+    rejectsFirstWord: /assert\.notEqual\(\s*result\s*,\s*(?:firstWord|full\.split)/.test(text),
+    requiresSeveralWords: /result\.includes\(\s*['"]-['"]\s*\)/.test(text),
+    imposesSixtyCharacterLimit: /result\.length\s*<=\s*60/.test(text),
+    requiresFullSlug: /assert\.equal\(\s*result\s*,\s*expected\s*\)/.test(text),
+  };
+}
+
+function checkWrites(events) {
+  return events
+    .filter(
+      (event) =>
+        event.type === 'tool.requested' &&
+        event.data?.tool === 'write_file' &&
+        event.data?.args?.path === 'working/test/strengthened.test.mjs',
+    )
+    .map((event) => checkFacts(event.data.args.content));
+}
+
+function safeRead(path) {
+  try {
+    return readFileSync(path, 'utf8');
+  } catch {
+    return '';
+  }
+}
+
+function preview(value, max = 74) {
+  const text = String(value ?? '');
+  return text.length <= max ? text : `${text.slice(0, max - 1)}…`;
+}
+
+function expectedSlug(title) {
+  return String(title)
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function mockCheckPath(artifact) {
+  const log = safeRead(join(artifact, 'right.log'));
+  return log.match(/check-adequacy\.sh\s+\S+\s+([^\s;&|]+)/)?.[1] ?? null;
+}
+
+function newestRealArtifact(exclude) {
+  if (!existsSync(ARTIFACTS)) return null;
+  return readdirSync(ARTIFACTS)
+    .filter((name) => name.startsWith('s4-'))
+    .map((name) => join(ARTIFACTS, name))
+    .filter((path) => path !== exclude && /right: mode=real\b/.test(safeRead(join(path, 'provenance.txt'))))
+    .filter((path) => existsSync(join(path, 'frames.txt')))
+    .sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)[0] ?? null;
+}
+
+function editDescription(check, previous) {
+  const changes = [];
+  if (check.rejectsFirstWord) changes.push('rejects the first-word-only result');
+  if (check.requiresSeveralWords) changes.push('requires a multi-word slug');
+  if (check.imposesSixtyCharacterLimit) changes.push('adds a maximum-60-character rule');
+  if (previous?.imposesSixtyCharacterLimit && !check.imposesSixtyCharacterLimit)
+    changes.push('removes the unsupported 60-character maximum');
+  if (check.requiresFullSlug) changes.push('requires the complete normalized slug');
+  return changes.length ? changes.join('; ') : 'changes the examples shown below';
+}
+
 function shortHash(value) {
   const hash = String(value).match(/\b[0-9a-f]{64}\b/i)?.[0];
   return hash ? `${hash.slice(0, 12)}…` : 'not recorded';
@@ -132,6 +237,13 @@ const hashesMatch = shortHash(leftStart) !== 'not recorded' && shortHash(leftSta
 const realMode = /right: mode=real\b/.test(provenance);
 const events = readEvents(join(artifact, 'right', 'shared', 'events.jsonl'));
 const manifest = readJson(join(artifact, 'right', 'manifest.json'));
+const selected = selectedFault(artifact);
+const story = faultStory(selected);
+const writes = checkWrites(events);
+const finalCheck = writes.at(-1) ?? null;
+const mockPath = realMode ? null : mockCheckPath(artifact);
+const mockCheck = mockPath ? checkFacts(safeRead(join(ROOT, mockPath))) : null;
+const mockAddedTests = addedTestNames(mockCheck);
 const attempts = events
   .filter((event) => event.type === 'tool.result' && event.data?.tool === 'run_adequacy')
   .map((event, index) => {
@@ -150,10 +262,32 @@ console.log(`\n${C.blue(C.bold('SESSION 4 · DID THE CHECK EARN TRUST?'))}`);
 console.log(C.dim(`Artifact: ${artifactName}`));
 console.log();
 
+if (realMode) {
+  console.log(C.green(C.bold('RUN MODE · REAL — one Claude worker authored the stronger check.')));
+} else {
+  console.log(C.yellow(C.bold('RUN MODE · MOCK — Claude did not run in this artifact.')));
+  console.log('The supplied stronger check stood in for Claude authorship; the host still ran all three judgments.');
+  const real = newestRealArtifact(artifact);
+  if (real) console.log(C.dim(`Newest retained real S4 run: ${relative(ROOT, real)}`));
+}
+console.log();
+
+box(
+  'WHAT THIS DEMO IS ACTUALLY TESTING',
+  [
+    'Product             slugify turns a title into a URL slug: “Hello World” → “hello-world”',
+    'Original check      three short examples: lowercase and dashes; ampersands; messy punctuation',
+    `Seeded wrong result ${story.seeded}`,
+    `Why check-v1 misses it ${story.missing}`,
+    'Only change         the check; both lanes start with the same broken slugify',
+  ],
+  C.blue,
+);
+
 box(
   'EXPERIMENTAL CONTROL',
   [
-    `room-selected fault  ${selectedFault(artifact)}`,
+    `room-selected fault  ${selected}`,
     `left product hash    ${shortHash(leftStart)}`,
     `right product hash   ${shortHash(rightStart)}`,
     hashesMatch
@@ -178,27 +312,51 @@ box(
 
 if (realMode || attempts.length || failedRun) {
   const model = manifest?.model ?? manifest?.requested_model ?? 'model not recorded';
-  const reviewLines = attempts.length
-    ? attempts.flatMap((attempt) => [
-        `${attempt.status === 'ok' ? C.green('✓') : C.red('×')} attempt ${attempt.number} · ${attempt.fault}`,
-        `            ${attempt.correct}`,
-      ])
-    : [
-        failedRun
-          ? C.red(`worker failed before an adequacy attempt · ${failedRun.data?.code ?? 'reason not recorded'}`)
-          : 'worker activity was not retained',
-      ];
+  const reviewLines = [
+    '1 · READ           the faulty slugify and the three-example check-v1',
+    '2 · FOUND          long inputs enter a branch that returns only the first word; check-v1 uses only short inputs',
+    '3 · LEFT ALONE     working/src/slugify.mjs — Claude changed the check, not the product',
+    `4 · WROTE          ${writes.length} version${writes.length === 1 ? '' : 's'} of working/test/strengthened.test.mjs`,
+    ...(finalCheck?.names?.length
+      ? [`FINAL TEST(S)      ${addedTestNames(finalCheck).join(' · ') || finalCheck.names.join(' · ')}`]
+      : ['FINAL TEST         not retained in this artifact']),
+    ...(finalCheck?.title
+      ? [
+          `NEW INPUT          “${preview(finalCheck.title)}”`,
+          `BROKEN OUTPUT      “${finalCheck.title.split(/\s+/)[0].toLowerCase()}”`,
+          `REQUIRED OUTPUT    “${preview(expectedSlug(finalCheck.title))}”`,
+        ]
+      : []),
+    ...(finalCheck
+      ? [`WHAT IMPROVED      ${editDescription(finalCheck, writes.at(-2))}`]
+      : [`PROPERTY ADDED     ${story.stronger}`]),
+    ...(attempts.length
+      ? attempts.flatMap((attempt) => [
+          `${attempt.status === 'ok' ? C.green('✓') : C.red('×')} version ${attempt.number} · ${editDescription(writes[attempt.number - 1] ?? finalCheck, writes[attempt.number - 2])}`,
+          `            ${attempt.fault}`,
+          `            ${attempt.correct}`,
+        ])
+      : [
+          failedRun
+            ? C.red(`worker failed before an adequacy attempt · ${failedRun.data?.code ?? 'reason not recorded'}`)
+            : 'worker activity was not retained',
+        ]),
+  ];
   box(
-    `REVIEW LOOP · REAL WORKER · ${model}`,
+    `WHAT CLAUDE CHANGED · REAL WORKER · ${model}`,
     reviewLines,
     failedRun && !attempts.length ? C.red : C.blue,
   );
 } else {
   box(
-    'REVIEW LOOP · SUPPLIED CHECK',
+    'WHAT THE SUPPLIED CHECK CHANGED · NO CLAUDE PROCESS',
     [
-      'mock mode starts no model process',
-      'the shipped stronger check replaces worker authorship; the adequacy harness still runs',
+      `Source file        ${mockPath ?? 'not recorded'}`,
+      `Property added     ${story.stronger}`,
+      `Original check     ${ORIGINAL_TEST_NAMES.join(' · ')}`,
+      ...(mockAddedTests.length ? [`Added beyond v1    ${mockAddedTests.join(' · ')}`] : []),
+      'Product unchanged  the supplied check does not fix working/src/slugify.mjs',
+      'Host judgment      the same three-state adequacy harness still runs',
     ],
     C.blue,
   );
@@ -206,11 +364,11 @@ if (realMode || attempts.length || failedRun) {
 
 const rightPasses = /stays GREEN/.test(rightSurprise) && /goes RED/.test(rightControl) && /stays GREEN/.test(rightVerdict);
 box(
-  'RIGHT · ATTACKED CHECK',
+  'RIGHT · HOST JUDGES THE STRONGER CHECK',
   [
-    `fault + current check       → ${rightSurprise}`,
-    `fault + stronger check      → ${rightControl}`,
-    `correct + stronger check    → ${rightVerdict}`,
+    `1 · prove the blind spot    current check + fault    → ${rightSurprise}`,
+    `2 · prove detection         stronger check + fault   → ${rightControl}`,
+    `3 · rule out false alarm    stronger check + correct → ${rightVerdict}`,
     rightPasses
       ? C.green('CHECK EARNS TRUST          fault red; correct result green')
       : C.red('ADEQUACY NOT ESTABLISHED      inspect the missing or failed state above'),

@@ -7,8 +7,8 @@ import type { Scenario } from '../scenario.ts';
 
 const SEED =
   `case '{{answer}}' in ` +
-  `'long-title truncation') cp control/checks/fixtures/solution-faulty.mjs working/src/slugify.mjs ;; ` +
-  `'digit drop') cp sessions/s4-attack-verify/fixtures/solution-faulty-v2.mjs working/src/slugify.mjs ;; ` +
+  `'long-title truncation — “A very long title …” becomes “a”'*) cp control/checks/fixtures/solution-faulty.mjs working/src/slugify.mjs ;; ` +
+  `'digit drop — Top 10 Tools of 2026 becomes top-tools-of'*) cp sessions/s4-attack-verify/fixtures/solution-faulty-v2.mjs working/src/slugify.mjs ;; ` +
   `*) echo 'unknown fault choice: {{answer}}' >&2; exit 2 ;; esac`;
 
 // The screen confirms the same product-source hash in both lanes before
@@ -38,9 +38,20 @@ const AUTHOR =
 // The room-seeded faulty candidate is the product both lanes certify. In mock
 // no worker runs at all; in real, an agent authors the right lane's check.
 const BRIEF_INPUT =
-  'outcome: working/src/slugify.mjs turns arbitrary titles into url-safe slugs\n' +
-  'check: node --test working/test/slugify.test.mjs\n' +
-  'product: the room-seeded faulty candidate — the same bytes in both lanes.';
+  'PRODUCT: slugify turns a title into a URL slug — “Hello World” → “hello-world”\n' +
+  'ORIGINAL CHECK: “Hello World” → “hello-world”; “Rock & Roll” → “rock-and-roll”; messy punctuation → “agentic-engineering”\n' +
+  'BLIND SPOTS: no long-title example and no example containing digits\n' +
+  'CONTROL: put the same room-selected broken slugify in both lanes; change only the check\n' +
+  'LEFT: keep check-v1, then let the real gate issue and verify its receipt\n' +
+  'RIGHT: Claude may write only a stronger check; the host judges it against broken and correct work';
+
+const REVIEW_INPUT =
+  'MODE: {{authorship}}\n' +
+  'ROLE: Claude is reviewing the check, not fixing slugify\n' +
+  'READ: working/src/slugify.mjs and working/test/slugify.test.mjs\n' +
+  'DO NOT CHANGE: working/src/slugify.mjs\n' +
+  'WRITE: working/test/strengthened.test.mjs with an observable example for the missing property\n' +
+  'HOST JUDGMENT: old check green over fault; stronger check red over fault; stronger check green over correct work';
 
 const scenario: Scenario = {
   id: 's4',
@@ -50,17 +61,20 @@ const scenario: Scenario = {
   mechanism:
     'Mock: seeded fixtures, the real gate, and the shipped strong check — deterministic. Real: the same seeded fault and gate, with the right lane\'s check written by an agent and judged by the same adequacy script.',
   allowedCausalDifference:
-    'The left check omits the selected property. The right check includes it.',
+    'Both lanes use the same broken slugify. The left keeps the original three-example check. The right adds the selected property.',
   pause: {
     question: 'Which wrong result must this check catch?',
     kind: 'menu',
-    options: ['long-title truncation', 'digit drop'],
-    default: 'long-title truncation',
+    options: [
+      'long-title truncation — “A very long title …” becomes “a”',
+      'digit drop — Top 10 Tools of 2026 becomes top-tools-of',
+    ],
+    default: 'long-title truncation — “A very long title …” becomes “a”',
   },
   evidenceNote:
     'left: pass 3 over a broken product, then a valid green receipt — identity holds, adequacy unknown · right: the three adequacy states — green over the fault under the current check, red under the strengthened one, green over the correct solution',
   artifactNote:
-    'the artifact records which supplied property the room chose and the three adequacy states; it does not prove that the check covers any other property.',
+    'the artifact records which supplied property the room chose and the three adequacy states. It does not prove that the check covers any other property.',
   expectedVerdicts: {
     left: 'dr-gate: VERIFIED',
     right: 'state 3: strengthened check stays GREEN',
@@ -75,7 +89,8 @@ const scenario: Scenario = {
     // real and honest; the product is wrong; every frame is extracted output.
     {
       lane: 'left',
-      say: 'The room selected this fault: {{answer}}.',
+      say:
+        'Seeded bug: {{answer}}. Check v1 has only three short examples and no assertion for this property.',
       cmd: SEED,
     },
     {
@@ -89,7 +104,8 @@ const scenario: Scenario = {
       lane: 'left',
       frame: 'SURPRISE',
       extract: '# pass \\d+',
-      say: 'The broken product runs against the named check.',
+      say:
+        'The broken slugify passes the three original examples: Hello World, Rock & Roll, and messy punctuation.',
       cmd: 'node --test working/test/slugify.test.mjs',
     },
     {
@@ -103,7 +119,8 @@ const scenario: Scenario = {
       lane: 'left',
       frame: 'VERDICT',
       extract: 'dr-gate: VERIFIED',
-      say: 'The receipt is valid, but the product is wrong. Identity holds. Adequacy remains unknown.',
+      say:
+        'This receipt is valid: check-v1 ran against this exact broken slugify. The missing property was never asked.',
       cmd: 'node control/dr-gate.ts verify {{runid}}',
     },
 
@@ -112,7 +129,8 @@ const scenario: Scenario = {
     // host-owned adequacy harness produces three states from one run.
     {
       lane: 'right',
-      say: 'The room selected the same faulty candidate: {{answer}}.',
+      say:
+        'Seeded the same bug: {{answer}}. The product bytes match the left lane. Only the check may change.',
       cmd: SEED,
     },
     {
@@ -124,11 +142,10 @@ const scenario: Scenario = {
     },
     {
       lane: 'right',
-      promptDisplay:
-        'Find what the existing check misses about this product, write a stronger check, ' +
-        'and use run_adequacy until all three states hold.',
-      inputLabel: 'REVIEW',
-      say: 'An agent attacks the check. Prose explains the work but never proves adequacy.',
+      promptDisplay: REVIEW_INPUT,
+      inputLabel: 'CLAUDE\'S JOB',
+      say:
+        '{{authorship}} The assignment is to read the broken function and the three original examples, then author a separate test file without fixing slugify.',
       realCmd: AUTHOR,
     },
     {

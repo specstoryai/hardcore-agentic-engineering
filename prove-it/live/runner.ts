@@ -280,6 +280,10 @@ const interp = (s: string, lane: LaneState) =>
     .replaceAll('{{runid}}', lane.runid)
     .replaceAll('{{artifact}}', artDir)
     .replaceAll('{{shared}}', sharedId())
+    .replaceAll('{{authorship}}',
+      MOCK
+        ? 'Mock: no Claude process starts; the supplied stronger check stands in for Claude authorship.'
+        : 'Live: one real Claude worker authors the stronger check.')
     .replaceAll('{{answer}}', lane.answer ?? '{{answer}}');
 
 // A run id both panes derive identically, from the one thing they share.

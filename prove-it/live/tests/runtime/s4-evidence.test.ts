@@ -57,7 +57,28 @@ test('the S4 viewer shows the control, both lanes, and rejected worker attempts'
     );
     writeFileSync(
       join(dir, 'right', 'shared', 'events.jsonl'),
-      [event(1, 'failed', 'fails the correct solution'), event(2, 'ok', 'stays GREEN over the correct solution')].join('\n') + '\n',
+      [
+        JSON.stringify({
+          id: 0,
+          run: 's4-test',
+          lane: 'shared',
+          ts: '2026-08-13T20:00:00.000Z',
+          type: 'tool.requested',
+          actor: 'worker',
+          data: {
+            tool: 'write_file',
+            args: {
+              path: 'working/test/strengthened.test.mjs',
+              content:
+                "test('long titles preserve every word', () => {\n" +
+                "  assert.equal(slugify('word '.repeat(20)), Array(20).fill('word').join('-'));\n" +
+                '});\n',
+            },
+          },
+        }),
+        event(1, 'failed', 'fails the correct solution'),
+        event(2, 'ok', 'stays GREEN over the correct solution'),
+      ].join('\n') + '\n',
     );
 
     const result = spawnSync(process.execPath, [join(REPO, 'scripts', 's4-evidence.mjs'), dir], {
@@ -67,13 +88,28 @@ test('the S4 viewer shows the control, both lanes, and rejected worker attempts'
     });
     assert.equal(result.status, 0, result.stdout + result.stderr);
     for (const heading of [
+      'WHAT THIS DEMO IS ACTUALLY TESTING',
       'EXPERIMENTAL CONTROL',
       'LEFT · WEAK CHECK',
-      'REVIEW LOOP · REAL WORKER · test-sonnet',
-      'RIGHT · ATTACKED CHECK',
+      'WHAT CLAUDE CHANGED · REAL WORKER · test-sonnet',
+      'RIGHT · HOST JUDGES THE STRONGER CHECK',
     ]) assert.match(result.stdout, new RegExp(heading));
+    assert.match(result.stdout, /RUN MODE · REAL/);
+    assert.match(result.stdout, /slugify turns a title into a URL slug/);
+    assert.match(result.stdout, /three short examples/);
+    assert.match(result.stdout, /incorrectly becomes only “a” once the slug exceeds 60/);
+    assert.match(result.stdout, /characters\./);
+    assert.match(result.stdout, /1 · READ\s+the faulty slugify and the three-example check-v1/);
+    assert.match(result.stdout, /2 · FOUND\s+long inputs enter a branch that returns only the first word/);
+    assert.match(result.stdout, /3 · LEFT ALONE\s+working\/src\/slugify\.mjs/);
+    assert.match(result.stdout, /4 · WROTE\s+1 version of working\/test\/strengthened\.test\.mjs/);
+    assert.match(result.stdout, /long titles preserve every word/);
+    assert.match(result.stdout, /1 · prove the blind spot/);
+    assert.match(result.stdout, /2 · prove detection/);
+    assert.match(result.stdout, /3 · rule out false alarm/);
     assert.match(result.stdout, /CONTROL HOLDS\s+same broken product/);
-    assert.match(result.stdout, /attempt 1 · state 2: strengthened check goes RED/);
+    assert.match(result.stdout, /version 1/);
+    assert.match(result.stdout, /state 2: strengthened check goes RED/);
     assert.match(result.stdout, /state 3: strengthened check fails the correct solution/);
     assert.match(result.stdout, /CHECK EARNS TRUST\s+fault red; correct result green/);
     assert.match(result.stdout, /receipt proves which check ran/);

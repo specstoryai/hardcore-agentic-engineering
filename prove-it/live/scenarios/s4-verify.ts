@@ -1,8 +1,8 @@
 // S4 · Verify — the check-adequacy compare night. Declaration only; the runner
-// owns every mechanic. Both lanes are deterministic by design, and that is
-// their honesty: the same fault dies the same way every time. The session's
-// one real element — the brief-A fire against a second staged lab — is the
-// run-sheet's job and never enters this scenario.
+// owns every mechanic. The fault, gate, and host adequacy judgment are
+// deterministic. In real mode, one worker authors the right lane's check; in
+// mock mode, the shipped strong check replaces only that authorship step. The
+// separate brief-A receipt-forgery fire remains the run-sheet's job.
 import type { Scenario } from '../scenario.ts';
 
 const SEED =
@@ -108,7 +108,8 @@ const scenario: Scenario = {
     },
 
     // RIGHT — the same candidate; only the check moves. The pause picks the
-    // property; the shipped pair carries it; three states from one run.
+    // property; a real worker authors the check (or mock supplies it); the
+    // host-owned adequacy harness produces three states from one run.
     {
       lane: 'right',
       say: 'The room selected the same faulty candidate: {{answer}}.',

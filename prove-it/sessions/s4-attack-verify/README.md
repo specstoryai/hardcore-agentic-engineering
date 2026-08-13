@@ -1,4 +1,4 @@
-# Session 4: Attack the gate and strengthen the proof
+# Session 4: Attack the check and strengthen the proof
 
 *Make a passing check prove more.*
 

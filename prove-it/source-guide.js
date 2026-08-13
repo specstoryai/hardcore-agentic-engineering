@@ -163,7 +163,7 @@
     '</div>',
     '<div class="run-reading" aria-live="polite"></div>',
     '<div class="state-line"><span class="state">goal + contract</span><span>→</span><span class="state">running</span><span>↺</span><span class="state">refused</span><span>→</span><span class="state done">accepted receipt</span><span>→</span><span class="state done">completed</span></div>',
-    '<div class="session-lenses" aria-label="Course session slices"><span><b>S1</b> contract</span><span><b>S2</b> brief + steer</span><span><b>S3</b> gate internals</span><span><b>S4</b> evidence trail</span><span><b>S5</b> run + recovery</span><span><b>S6</b> human release</span></div>',
+    '<div class="session-lenses" aria-label="Course session slices"><span><b>S1</b> contract</span><span><b>S2</b> brief + steer</span><span><b>S3</b> recovery + authority</span><span><b>S4</b> check adequacy</span><span><b>S5</b> hand-off + regression</span><span><b>S6</b> joins + release</span></div>',
     '<p class="session-note">These labels are lesson lenses. They are not six separate systems.</p>',
     '<nav class="run-sources" aria-label="Real provider source files"><span>Read the real path:</span>',
       '<a href="' + publicSourceBase + 'scripts/demo-compare.sh">launcher</a>',

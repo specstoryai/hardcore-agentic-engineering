@@ -112,3 +112,15 @@ specific run.
 
 The important seam is between steps 3 and 4. The read reports what the world
 contains. The operator decides what that evidence permits the run to record.
+
+For Session 4, render the controlled comparison and the check-authoring loop:
+
+```sh
+node scripts/s4-evidence.mjs
+node scripts/s4-evidence.mjs live/artifacts/<s4-directory>
+```
+
+The first command finds the newest Session 4 artifact. It shows the matching
+product hashes, the valid weak-check receipt, each retained adequacy attempt,
+and the final fault-red/correct-green result. It reads artifacts only; it does
+not rerun the worker or any check.

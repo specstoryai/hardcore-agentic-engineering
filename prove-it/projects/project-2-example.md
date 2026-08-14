@@ -1,13 +1,8 @@
 # Project 2 — controlled and attacked run (worked example)
 
-> Week 2 of the same fictional task. Same repository, same run, further along.
+> Week 2 of the same fictional task. Same repository and evidence lineage,
+> with new attempts where the contract or check changes.
 > Evidence paths are illustrative; yours are real links on your branch.
->
-> One difference from the Session 4 steps, named up front: this example
-> attacked from the check side — it weakened the check to prove the green was
-> not evidence. The Session 4 steps attack from the result side — make one
-> real case wrong, then strengthen the check to catch it. Either direction
-> fills the same five headings and the same six grading boxes.
 
 ## The moment the run became uncertain
 
@@ -28,24 +23,26 @@ exactly how the original double-charge happened.
 
 ## The case I made wrong on purpose
 
-I weakened the dedupe check in a branch: the assertion that counts ledger
-entries now accepts `>= 1` instead of `== 1`. Production code untouched.
+My Project 1 check sent duplicate deliveries one after another. It did not
+send them at the same time.
+
+On a non-main branch, I replaced the atomic insert with a read-then-insert
+sequence. Two concurrent deliveries can both read "missing" before either
+one writes. The old sequential check still passed this wrong implementation.
 
 ## The evidence that came back
 
-The weakened check stayed green over a real duplicate — which is the finding.
-Each branch got its own ported run, opened fresh so `protect` pinned what was
-actually there: on the weakened branch,
-`node src/loop.ts open --run-id p2-attack-weak --contract projects/contract-dedupe.yaml`,
-then `node control/dr-gate.ts check p2-attack-weak` came back ACCEPTED — a
-receipt earned by an inadequate check, exactly what a receipt does not rule
-out. The honest branch, same commands under `p2-attack-honest`, was refused
-with `# fail 1`, the exact case red, in
-`runs/p2-attack-honest/check-output.txt`. Both rulings sit in the prove-it
-clone, and the diff of the weakening is one line, kept in the branch history.
+I saved three results under `projects/project-2-evidence/`:
+
+1. The old sequential check passed the wrong read-then-insert implementation.
+2. The stronger concurrent check failed on that implementation. It found two ledger entries for one `event_id`.
+3. The stronger concurrent check passed after I restored the atomic insert.
+
+The linked `wrong-case.md` records both commands and links all three outputs.
+The branch history keeps the deliberate wrong change and the correction.
 
 ## The blind spot that remains
 
-My check reads the ledger through the same code path the handler writes it
-with. A bug shared by both — wrong key derivation, say — passes clean. An
-independent read path is the fix, and it is not built yet.
+The stronger check covers two simultaneous deliveries. It does not cover a
+large burst across several service instances. A distributed race can still
+pass this local test.

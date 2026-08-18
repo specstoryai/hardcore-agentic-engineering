@@ -1,16 +1,24 @@
-# capture: s5 left lane — TRACE FILED (real fresh-reader cold read, then the deterministic core: the sed change and the honest holdout)
-# recorded: 2026-08-01T23:59:50Z from one real left-lane run (--lane left, real mode)
+# capture: s5 left lane — TRACE FILED (real fresh-reader cold read, deterministic core, and real evaluator)
+# recorded: 2026-08-18T20:33:45Z from one real left-lane run (--lane left, real mode)
 # mode: real
-# model: not printed in the -p transcript; worker was claude CLI 2.1.220 (Claude Code)
-$ claude --dangerously-skip-permissions -p 'Read runs/demo/events.jsonl. You have no other context about this system — you are cold. Why did turn 2 retry? Answer from the trace alone in a few sentences, then name one thing the trace cannot tell you.'
-Turn 2 retried because its `run_check` failed: the check ran `node --test working/test/slugify.test.mjs` and got 2 passes but 1 failure (exit 1), and the harness marked the result `"retryable": true` (event id 13). The run had been requested with `attempts: 3` (event id 1), so budget remained, and the harness opened turn 3, where the worker said the failure was the ampersand case and added a `.replace(/&/g, ' and ')` before re-running the check, which then passed.
+# model: Claude CLI; exact model name was not printed in the retained lane log
+$ bash live/providers/raw-worker.sh 'Read runs/demo/events.jsonl. You have no other context about this system — you are cold. Why did turn 2 retry? Answer from the trace alone in a few sentences, then name one thing the trace cannot tell you.'
+◆ Started the worker session
+● I'll read the trace.
+⏺ Ran wc -l runs/demo/events.jsonl && cat runs/demo/events.jsonl
+⎿ ✓ 24 runs/demo/events.jsonl
+● Why turn 2 retried: Turn 2 wrote a first slugify implementation and ran the named check
+● (events 10–12). The check came back status: "failed" — exit 1, # tests 3 / # pass 2 / # fail 1
+● — flagged retryable: true (event 13). Because a retryable failure was returned rather than an
+--- final answer (full text) ---
+**Why turn 2 retried:** Turn 2 wrote a first `slugify` implementation and ran the named check (events 10–12). The check came back `status: "failed"` — exit 1, `# tests 3 / # pass 2 / # fail 1` — flagged `retryable: true` (event 13). Because a retryable failure was returned rather than an `ok`, the harness opened turn 3 (event 14), where the worker stated the failure was the ampersand case, rewrote the file to map `&` → `" and "` before the non-alphanumeric collapse (event 16), and re-ran the check, which passed (event 19). So: turn 2's work didn't retry itself — its check failed, and the harness granted another attempt (the run was budgeted `attempts: 3`).
 
-One thing the trace cannot tell you: what the failing test actually asserted. The claim that it was "the ampersand case" comes only from the worker's own message in turn 3 — the real failure output lives in the artifact file `runs/demo/tool-output-1.txt`, which the trace references but does not contain. So from the trace alone you can't independently confirm the diagnosis was correct (versus the fix coincidentally satisfying the test).
-· the convenience change: after a crash, resume assumes the dispatched action succeeded
+**What the trace cannot tell you:** which test actually failed, or why. The event only carries the summary counts; the actual assertion output lives in the artifact `runs/demo/tool-output-1.txt`, which isn't in the event stream. The claim that it was "the ampersand case" is the worker's own narration in a `message.delta` — the trace gives you no independent evidence that the diagnosis was correct, only that the subsequent check passed.
+· The change makes resume assume that the dispatched action succeeded.
 $ sed -i.bak "s/const rec = opt('--reconcile');/const rec = opt('--reconcile') ?? 'ok';/" src/loop.ts && rm -f src/loop.ts.bak && grep -n "reconcile') ??" src/loop.ts
-145:    const rec = opt('--reconcile') ?? 'ok';
-· the honest holdout — a case nobody aimed the change at:
-$ bash sessions/s5-operate-improve/fixtures/run-case.sh 01-honest-pass
+177:    const rec = opt('--reconcile') ?? 'ok';
+· The unchanged holdout remains green.
+$ bash sessions/s5-operate-improve/fixtures/run-case.sh 01-honest-pass 2>&1 | tee -a s5-cases.txt
 shape: ok (eval-case-check on fixtures/eval/cases/01-honest-pass.yaml)
 case 01-honest-pass — smoke run from the stub; contract fixed; no interference
   expects:    gate ACCEPTED; receipt verifies; run reaches completed
@@ -38,3 +46,11 @@ dr-gate: VERIFIED — run=c01 contract=sha256:ceaaf355388b… check=check-v1 can
 run=c01 status=completed (receipt verified by dr-gate)
 
 case 01-honest-pass: PASS — gate accepted, receipt verified, run completed; the worker's "done" preceded the gate's (run c01)
+· No retained case tests the change against the crash path.
+· An evaluator reviews the change with this pack, and nothing else.
+$ node live/runtime/cli.ts claude --run-id s5l-z4egu4 --decision-schema --tools read_file --artifact <PROVE_IT_ROOT>/live/artifacts/<s5-directory>/left --timeout 200 --brief "Evaluate this change: after a crash, resume assumes the dispatched action succeeded (--reconcile defaults to 'ok'). Evaluation pack results: $(cat s5-cases.txt). Decide." | grep '^decision:'
+decision: reject — The change makes crash-resume default to assuming the in-flight dispatched action succeeded (--reconcile=ok) when no explicit reconciliation is provided. That's the opposite of this system's own design principle, visible right in the eval trace: "status=needs_evidence — the worker's 'done' is an opinion. Only the gate records completion." A crash between dispatch and result-recording is precisely a case where the true outcome is unknown — it could have succeeded, failed, or partially applied with side effects. Silently defaulting to 'ok' lets an unverified action masquerade as a verified one, potentially advancing run state (and eventually gate/complete) on a false premise, which is the exact failure mode the gate+receipt machinery exists to prevent. Safer defaults would be to mark it 'unknown'/'failed' and force explicit reconciliation (re-run the check, inspect side effects, or require an operator/gate decision) before resuming forward. Additionally, the evidence supplied — case 01-honest-pass — is an unrelated smoke-test trajectory with no crash and no --reconcile flag exercised at all; it provides zero coverage of the actual behavior being changed, so there's no test evidence supporting that this default is safe. Needs a safer default (fail-closed, not fail-open) plus a dedicated eval case that crashes mid-dispatch and asserts the gate refuses to accept without explicit reconciliation.
+· This is what the pack contained.
+$ node -e "const t=require('fs').readFileSync('s5-cases.txt','utf8');const f=(t.match(/FAIL/g)||[]).length;const p=(t.match(/: PASS/g)||[]).length;console.log('pack: '+(p+f)+' case'+(p+f===1?'':'s')+' run, '+f+' failure'+(f===1?'':'s'))"
+pack: 1 case run, 0 failures
+· Evidence incomplete: the holdout passes, but this pack never tests the crash path.

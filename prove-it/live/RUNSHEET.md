@@ -124,3 +124,16 @@ The first command finds the newest Session 4 artifact. It shows the matching
 product hashes, the valid weak-check receipt, each retained adequacy attempt,
 and the final fault-red/correct-green result. It reads artifacts only; it does
 not rerun the worker or any check.
+
+For Session 5, show the change, the controlled difference, the results, and
+the limit of the proof:
+
+```sh
+node scripts/s5-evidence.mjs
+node scripts/s5-evidence.mjs live/artifacts/<s5-directory>
+node scripts/s5-evidence.mjs --details live/artifacts/<s5-directory>
+```
+
+The viewer reads the artifact only. The default view has four short evidence
+frames. The detailed view adds the exact code, raw case output, model advice,
+and the room's recorded decision.

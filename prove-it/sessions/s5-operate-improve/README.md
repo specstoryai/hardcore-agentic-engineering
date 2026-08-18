@@ -47,11 +47,11 @@ During the instructor demo, watch and predict. There is nothing to type. Run the
 
 ### Watch
 
-The left lane files a failed trace but does not keep a runnable case. Its holdout passes, so an outcome-only review supports promotion.
+The left lane keeps readable history but has no runnable crash target. Its holdout passes, but that holdout never enters the changed crash path. The evidence is incomplete.
 
-The right lane keeps the same trace as a regression case. The case catches a false operator event that the passing holdout misses.
+The right lane retains the crash boundary as a regression case. The case catches a false operator event that the passing holdout misses.
 
-In live mode a real Claude reads the trace cold, and a real evaluator reviews each lane's pack and returns a one-word decision. The staging, the change, and the case runs are deterministic fixtures in both modes; your `--mock` copy replays a sanitized recording of the reader.
+In live mode a real Claude first reads a completed run trace cold. This prelude shows what a trace can and cannot explain; it is not the crash test. A real evaluator then reviews each lane's pack and recommends a decision. The recommendation can vary. The staging, the change, the target, and the holdout are deterministic fixtures in both modes; your `--mock` copy replays a sanitized recording of the reader.
 
 ### Decide
 
@@ -68,6 +68,17 @@ bash scripts/demo-compare.sh s5 --mock
 ```
 
 Look for the target case failure, the passing holdout, and the room decision. The runner prints the path of the saved compare artifact.
+
+To explain the retained evidence after the run, use:
+
+```sh
+node scripts/s5-evidence.mjs
+```
+
+The viewer does not rerun anything. The default view answers four questions:
+What changed? What differed between the lanes? What happened? What does the
+evidence prove? Use `node scripts/s5-evidence.mjs --details` to inspect the
+exact code, case output, and model advice.
 
 If `tmux` is not installed, the lanes run one after the other. The evidence is the same. If `tmux` opens but cannot attach, run the same command with `--seq`.
 

@@ -1,4 +1,5 @@
-// S5 · Compound — does a retained trace change a later decision? Declaration
+// S5 · Compound — does a retained case change what a later decision can rely
+// on? Declaration
 // only; the runner owns every mechanic. One real element, honestly placed: the
 // fresh-reader opens the left lane — a real Claude, cold, handed the staged
 // demo trace — and everything after it is deterministic in both lanes, so the
@@ -36,28 +37,33 @@ const CHANGE =
   `sed -i.bak "s/const rec = opt('--reconcile');/const rec = opt('--reconcile') ?? 'ok';/" src/loop.ts` +
   ` && rm -f src/loop.ts.bak && grep -n "reconcile') ??" src/loop.ts`;
 
-// The fresh-reader brief: the trace, the one question, and nothing else.
+// The fresh-reader is a prelude about the limits of a readable trace. It is
+// deliberately separate from the controlled crash-case comparison below.
 const COLD_READ =
   'Read runs/demo/events.jsonl. You have no other context about this system — you are cold. ' +
   'Why did turn 2 retry? Answer from the trace alone in a few sentences, ' +
   'then name one thing the trace cannot tell you.';
 
-// The right lane evaluates a change, not a prompt — this is its exact input.
-const CHANGE_INPUT =
-  'change under review: after a crash, resume assumes the dispatched action ' +
-  "succeeded (--reconcile defaults to 'ok').\n" +
-  'evaluation pack: fixtures/eval/cases — 01-honest-pass (the holdout) and ' +
-  '03-crash-boundary (the retained trace).';
+// Both panes show this before they diverge. Session 4 established the same
+// pattern: name the system, starting rule, proposed change and control before
+// asking the room to interpret any output.
+const BRIEF_INPUT =
+  'SYSTEM: the harness records tool dispatch and results, then resumes interrupted runs\n' +
+  'SAFE START: if a crash leaves a result unknown, resume stops and asks an operator to reconcile it\n' +
+  "CHANGE: without an operator answer, resume now assumes the action succeeded (--reconcile defaults to 'ok')\n" +
+  'TARGET: crash after run_check dispatch but before its result is recorded; resume must not invent an answer\n' +
+  'CONTROL: both lanes make the same change and run the same holdout; only the right pack runs the target\n' +
+  'PRELUDE: a cold reader first inspects a completed run trace; this shows what a trace can explain, not the crash test';
 
 const scenario: Scenario = {
   id: 's5',
   title: 'TRACE FILED vs TRACE RETAINED AS A CASE',
   sharedFixture:
-    'Both lanes use the same trace, convenience change, and honest holdout.',
+    'Both lanes start from the same safe resume rule, apply the same convenience change, and run the same honest holdout.',
   mechanism:
-    'The left lane starts with a live cold read. Both lanes then use deterministic fixtures inside the harness.',
+    'A live cold read demonstrates the limits of trace inspection. The controlled comparison then uses deterministic fixtures inside the harness.',
   allowedCausalDifference:
-    'The left evaluation pack omits the retained case. The right evaluation pack includes it.',
+    'After the shared prelude, the left evaluation pack omits the crash target. The right evaluation pack includes it.',
   pause: {
     question: 'Target red, holdout green. Promote, reject or revise?',
     kind: 'menu',
@@ -65,32 +71,33 @@ const scenario: Scenario = {
     default: 'reject',
   },
   evidenceNote:
-    "left: a cold reader's answer, then a green holdout with nothing behind it — promotion reads supportable · right: the same green holdout, the retained case red on a phantom operator event, and the room's signed decision",
+    "left: a cold reader's answer, then a green holdout that never enters the crash path — evidence incomplete · right: the same green holdout, the crash target red on a phantom operator event, and the room's signed decision",
   artifactNote:
     'the artifact records which case caught the lie and what the room decided — it proves nothing about the next change; retaining the right case from your own history is Project 3.',
   expectedVerdicts: {
-    left: 'outcome-only review would promote|pack: 1 case run, 0 failures',
+    left: 'Evidence incomplete|pack: 1 case run, 0 failures',
     right: 'decision: (promote|reject|revise)|pack: 2 cases run, 1 failure',
   },
   lanes: {
     left: {
       label: 'TRACE FILED',
-      promptDisplay: COLD_READ,
+      promptDisplay: BRIEF_INPUT,
+      inputLabel: 'BRIEF',
       capture: {
         path: 'live/captures/s5-left.txt',
         provenance:
-          'recorded 2026-08-01 from one real left-lane run (claude CLI fresh reader, then the deterministic core, real mode); local paths sanitized',
+          'recorded 2026-08-18 from one real left-lane run (Claude CLI fresh reader, deterministic core, and real evaluator); local paths sanitized',
       },
     },
-    right: { label: 'TRACE RETAINED AS A CASE', promptDisplay: CHANGE_INPUT, inputLabel: 'CHANGE' },
+    right: { label: 'TRACE RETAINED AS A CASE', promptDisplay: BRIEF_INPUT, inputLabel: 'BRIEF' },
   },
   steps: [
-    // LEFT — the failed trace was filed away; outcomes are all that is left.
+    // LEFT — the prelude trace is readable, but the crash target is absent.
     // Real mode runs a live cold read; mock replays the capture from there on.
     {
       lane: 'left',
       frame: 'START',
-      say: 'The crash trace exists, but the evaluation pack does not contain it.',
+      say: 'The trace is readable, but this evaluation pack has no replayable crash target.',
     },
     {
       lane: 'left',
@@ -100,7 +107,9 @@ const scenario: Scenario = {
     {
       lane: 'left',
       captureRef: true,
-      say: 'A fresh Claude reader receives only the trace. It explains turn 2 and names one uncertainty.',
+      promptDisplay: COLD_READ,
+      inputLabel: 'CLAUDE\'S JOB',
+      say: 'A fresh Claude reader receives only the completed run trace. It explains turn 2 and names one uncertainty.',
       realCmd: `bash live/providers/raw-worker.sh '${COLD_READ}'`,
     },
     {
@@ -118,7 +127,7 @@ const scenario: Scenario = {
     {
       lane: 'left',
       frame: 'CONTROL',
-      say: 'No retained case tests the change against the failed trace.',
+      say: 'No retained case tests the change against the crash path.',
     },
     {
       lane: 'left',
@@ -138,15 +147,15 @@ const scenario: Scenario = {
     {
       lane: 'left',
       frame: 'VERDICT',
-      say: 'The outcome-only review would promote. The holdout is green, and no retained case exposes the false history.',
+      say: 'Evidence incomplete: the holdout passes, but this pack never tests the crash path.',
     },
 
-    // RIGHT — the same trace is a replayable case; identical in both modes.
+    // RIGHT — the crash boundary is a replayable case; identical in both modes.
     {
       lane: 'right',
       frame: 'START',
       extract: 'id: 03-crash-boundary',
-      say: 'The evaluation pack retains the failed trace as a replayable case.',
+      say: 'The evaluation pack retains the crash boundary as a replayable case.',
       cmd: 'cat fixtures/eval/cases/03-crash-boundary.yaml',
     },
     {

@@ -3,6 +3,7 @@ node_modules/
 # Built reading editions live on the course site, not in this repo.
 *.html
 !SOURCE-GUIDE.html
+!CONTAINMENT.html
 
 # Live compare artifacts are per-run evidence, retained locally, never committed.
 live/artifacts/

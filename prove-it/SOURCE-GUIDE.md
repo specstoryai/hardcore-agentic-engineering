@@ -13,3 +13,7 @@ six separate systems.
 
 The gate also proves one narrow fact. The named checks passed for one pinned
 candidate. The receipt does not prove that the checks were strong enough.
+
+It also assumes that the worker cannot replace the gate or read its key. Read
+[Can the worker tamper with the gate key?](CONTAINMENT.md) for the missing
+security boundary and the production version of the pattern.

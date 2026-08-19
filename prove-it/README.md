@@ -47,6 +47,11 @@ agreed checks and signs a receipt. The gate refuses forged, replayed and stale
 receipts. A receipt proves the checks ran — not that they were adequate. The
 course lives in that difference.
 
+`prove-it` teaches receipt binding. It does not contain an arbitrary local
+process. An unconstrained process can read or replace files in `control/`,
+including `gate.key`. [The containment explainer](CONTAINMENT.md) shows this
+limit and the structural isolation that a production system adds.
+
 [The Session 0 guide](sessions/s0-setup/README.md) walks all 5 commands with
 their real outputs. It is the only file Session 0 needs, and it is due before
 Session 1 on Tuesday 4 August.

@@ -16,19 +16,19 @@ claude --version                   # the provider must be on PATH
 Rehearse the session you are about to run:
 
 ```sh
-bash scripts/demo-compare.sh s3 --seq --ci
+bash scripts/demo-compare.sh s6 --mock --seq --ci
 ```
 
-`--seq` runs both lanes in one terminal. Drop it for the two-pane tmux layout
-you will actually project.
+This rehearsal checks the complete Session 6 join comparison without a provider.
+`--seq` runs both lanes in one terminal.
 
 ## On the night
 
 ```sh
-bash scripts/demo-compare.sh s3            # tmux, two panes, live
-bash scripts/demo-compare.sh s3 --details  # same run, more of it on screen
-bash scripts/demo-compare.sh s3 --mock     # keyless, no provider
-bash scripts/demo-compare.sh s3 --capture  # the recorded worker, explicitly
+bash scripts/demo-compare.sh s6            # tmux, two panes, live coordinator
+bash scripts/demo-compare.sh s6 --details  # same run, more evidence on screen
+bash scripts/demo-compare.sh s6 --mock     # deterministic, keyless fallback
+bash scripts/demo-compare.sh s6 --capture  # recorded worker, selected explicitly
 ```
 
 `--details` changes what reaches the screen and never what the artifact holds.
@@ -112,6 +112,17 @@ specific run.
 
 The important seam is between steps 3 and 4. The read reports what the world
 contains. The operator decides what that evidence permits the run to record.
+
+For Session 6, inspect the artifact in this order:
+
+1. `frames.txt` shows the summary decision and the evidence-bound verdict.
+2. `decision.txt` names the seam that the room selected.
+3. `right.log` shows the join refusal and the human promotion boundary.
+4. `right/**/join-result.json` records the exact invariant that refused the run.
+5. `right/**/promotion.json` names the release owner and rollback path.
+
+The comparison tests the join, not the models. Both lanes receive the same
+node outcomes and the same broken seam.
 
 For Session 4, render the controlled comparison and the check-authoring loop:
 

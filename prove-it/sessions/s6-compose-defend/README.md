@@ -11,7 +11,7 @@ A workflow can release after its receipts agree and a person approves it.
 
 **Do before class:** Read Chapter 6 and bring `PROOF.md`.
 
-**Do in class:** Run the compare and write your run-shape sentence.
+**Do in class:** Predict the join refusal, run the compare, and make one supervisor decision.
 
 **Finish for Project 3:** Complete `PROOF.md` and submit its link through Maven.
 
@@ -35,7 +35,13 @@ A **node** is one bounded agent run in a workflow.
 
 A **receipt** is the gate's signed record of the run, contract, check, and checked code snapshot.
 
-A **join** reads the node receipts and decides whether their results can combine.
+A **join** reads the node receipts and decides whether their results are eligible to count together.
+
+A **composition method** turns eligible results into one parent candidate. Use synthesis, union, ordered integration, or repair or refusal.
+
+A **parent gate** checks the new composed candidate. Child receipts do not cover this new state.
+
+A **supervisor** owns the parent goal, total budget, worker boundaries, join, and release path.
 
 A **shared budget** is one attempt limit that all nodes and retries use together.
 
@@ -67,9 +73,20 @@ The live session runs Thursday 20 August, from 5pm to 7pm ET. Open the Zoom link
 
 ## During the live session
 
-During the instructor demo, watch and predict. There is nothing to type. Run the launcher once when the lab block starts.
+The session has four moves: predict, compare, supervise, and defend. During the instructor demo, watch and predict. Run the launcher during the lab block.
 
-### Watch
+### 1. Predict
+
+Four worker summaries say `complete`. The room selects one broken seam:
+
+- `write-set-overlap`
+- `swapped-receipt-identity`
+- `stale-candidate`
+- `blown-shared-budget`
+
+Write the expected refusal in plain language before the join runs.
+
+### 2. Compare
 
 Both lanes use the same four node results and the same broken seam.
 
@@ -77,40 +94,46 @@ The left lane reads node summaries. Every summary says complete, so it supports 
 
 The right lane reads receipts and recalculates the shared-budget rule. It refuses and names the broken seam.
 
-In the live run one real coordinator drives the four nodes once, and both lanes read that same node evidence; the nodes themselves stay deterministic. Your `--mock` copy uses a scripted demo agent in the coordinator's place. The room's seam choice changes the run in both.
+In the live run, one coordinator drives the four nodes once. Both lanes read the same node evidence.
 
-### Decide
+The nodes stay deterministic. Your `--mock` copy uses a scripted demo agent in place of the coordinator. The room's seam choice changes both lanes.
 
-Choose one seam to break:
+This comparison tests one claim: the evidence-bound join can detect the broken seam. It does not compare model quality, model speed, or workflow value.
 
-- `write-set-overlap`
-- `swapped-receipt-identity`
-- `stale-candidate`
-- `blown-shared-budget`
-
-Predict the refusal before the join prints it.
-
-### Try it
-
-After the demo, run this command from the `prove-it` root:
+Run this command from the `prove-it` root:
 
 ```sh
 bash scripts/demo-compare.sh s6 --mock
 ```
 
-Look for the summary-only release, the join refusal, and the saved refusal reason. The runner prints the compare artifact path.
+Look for three results:
 
-### Your task
+- The summary-only lane supports release.
+- The evidence-bound join refuses the broken invariant.
+- The runner saves the refusal reason in `join-result.json`.
 
-Write one run-shape sentence for your real Project 3 task.
+### 3. Supervise
 
-Name the run shape and the specific problem that requires it. One agent is a valid answer with a stated reason.
+For your Project 3 task, make a small supervisor packet:
 
-Save the sentence in the run-shape field of `PROOF.md`.
+1. **Shape:** Select one worker, a specialist, a sequence, parallel workers, or a dependency workflow.
+2. **Ownership:** Name the parent goal and each worker's write set.
+3. **Composition method:** Select synthesis, union, ordered integration, or repair or refusal. Name the artifacts and evidence that must return.
+4. **Next action:** Select accept, retry, rebrief, sequence, repair, or refuse.
+
+Do not add a worker as a recovery action unless you can name its new boundary.
+
+### 4. Defend
+
+Write one run-shape sentence for your Project 3 task. Use this form:
+
+> I will use **[shape]** because **[task property]**. I will change this shape if **[evidence]**.
+
+One worker is a complete answer when the task needs shared context or overlapping changes.
 
 ### Save
 
-Save your run-shape sentence in `PROOF.md`.
+Save your run-shape sentence in `PROOF.md`. Keep the supervisor packet in your notes for the class discussion.
 
 The compare artifact is useful class evidence. It is not required for Project 3.
 

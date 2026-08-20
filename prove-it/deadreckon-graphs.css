@@ -23,6 +23,8 @@ FORM: Match CONTAINMENT as the working sibling; the one delta is evidence flow i
 
 .graph-answer strong { color: var(--accent-cream); }
 
+.graph-explorer .containment-tabs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
 .job-pipeline {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -196,6 +198,90 @@ FORM: Match CONTAINMENT as the working sibling; the one delta is evidence flow i
 .graph-verdict strong { color: var(--ink); }
 .graph-verdict .observed { color: var(--mute); font-family: var(--font-mono); font-size: var(--step--1); }
 
+.dag-figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--navy-2);
+}
+
+.dag-figure figcaption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: .8rem var(--space-md);
+  border-bottom: 1px solid var(--containment-line);
+  color: var(--cream-3);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+}
+
+.graph-explorer .dag-figure figcaption strong { color: var(--cream); }
+
+.dag-wave { padding: clamp(1rem, .6rem + 2vw, 2rem); }
+
+.dag-wave-label {
+  display: block;
+  margin-bottom: .7rem;
+  color: var(--accent-cream);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.dag-siblings,
+.dag-arrows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.dag-node {
+  padding: 1rem;
+  border: 1px solid var(--containment-line);
+  border-radius: var(--radius-md);
+  color: var(--cream-2);
+  background: var(--containment-deep);
+  text-align: center;
+}
+
+.dag-node b,
+.dag-node span { display: block; }
+.dag-node b { margin-bottom: .25rem; color: var(--cream); font-size: var(--step-0); }
+.dag-node span { color: var(--cream-3); font-size: var(--step--1); }
+.dag-node em { display: block; margin-bottom: .45rem; color: var(--accent-cream); font-family: var(--font-mono); font-size: var(--step--2); font-style: normal; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+
+.dag-arrows span {
+  padding: .25rem 0;
+  color: var(--accent-cream);
+  font-size: var(--step-2);
+  text-align: center;
+}
+
+.dag-join-node {
+  width: min(24rem, 100%);
+  margin: 0 auto;
+  background: var(--containment-panel);
+}
+
+.apply-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: var(--space-lg);
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.apply-compare section { padding: var(--space-md) var(--space-lg) var(--space-md) 0; }
+.apply-compare section + section { padding-right: 0; padding-left: var(--space-lg); border-left: 1px solid var(--line-strong); }
+.apply-compare code { color: var(--accent-text); font-size: var(--step--1); font-weight: 600; }
+.graph-explorer .apply-compare h4 { margin: .3rem 0 .4rem; color: var(--ink); font-family: var(--font-display); font-size: var(--step-1); letter-spacing: -.01em; text-transform: none; }
+.graph-explorer .apply-compare p { max-width: 48ch; margin: 0; }
+
 .disk-flow {
   display: grid;
   grid-template-columns: minmax(22rem, .95fr) minmax(0, 1.05fr);
@@ -259,6 +345,43 @@ FORM: Match CONTAINMENT as the working sibling; the one delta is evidence flow i
 .composition-row.is-live { margin: 0 calc(var(--space-sm) * -1); padding-right: var(--space-sm); padding-left: var(--space-sm); background: var(--accent-wash); }
 .composition-row.is-live .rule-result { color: var(--accent-text); font-weight: 600; }
 
+.strategy-section {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--line-strong);
+}
+
+.strategy-section > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.graph-explorer .strategy-section h4 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: var(--step-1); letter-spacing: -.01em; text-transform: none; }
+.graph-explorer .strategy-section header p { max-width: 38ch; margin: 0; color: var(--mute); font-family: var(--font-mono); font-size: var(--step--1); }
+
+.strategy-ledger {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--navy-2);
+}
+
+.strategy-ledger > div {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr) 9rem;
+  gap: var(--space-md);
+  align-items: baseline;
+  padding: .85rem var(--space-md);
+  border-bottom: 1px solid var(--containment-line);
+}
+
+.strategy-ledger > div:last-child { border-bottom: 0; }
+.strategy-ledger code { color: var(--accent-cream); font-size: var(--step--1); font-weight: 600; }
+.strategy-ledger span { color: var(--cream-2); }
+.strategy-ledger b { color: var(--cream); font-family: var(--font-mono); font-size: var(--step--1); font-weight: 500; }
+
 .fan-in-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -295,6 +418,9 @@ FORM: Match CONTAINMENT as the working sibling; the one delta is evidence flow i
 }
 
 @media (max-width: 720px) {
+  .graph-explorer .containment-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .graph-explorer .containment-tabs button:nth-child(2n) { border-right: 0; }
+  .graph-explorer .containment-tabs button:last-child { grid-column: 1 / -1; }
   .one-versus-job,
   .graph-verdict,
   .completion-equation { grid-template-columns: 1fr; }
@@ -303,18 +429,32 @@ FORM: Match CONTAINMENT as the working sibling; the one delta is evidence flow i
   .completion-equation .not-equal { transform: rotate(90deg); }
   .composition-row { grid-template-columns: 1fr; gap: .25rem; padding: 1rem 0; }
   .composition-head { display: none; }
+  .apply-compare { grid-template-columns: 1fr; }
+  .apply-compare section { padding-right: 0; }
+  .apply-compare section + section { padding-left: 0; border-top: 1px solid var(--line-strong); border-left: 0; }
+  .strategy-section > header { display: block; }
+  .graph-explorer .strategy-section header p { margin-top: .35rem; }
+  .strategy-ledger > div { grid-template-columns: 1fr; gap: .25rem; }
   .fan-in-strip { grid-template-columns: 1fr 1fr; }
   .fan-in-strip > div:nth-child(2) { border-right: 0; }
   .fan-in-strip > div:nth-child(-n + 2) { border-bottom: 1px solid var(--containment-line); }
 }
 
 @media (max-width: 520px) {
+  .graph-explorer .containment-tabs { grid-template-columns: 1fr; }
+  .graph-explorer .containment-tabs button:last-child { grid-column: auto; }
   .job-pipeline { grid-template-columns: 1fr; }
   .pipeline-step { min-height: auto; border-right: 0; border-bottom: 1px solid var(--containment-line); }
   .pipeline-step:nth-child(-n + 3) { border-bottom: 1px solid var(--containment-line); }
   .pipeline-step:last-child { border-bottom: 0; }
   .pipeline-step:not(:last-child)::after { top: auto; right: 50%; bottom: -.7rem; transform: translateX(50%) rotate(90deg); }
   .pipeline-step:nth-child(3)::after { display: grid; }
+  .dag-siblings { grid-template-columns: 1fr; }
+  .dag-arrows { grid-template-columns: 1fr; }
+  .dag-arrows span { display: none; }
+  .dag-arrows span:nth-child(2) { display: block; }
+  .dag-figure figcaption { display: block; }
+  .dag-figure figcaption span { display: block; margin-top: .2rem; }
   .fan-in-strip { grid-template-columns: 1fr; }
   .fan-in-strip > div { border-right: 0; border-bottom: 1px solid var(--containment-line); }
   .fan-in-strip > div:last-child { border-bottom: 0; }

@@ -16,6 +16,7 @@
     <div class="containment-tabs" role="tablist" aria-label="DeadReckon graph explainer sections">
       <button id="graph-tab-answer" role="tab" aria-selected="true" aria-controls="graph-panel-answer" data-panel="answer">The direct answer</button>
       <button id="graph-tab-execution" role="tab" aria-selected="false" aria-controls="graph-panel-execution" data-panel="execution" tabindex="-1">This execution</button>
+      <button id="graph-tab-shapes" role="tab" aria-selected="false" aria-controls="graph-panel-shapes" data-panel="shapes" tabindex="-1">Graph shapes</button>
       <button id="graph-tab-disk" role="tab" aria-selected="false" aria-controls="graph-panel-disk" data-panel="disk" tabindex="-1">What lives on disk</button>
       <button id="graph-tab-compose" role="tab" aria-selected="false" aria-controls="graph-panel-compose" data-panel="compose" tabindex="-1">Compose or refuse</button>
     </div>
@@ -55,7 +56,7 @@
 
     <section class="containment-panel" id="graph-panel-execution" role="tabpanel" aria-labelledby="graph-tab-execution" data-panel-name="execution" hidden>
       <header class="panel-heading">
-        <div><p class="panel-kicker">Real execution <code>a7f25a76</code></p><h3>Five tasks does not mean five workers at once.</h3></div>
+        <div><p class="panel-kicker">Observed chain · details shortened</p><h3>Five tasks does not mean five workers at once.</h3></div>
         <p>Dependencies decide which tasks are ready.</p>
       </header>
 
@@ -113,6 +114,42 @@
       <p class="sequence-rule"><strong>Parallelism is earned by graph shape.</strong> Independent ready nodes can fan out. This Job has no independent siblings, so its five supervised stages stay ordered.</p>
     </section>
 
+    <section class="containment-panel" id="graph-panel-shapes" role="tabpanel" aria-labelledby="graph-tab-shapes" data-panel-name="shapes" hidden>
+      <header class="panel-heading">
+        <div><p class="panel-kicker">Readiness follows the edges</p><h3>A DAG runs in waves, not all at once.</h3></div>
+        <p>Graph width creates parallelism only when application is deferred.</p>
+      </header>
+
+      <figure class="dag-figure" aria-labelledby="dag-caption">
+        <figcaption id="dag-caption"><strong>Fan-out, then fan-in</strong><span>One Job with three independent children</span></figcaption>
+        <div class="dag-wave">
+          <span class="dag-wave-label">Ready together</span>
+          <div class="dag-siblings">
+            <article class="dag-node"><b>A · Inspect</b><span>No dependencies</span></article>
+            <article class="dag-node"><b>B · Tests</b><span>No dependencies</span></article>
+            <article class="dag-node"><b>C · Design</b><span>No dependencies</span></article>
+          </div>
+          <div class="dag-arrows" aria-hidden="true"><span>↘</span><span>↓</span><span>↙</span></div>
+          <article class="dag-node dag-join-node"><em>Waiting for A + B + C</em><b>D · Integrate</b><span>Starts after all dependencies pass.</span></article>
+        </div>
+      </figure>
+
+      <div class="apply-compare">
+        <section>
+          <code>apply: at-end</code>
+          <h4>Use the graph width.</h4>
+          <p>DeadReckon starts every ready node in an isolated child run. A dependent node receives their composed results.</p>
+        </section>
+        <section>
+          <code>apply: per-node</code>
+          <h4>Serialize the ready set.</h4>
+          <p>DeadReckon starts one ready node. Each accepted result updates the ordered candidate before the next node starts.</p>
+        </section>
+      </div>
+
+      <p class="parent-rule"><strong>Completion time does not decide precedence.</strong> The dependency graph decides which result can supersede another result.</p>
+    </section>
+
     <section class="containment-panel" id="graph-panel-disk" role="tabpanel" aria-labelledby="graph-tab-disk" data-panel-name="disk" hidden>
       <header class="panel-heading">
         <div><p class="panel-kicker">Isolation is visible in the filesystem</p><h3>Each layer has one job.</h3></div>
@@ -121,14 +158,14 @@
 
       <div class="disk-flow">
 <pre class="disk-tree" aria-label="DeadReckon execution files">~/.deadreckon/
-├── jobs/a7f25a76…/
+├── jobs/&lt;job-id&gt;/
 │   ├── job.json
 │   ├── authority.json
 │   ├── acceptance.yaml
 │   └── ordered-candidate/
 │       └── workspace/
 │
-├── plans/a7f25a76…/
+├── plans/&lt;plan-id&gt;/
 │   ├── plan.json
 │   ├── plan-events.jsonl
 │   └── worker-specs/
@@ -136,10 +173,10 @@
 │       └── task-1…4.md
 │
 ├── worktrees/
-│   └── task-0-…/
+│   └── &lt;task-scope&gt;/
 │
-└── runstate/task-0-…/
-    └── runs/15b168c0…/
+└── runstate/&lt;task-scope&gt;/
+    └── runs/&lt;run-id&gt;/
         ├── events/
         ├── snapshots/
         ├── proofs/
@@ -170,9 +207,19 @@
         <div class="composition-row composition-head" role="row"><span role="columnheader">Rule</span><span role="columnheader">Child outputs</span><span role="columnheader">Supervisor action</span><span role="columnheader">Result</span></div>
         <div class="composition-row" role="row"><strong role="cell">Synthesis</strong><span role="cell">Findings or competing hypotheses</span><span role="cell">Compare evidence and write one conclusion.</span><span class="rule-result" role="cell">one explanation</span></div>
         <div class="composition-row" role="row"><strong role="cell">Union</strong><span role="cell">Disjoint files or modules</span><span role="cell">Combine artifacts after each local gate passes.</span><span class="rule-result" role="cell">mechanical join</span></div>
-        <div class="composition-row is-live" role="row"><strong role="cell">Ordered integration</strong><span role="cell">A declared dependency chain</span><span role="cell">Compose by dependency order, not finish time.</span><span class="rule-result" role="cell">this Job</span></div>
+        <div class="composition-row is-live" role="row"><strong role="cell">Ordered integration</strong><span role="cell">A declared dependency chain</span><span role="cell">Compose by dependency order, not finish time.</span><span class="rule-result" role="cell">chain example</span></div>
         <div class="composition-row" role="row"><strong role="cell">Repair or refusal</strong><span role="cell">Overlapping siblings or disagreement</span><span role="cell">Preserve a conflict bundle. Assign bounded repair or stop.</span><span class="rule-result" role="cell">no silent winner</span></div>
       </div>
+
+      <section class="strategy-section" aria-labelledby="strategy-title">
+        <header><h4 id="strategy-title">DeadReckon merge controls</h4><p>The operator selects how the Job handles incompatible artifacts.</p></header>
+        <div class="strategy-ledger">
+          <div><code>dag-aware</code><span>A descendant supersedes its ancestor. Unrelated sibling overlap becomes a conflict.</span><b>default</b></div>
+          <div><code>fail-on-conflict</code><span>Any incompatible overlap stops composition. DeadReckon does not start repair.</span><b>strict stop</b></div>
+          <div><code>prefer-child</code><span>A named child wins the overlap. DeadReckon records the operator's selection.</span><b>explicit choice</b></div>
+          <div><code>repair modes</code><span>Modes are <code>auto</code>, <code>prefer</code>, <code>synthesize</code>, and <code>child</code>. Each repair has a fixed attempt limit. Unresolved conflicts stop composition.</span><b>evidence retained</b></div>
+        </div>
+      </section>
 
       <div class="fan-in-strip" aria-label="Four distinct parent decisions">
         <div><b>JOIN</b><span>Is this evidence eligible?</span></div>

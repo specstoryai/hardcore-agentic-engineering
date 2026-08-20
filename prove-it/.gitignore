@@ -4,6 +4,7 @@ node_modules/
 *.html
 !SOURCE-GUIDE.html
 !CONTAINMENT.html
+!DEADRECKON-GRAPHS.html
 
 # Live compare artifacts are per-run evidence, retained locally, never committed.
 live/artifacts/

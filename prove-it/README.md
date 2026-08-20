@@ -52,6 +52,10 @@ process. An unconstrained process can read or replace files in `control/`,
 including `gate.key`. [The containment explainer](CONTAINMENT.md) shows this
 limit and the structural isolation that a production system adds.
 
+DeadReckon also composes many verified child runs into one Job.
+[The jobs, graphs and joins explainer](DEADRECKON-GRAPHS.md) follows a real
+five-task execution from its dependency graph to its parent checks.
+
 [The Session 0 guide](sessions/s0-setup/README.md) walks all 5 commands with
 their real outputs. It is the only file Session 0 needs, and it is due before
 Session 1 on Tuesday 4 August.
